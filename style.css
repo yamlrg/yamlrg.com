@@ -19,7 +19,7 @@ main {
     justify-content: center; /* vertical center */
     align-items: left;     /* horizontal center */
     flex: 1;                 /* take up remaining space */
-    max-width: 800px;
+    max-width: 400px;
     margin: 0 auto;
     text-align: left;
 }
