@@ -1,0 +1,80 @@
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  
+body {
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* The main area grows to fill space and centers its content */
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* vertical center */
+    align-items: left;     /* horizontal center */
+    flex: 1;                 /* take up remaining space */
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+p {
+    line-height: 1.5em;  /* Adjust as needed for tighter line spacing */
+    margin-bottom: 0.5em;  /* Default spacing after a paragraph */
+}
+
+  
+footer {
+    font-size: x-small;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+  
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #222; /* Dark mode background */
+        color: #eee; /* Text color for dark mode */
+    }
+}
+
+.links {
+    font-size: smaller;
+    line-height: 2;
+    text-align: center;
+    margin: 2rem 2rem; /* Space between links */
+    transition: color 0.3s ease;
+}
+
+.links a {
+    text-decoration: none;
+    padding: 0 0.4rem;
+}
+
+a:hover {
+    color: #005bb5; /* Darker blue on hover */
+}
+
+@media (prefers-color-scheme: dark) {
+    a {
+        color: #66cfff; /* Light blue for dark mode */
+    }
+
+    a:hover {
+        color: #33aaff; /* Brighter blue on hover in dark mode */
+    }
+}
+
+.profile-pic {
+    width: 70px;         /* Adjust size as needed */
+    height: 70px;        /* Make height and width the same for a circle */
+    border-radius: 50%;   /* This makes it circular */
+    object-fit: cover;    /* Ensures image fills the circle nicely without distortion */
+    margin-top: 1em;      /* Add some spacing above the image */
+    margin-bottom: 1em;   /* Add some spacing below the image */
+}
