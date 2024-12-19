@@ -1,5 +1,5 @@
 import "./globals.css";
-import { type Metadata } from 'next'
+import { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 
 const inter = Inter({
@@ -8,10 +8,23 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'yamlrg?',
-  description: 'Yet Another Machine Learning Reading Group',
+  title: 'YAMLRG',
+  description: 'YAMLRG Community Stats',
+  openGraph: {
+    title: 'YAMLRG',
+    description: 'YAMLRG Community Stats',
+    images: [
+      {
+        url: '/yamlrg.webp',
+        width: 1200,
+        height: 630,
+        alt: 'YAMLRG Logo',
+      },
+    ],
+  },
   icons: {
-    icon: '/yamlrg.png',
+    icon: '/favicon.ico',
+    apple: '/yamlrg.png',
   },
 }
 
