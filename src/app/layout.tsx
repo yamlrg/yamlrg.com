@@ -8,11 +8,11 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'YAMLRG',
-  description: 'YAMLRG Community Stats',
+  title: 'yamlrg?',
+  description: 'Yet Another Machine Learning Reading Group',
   openGraph: {
-    title: 'YAMLRG',
-    description: 'YAMLRG Community Stats',
+    title: 'yamlrg?',
+    description: 'Yet Another Machine Learning Reading Group',
     images: [
       {
         url: '/yamlrg.webp',
@@ -24,7 +24,19 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: '/favicon.ico',
+    shortcut: '/yamlrg.png',
     apple: '/yamlrg.png',
+    other: [
+      {
+        rel: 'apple-touch-icon',
+        url: '/yamlrg.png',
+      },
+    ],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'yamlrg?',
   },
 }
 
