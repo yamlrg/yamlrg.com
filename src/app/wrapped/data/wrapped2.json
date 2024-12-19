@@ -1,0 +1,61 @@
+{
+    "topics_sparking_conversations": {
+        "AI_Research_Papers": {
+            "subcategories": {
+                "NeRF": 45,
+                "Diffusion Models": 38,
+                "Transformer Architectures": 32,
+                "Causal Machine Learning": 28,
+                "Attention Mechanisms": 24
+            }
+        },
+        "Event_Session_Planning": 62,
+        "AI_Ethics": 41,
+        "Technical_Concepts": 33,
+        "Personal_Updates_Presentations": 26
+    },
+    "most_shared_links": [
+        {
+            "user": "Tom Walker",
+            "count": 15
+        },
+        {
+            "user": "Maria",
+            "count": 12
+        },
+        {
+            "user": "Callum",
+            "count": 10
+        },
+        {
+            "user": "Josh",
+            "count": 9
+        },
+        {
+            "user": "Oisin Nolan",
+            "count": 8
+        }
+    ],
+    "popular_keywords": [
+        {
+            "keyword": "NeRF",
+            "mentions": 45
+        },
+        {
+            "keyword": "GPT-4",
+            "mentions": 38
+        },
+        {
+            "keyword": "Deep Learning",
+            "mentions": 32
+        },
+        {
+            "keyword": "Diffusion",
+            "mentions": 28
+        },
+        {
+            "keyword": "Causal ML",
+            "mentions": 24
+        }
+    ]
+}

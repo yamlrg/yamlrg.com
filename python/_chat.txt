@@ -1,0 +1,1581 @@
+[14/10/2022, 19:00:03] YAMLRG: ‎Messages and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them.
+[14/10/2022, 19:00:03] ~ callum: ‎~ callum created this group
+[14/10/2022, 19:11:45] YAMLRG: ‎You joined using this group's invite link
+[14/10/2022, 19:11:56] Maria: can i stay as a lurker
+[14/10/2022, 19:12:12] Maria: or do u want everyone to contribute
+[14/10/2022, 19:12:21] Maria: i’m happy to leave and u send me interesting stuff every now and then
+[14/10/2022, 19:12:23] Maria: hahahahahahaha
+‎[14/10/2022, 19:12:34] ~ callum: ‎sticker omitted
+[14/10/2022, 19:12:39] Maria: okay fine
+[14/10/2022, 19:12:42] Maria: just do this
+‎[14/10/2022, 19:12:42] ~ callum: ‎sticker omitted
+[14/10/2022, 19:12:44] Maria: 🥰❤️
+[14/10/2022, 19:12:46] Oisín Nolan: 😂
+[14/10/2022, 21:45:19] YAMLRG: ‎You joined using this group's invite link
+[14/10/2022, 21:45:32] Andrés 🤓: ‎Andrés 🤓 was added
+[14/10/2022, 21:45:32] ~ Neimhin: ‎~ Neimhin was added
+[14/10/2022, 21:45:32] Arjan Dhesi: ‎Arjan Dhesi was added
+[14/10/2022, 21:45:32] Milo Carroll 💪🏽: ‎Milo Carroll 💪🏽 was added
+[14/10/2022, 21:45:32] David Mlčoch 🦁: ‎David Mlčoch 🦁 was added
+[14/10/2022, 21:45:32] Tom Walker: ‎Tom Walker was added
+[14/10/2022, 21:45:32] Josh 🦒: ‎Josh 🦒 was added
+[15/10/2022, 01:44:33] Nikolaos Zavitsanos MSc: ‎Nikolaos Zavitsanos MSc joined using this group's invite link
+[15/10/2022, 22:34:43] Maria: we’re making bets of what the title means
+[15/10/2022, 22:34:57] Maria: josh: young adult machine learning reading group
+[15/10/2022, 22:35:01] Maria: maria: yet another
+[15/10/2022, 22:35:12] Maria: milo: your average
+[16/10/2022, 11:07:05] ~ callum: Inspired by our favourite Young Adult Markup Language
+[17/10/2022, 16:27:42] Maria: alright come on let's do smth with this
+[17/10/2022, 16:27:46] Maria: i haven't had ml exposure in a while
+[17/10/2022, 16:27:47] Maria: https://news.mit.edu/2022/machine-learning-edge-microcontroller-1004
+[17/10/2022, 16:28:00] Maria: let's choose a paper and set up a meeting to discuss it?
+[17/10/2022, 16:28:03] Maria: or how is this gonna work
+[17/10/2022, 16:42:22] ~ callum: @447387172915 was keen to chat about this, in preparation for a presentation he's doing 🙌🏼
+[17/10/2022, 16:44:17] ~ callum: But I was originally thinking we aim to begin (officially) in Jan 2023. It could be rad if we could have a timeslot defined, and a plan for how we'll choose papers / etc. :)
+[17/10/2022, 16:47:24] ~ callum: Open to alternative ideas though ☀️
+[17/10/2022, 16:47:44] Maria: ahh oki
+[17/10/2022, 16:48:19] Josh 🦒: Sounds good
+[17/10/2022, 16:48:46] Josh 🦒: I was thinking of making a LinkedIn group, I keep seeing loads of interesting posts but would take ages to tag everyone in them
+[17/10/2022, 16:49:10] Josh 🦒: https://www.linkedin.com/groups/12717620
+[17/10/2022, 16:49:46] Josh 🦒: I was thinking of keeping it public so people in our networks could join and eventually have a popping ai group
+[17/10/2022, 16:49:57] ~ callum: Love that idea :) thanks bro!
+[17/10/2022, 16:50:39] ~ callum: I also see loads of interesting stuff on twitter, if y'all are keen to share those :)
+[17/10/2022, 18:37:55] Tom Walker: Also I think it would be beneficial to properly get our heads around diffusion at some point, given everything seems to be going that way
+[17/10/2022, 18:59:49] Josh 🦒: Yeah I’ve been doing some reading but would be great to discuss
+[17/10/2022, 21:53:40] Milo Carroll 💪🏽: I also think neural cellular automata could be fun
+[17/10/2022, 21:53:43] Milo Carroll 💪🏽: https://distill.pub/2020/growing-ca/
+[19/10/2022, 15:32:01] ~ callum: https://twitter.com/deliprao/status/1582531571394916352?t=L3HOKRPV7WkX73M4mWwTWw&s=08
+[19/10/2022, 20:31:40] Tom Walker: thicc
+[24/10/2022, 19:09:40] Tom Walker: Interesting paper that's leading to more cool shit: https://arxiv.org/pdf/1806.07366.pdf
+[24/10/2022, 19:10:34] Tom Walker: imagine a ResNet but where network depth is continuous, not discrete
+[24/10/2022, 19:12:07] ~ callum: Any cool applications you've seen? 🙌🏼
+[24/10/2022, 19:21:45] Tom Walker: I guess it's applications could be very broad (once they figure out how to do
+[24/10/2022, 19:22:58] Tom Walker: to* optimize it). But I'm interested in it because it generalizes more easily to manifolds, hence, https://arxiv.org/pdf/2006.10254.pdf
+[11/11/2022, 16:51:14] Josh 🦒: https://arxiv.org/pdf/2205.14135.pdf Interesting paper
+[11/11/2022, 16:51:31] Josh 🦒: about efficient and fast attention
+[13/11/2022, 11:44:56] ~ callum: https://twitter.com/hardmaru/status/1590954878305972227
+[14/11/2022, 14:49:56] ~ callum: ‎This message was deleted.
+[19/11/2022, 18:23:14] Tom Walker: https://youtu.be/KuXjwB4LzSA
+[19/11/2022, 18:23:23] Tom Walker: 3B1B
+[21/12/2022, 23:36:50] Tom Walker: NLP people, how well is AI doing with metaphors/analogies? How is it handled?
+[21/12/2022, 23:43:38] Oisín Nolan: https://arxiv.org/abs/2212.09196v1
+[21/12/2022, 23:43:44] Oisín Nolan: Discussion section in this is good
+[22/12/2022, 18:27:11] Tom Walker: V interesting. Are there any very big/successful models which aren't transformer based? Wonder how they'd do on analogies without the similarity part of self-attention
+[25/12/2022, 07:30:20] ~ callum: ‎‎~ callum changed their phone number to a new number. ‎Tap to message or add the new number.
+[25/12/2022, 12:47:02] Oisín Nolan: I'm not sure actually it would've been cool if they compared to other models
+[25/12/2022, 12:47:17] Oisín Nolan: You'd think similarity would be super useful for pattern recognition though intuitively yeah
+[16/01/2023, 23:01:40] Tom Walker: Don't suppose any of your compsci folk can explain to me what a hash encoding is
+[16/01/2023, 23:02:22] Tom Walker: (https://vcai.mpi-inf.mpg.de/projects/NeuS2/)
+[16/01/2023, 23:04:18] David Mlčoch 🦁: X->Y✅ Y->X❌
+[27/01/2023, 08:15:40] Callum 🇿🇦: https://google-research.github.io/seanet/musiclm/examples/
+Insane
+[27/01/2023, 14:19:19] Josh 🦒: Dear fellow scholars when are we planning to get this party started?
+[27/01/2023, 14:24:10] Callum 🇿🇦: Fantastic point, sir
+[27/01/2023, 14:24:19] Callum 🇿🇦: I think we should begin with a wee poll
+[27/01/2023, 14:24:37] Tom Walker: Yeah I was sent this this morning. Not sure how I feel about it
+[27/01/2023, 14:24:43] Callum 🇿🇦: ‎POLL:
+Frequency
+‎OPTION: Weekly (1 vote)
+‎OPTION: Bi-weekly 🏳️‍🌈 (9 votes)
+‎OPTION: Monthly (0 votes)
+[27/01/2023, 14:25:04] Tom Walker: I've got a little project in the works I'd like to present to you guys in the next month if possible
+[27/01/2023, 14:25:12] Callum 🇿🇦: ‎POLL:
+-day
+‎OPTION: Mon (7 votes)
+‎OPTION: Tues (0 votes)
+‎OPTION: Wednes (1 vote)
+‎OPTION: Thurs (1 vote)
+‎OPTION: Fri (0 votes)
+[27/01/2023, 14:25:30] Callum 🇿🇦: ‎POLL:
+More importantly:
+‎OPTION: scheduled (6 votes)
+‎OPTION: ad hoc (0 votes)
+‎[27/01/2023, 14:25:45] Tom Walker: ‎GIF omitted
+[27/01/2023, 14:55:01] Maria: oh wow
+[27/01/2023, 14:55:10] Maria: thats art
+[27/01/2023, 14:55:15] Maria: not someone with a brush and some paint
+[27/01/2023, 15:18:57] ~ Neimhin: Is bi-weekly twice a week or fortnightly? I assume fortnightly by the escalation in the list.
+[27/01/2023, 15:20:12] Maria: fortnightly
+[27/01/2023, 15:20:16] Callum 🇿🇦: fortnightly, indeed 👍🏻
+[27/01/2023, 15:20:17] Maria: is you name hi? 🙄
+[27/01/2023, 15:20:26] Maria: ba dum tss for whoever got the joke
+‎[27/01/2023, 15:20:54] Callum 🇿🇦: ‎image omitted
+[27/01/2023, 15:22:16] ~ Neimhin: Pretty bad language overall 2/5.
+[27/01/2023, 15:26:02] Milo Carroll 💪🏽: Is this from the skull paper we talked about
+[27/01/2023, 15:33:29] Tom Walker: Yup, DTU dataset. That paper triggered this idea so I appreciate you liking it on LinkedIn lol
+[27/01/2023, 17:36:39] Milo Carroll 💪🏽: 2nd author ?
+[06/02/2023, 20:13:25] Callum 🇿🇦: g'eve fellow scholars 🫡 democracy wins: scheduled biweekly meetings on Mondays 📚 I'm thinking we begin on the 20th Feb? We can use a Google Doc and take turns to present a paper that we have read :)
+[06/02/2023, 20:14:01] Callum 🇿🇦: Would 7pm UK time be ok for everyone?
+[06/02/2023, 20:14:18] Callum 🇿🇦: Also: please send me your email addresses, so that I can set up a calendar invite :)
+[06/02/2023, 20:36:22] Maria: mluqueanguita@gmail.com
+[06/02/2023, 20:49:38] Andrés 🤓: andresmenagodino@gmail.com
+[06/02/2023, 20:50:43] Tom Walker: thomaswalker0519@gmail.com
+[06/02/2023, 20:58:37] Oisín Nolan: oinolan@tcd.ie
+[06/02/2023, 21:35:19] Milo Carroll 💪🏽: milocarroll1@gmail.com
+[06/02/2023, 21:57:39] David Mlčoch 🦁: david.mlcoch@gmail.com
+[06/02/2023, 21:58:06] Josh 🦒: Joshuaplacidi@gmail.com
+[06/02/2023, 23:28:11] ~ Neimhin: nrobinso@tcd.ie
+[07/02/2023, 00:24:02] Arjan Dhesi: Arjan.dhesi@outlook.com
+[07/02/2023, 07:52:01] Callum 🇿🇦: Apologies for sending the calendar invite twice—accidentally used my work email first. But let me know if you didn't receive it :)
+[07/02/2023, 08:04:06] Callum 🇿🇦: https://docs.google.com/document/d/14mPAdu7aiVNAbLFwlMA8M_So2HuiXYNe7KyTw4IuxGc/edit?usp=sharing
+
+We should probably create a shared drive or something, but here's a starting doc for planning 🙏🏼
+[07/02/2023, 08:04:17] Callum 🇿🇦: (You also should've received an email about it)
+[07/02/2023, 08:26:02] Maria: is this the first one we have to read?
+[07/02/2023, 08:26:41] Callum 🇿🇦: No, it depends on who's willing to go first :)
+[07/02/2023, 11:26:33] Nikolaos Zavitsanos MSc: nikolaoszavitsanos1@gmail.com
+[08/02/2023, 06:48:01] Callum 🇿🇦: Who would like to go first? (@447387172915 you mentioned you had something?)⭐ 
+Perhaps we could aim for ~30 min presentation, followed by 30 min of discussion? Or what do y'all think?
+[19/02/2023, 12:14:30] David Mlčoch 🦁: Is this happening tomorrow?
+[19/02/2023, 12:23:13] Callum 🇿🇦: Yes sir! I believe that @447387172915 is happy to present 🙏🏼
+[19/02/2023, 14:33:43] Tom Walker: 30 mins sounds good, when tomorrow?
+[19/02/2023, 15:29:32] Callum 🇿🇦: 7pm UK time xox
+[20/02/2023, 17:42:10] Tom Walker: How many people who are joining later know what nerf is/roughly how it works? Should I go through that
+[20/02/2023, 17:42:18] Tom Walker: Kinda a prerequisite
+[20/02/2023, 17:47:56] Maria: i can't lol
+[20/02/2023, 17:48:44] ~ Neimhin: i'm coming and i do not know what that is
+[20/02/2023, 17:48:54] Tom Walker: don't let Arjan boss you around
+[20/02/2023, 17:49:00] Tom Walker: Okay I'll add a slide
+[20/02/2023, 17:49:18] Tom Walker: Fyi this is gonna be thrown together pretty quickly and will not be smooth lol
+[20/02/2023, 17:50:13] Milo Carroll 💪🏽: Hey guys, unfortunately I won't be able to make it, I have an interview tomorrow and haven't started prep yet... Can someone record today's session please ?
+[20/02/2023, 17:50:45] Tom Walker: Idm rescheduling to later in the week that would potentially be better for me
+[20/02/2023, 17:53:56] Milo Carroll 💪🏽: I don't mind, but I don't want inconvenience everyone else
+[20/02/2023, 17:54:21] Tom Walker: Well I know you'd have questions and it's relevant to what you're doing so be good if you could make it
+[20/02/2023, 17:55:07] Milo Carroll 💪🏽: is it a 1hour session ?
+[20/02/2023, 18:04:19] Oisín Nolan: I can make it today and don't have any background on NERF
+[20/02/2023, 18:05:11] Tom Walker: I'm crying
+[20/02/2023, 18:05:47] Tom Walker: Only being paid for 30
+[20/02/2023, 18:06:59] Tom Walker: ‎POLL:
+when
+‎OPTION: mon (4 votes)
+‎OPTION: wed (1 vote)
+‎OPTION: Friday (2 votes)
+‎OPTION: idk (4 votes)
+[20/02/2023, 18:08:04] Callum 🇿🇦: Personally tonight would suit me best, and I need NeRF 101 pls xoxo
+[20/02/2023, 18:17:20] Tom Walker: Any chance we could do more like 6:30? I'm gonna have to head off by like 7:20ish
+[20/02/2023, 18:17:34] Tom Walker: (if we are doing today)
+[20/02/2023, 18:31:29] Andrés 🤓: I’ll try to join but not sure if I’ll make it 😢
+[20/02/2023, 18:48:25] Tom Walker: I'm gonna send a zoom link as I'll need it's whiteboard feature
+[20/02/2023, 19:32:05] Tom Walker: Join Zoom Meeting
+https://ed-ac-uk.zoom.us/j/83983692564
+
+Meeting ID: 839 8369 2564
+Passcode: Fu320mJc
+‎[20/02/2023, 19:32:42] Tom Walker: ‎image omitted
+‎[20/02/2023, 19:32:43] Tom Walker: ‎image omitted
+[20/02/2023, 19:33:24] Callum 🇿🇦: starting now hey?
+[20/02/2023, 19:33:37] Tom Walker: yup
+[20/02/2023, 19:56:26] Josh 🦒: hey guys my sound cut out
+[20/02/2023, 19:56:31] Josh 🦒: could someone let me back in to the meeting?
+[20/02/2023, 20:02:31] Milo Carroll 💪🏽: Says there is no one there
+[20/02/2023, 20:02:42] Josh 🦒: Zoom meeting
+[20/02/2023, 20:02:47] Josh 🦒: ^
+[20/02/2023, 20:03:58] Milo Carroll 💪🏽: I have arrived
+[20/02/2023, 20:04:45] Milo Carroll 💪🏽: @447387172915 let me in old sport
+[20/02/2023, 20:17:05] Maria: guys tiago would love to join this calls, as he also does ML research, can he join?
+‎[20/02/2023, 20:19:45] Maria: ‎image omitted
+[20/02/2023, 20:36:17] Tom Walker: https://docs.google.com/presentation/d/1PD3yXx4mXbevrFsnlBbMTTbJoZ2bkjOOeRogGyvOFuM/edit?usp=sharing
+[20/02/2023, 20:37:39] David Mlčoch 🦁: https://www.precismo.com/our-technology/
+[20/02/2023, 20:37:54] David Mlčoch 🦁: Check out this company Tom, it might be relevant for you.
+[20/02/2023, 20:39:24] Tiaguito 🦨: ‎Callum 🇿🇦 added Tiaguito 🦨
+[20/02/2023, 20:39:37] YAMLRG: ‎You're now an admin
+[20/02/2023, 20:39:53] Maria: tiago the next call will be in 2 weeks time, callum will be presenting, he will send the paper beforehand so we have time to read it before the call
+[20/02/2023, 20:40:15] Maria: just 1 rule: questions are asked through the hands up feature on zoom, no cutting people presenting
+[20/02/2023, 20:40:41] Maria: if u wanna present an idea feel free to write it down!! you could present what you've been working on at your job, these ppl might have cool ideas
+[20/02/2023, 20:41:30] Maria: shall we make a notion page with details of what each meeting was about and links to the presentations/papers of each meeting?
+[20/02/2023, 20:41:49] Maria: and that way we can keep track of who presented what and when and where we can find more info
+[20/02/2023, 20:43:15] Callum 🇿🇦: There's currently a Google Doc (https://docs.google.com/document/d/14mPAdu7aiVNAbLFwlMA8M_So2HuiXYNe7KyTw4IuxGc/edit?usp=sharing), but I'm happy to move over to Notion ⭐ Still trying to brainstorm the best way to keep everything organised.
+
+👍🏻 Notion
+🙏🏼 Google Suite (Docs / Drive)
+❤️ Other
+[20/02/2023, 20:48:09] David Mlčoch 🦁: Great presentation Tom. I particularly like the new tradition that the presenter needs to calm himself down with a beer during our stupid questions.
+[20/02/2023, 20:55:58] Callum 🇿🇦: If all goes well, we'll meet again in two weeks—on the 6th of March, at 7pm UK time 🙏🏼
+Unless there are any objections, I'm happy to chat about some work I've been doing in MARL :)
+
+The paper will be on ArXiv soon, but here's a sneaky peaky
+https://drive.google.com/file/d/1s4Pp9uPo-GeaetuzkvFlDa8ASJePO4xj/view?usp=sharing
+(Once we've decided on our platform of choice, e.g. Notion, I'll also put resources there ⭐)
+
+Looking forward! 🍻
+[20/02/2023, 20:58:09] ~ Neimhin: Thanks again for leading the charge Tom!
+[20/02/2023, 21:15:33] Tom Walker: Thanks for listening gang x
+[20/02/2023, 21:36:51] Tiaguito 🦨: I’ll see you all in a couple of weeks :)
+[01/03/2023, 07:49:51] Callum 🇿🇦: https://twitter.com/callumtilbury/status/1630819378051596289
+[06/03/2023, 08:14:17] Callum 🇿🇦: Greetings fellow scholars! See y'all tonight, 7pm UK time, for the second instalment of YAMLRG ✊🏼
+[06/03/2023, 19:30:06] Maria: i won't be able to join today :(
+[06/03/2023, 19:30:08] Maria: can you record it?
+[06/03/2023, 20:01:30] Callum 🇿🇦: Will try, but I'm not sure if I can on my personal Google account
+[06/03/2023, 20:01:46] Oisín Nolan: Do we have a zoom link somewhere?
+[06/03/2023, 20:02:33] Callum 🇿🇦: Link is on the calendar invite sorry!
+[06/03/2023, 20:02:56] Oisín Nolan: Is it the google meet?
+[06/03/2023, 20:03:15] Josh 🦒: yes
+[06/03/2023, 20:03:30] Oisín Nolan: Sweet I'll be there in 2
+[06/03/2023, 20:03:40] Callum 🇿🇦: https://meet.google.com/sno-jaqt-oqy
+[06/03/2023, 21:09:17] Josh 🦒: Thanks Callum, super interesting talk!
+[07/03/2023, 00:52:23] Tom Walker: Couldn't make this one unfortunately but I'll be back
+[14/03/2023, 19:16:17] Callum 🇿🇦: https://openai.com/research/gpt-4
+‎[14/03/2023, 19:38:56] Josh 🦒: ‎GIF omitted
+‎[14/03/2023, 19:41:58] David Mlčoch 🦁: ‎GIF omitted
+[14/03/2023, 19:42:36] Maria: damn
+[14/03/2023, 19:42:55] Maria: kinda hoping my company doesn’t figure it out
+[14/03/2023, 19:43:07] Maria: who’s gonna need a junior data engineer now? 😩🤣
+‎[14/03/2023, 19:43:35] David Mlčoch 🦁: ‎image omitted
+[14/03/2023, 19:44:41] Josh 🦒: I did a quick sketch of you while you were sleeping in Prague
+[14/03/2023, 19:48:00] Maria: HAHAHAHAHHAHAHAH
+[19/03/2023, 17:15:37] Tom Walker: Anyone tried Pytorch 2.0 yet
+[19/03/2023, 17:16:15] Callum 🇿🇦: Jax all the way bby xoxo
+[19/03/2023, 17:18:18] Tom Walker: What's the Jax learning curve like
+[19/03/2023, 17:19:46] ~ Neimhin: Hey guys, I've been preparing a presentation on the wav2vec series of papers. How's 19:00 GMT tomorrow?
+
+I'll try to keep it short so we can have some time to discuss a pretty wild past couple of weeks...
+[20/03/2023, 19:05:53] ~ Neimhin: Can we use this link again?
+[20/03/2023, 19:06:06] Maria: i won't be able to join guys, enjoy ❤️
+[20/03/2023, 19:48:18] ~ Neimhin: ‎This message was deleted.
+[20/03/2023, 19:48:30] Callum 🇿🇦: yes, that's the recurring one 👌🏼
+[20/03/2023, 19:48:37] Callum 🇿🇦: or not 😂 either way!!
+[20/03/2023, 19:48:57] ~ Neimhin: haha timing
+[20/03/2023, 19:49:21] ~ Neimhin: https://meet.google.com/sno-jaqt-oqy
+‎[20/03/2023, 21:02:35] Callum 🇿🇦: ‎image omitted
+[28/03/2023, 10:17:15] Josh 🦒: This is a really cool video on splines: https://youtu.be/jvPPXbo87ds
+[28/03/2023, 10:17:20] Josh 🦒: would definitely recommend
+[28/03/2023, 10:17:31] Josh 🦒: dont sleep on the spline
+[29/03/2023, 00:07:49] Ben Clarke: ‎You added Ben Clarke
+[29/03/2023, 07:04:01] Oisín Nolan: https://futureoflife.org/open-letter/pause-giant-ai-experiments/
+‎[29/03/2023, 07:04:25] Oisín Nolan: ‎image omitted
+[29/03/2023, 07:05:23] Oisín Nolan: Petition to stop any AI lab training a model more powerful than gpt-4 for the next 6 months
+[29/03/2023, 07:05:43] Oisín Nolan: Signed by bengio 😮
+[29/03/2023, 08:40:51] Maria: whos Bengio?
+[29/03/2023, 08:41:03] Maria: i mean i can see there who he is but why are you surprised
+[29/03/2023, 10:25:50] Oisín Nolan: Famous deep learning guy, he's the only one on the list who has some deep learning clout (so maybe should be taken seriously), the rest are just famous tech people
+[29/03/2023, 10:26:22] Oisín Nolan: Maybe Stuart russell too, idk who he is though
+[29/03/2023, 11:01:06] ~ Neimhin: Elon only signed that to build hype
+[29/03/2023, 11:01:52] ~ Neimhin: or he's trying to get ahead of the game
+[29/03/2023, 11:01:54] Oisín Nolan: To buy him some time to compete haha
+[29/03/2023, 11:02:55] Tiaguito 🦨: That’s what that open letter is looking a bit like to me. I get some of the points but still a bit sceptical
+[29/03/2023, 11:04:04] ~ Neimhin: They can be perceptive points while still coming from a deceptive motivation
+[29/03/2023, 11:06:31] ~ Neimhin: i agree that the arms race is a bit scary, and i doubt it's accompanied by an appropriate arms race in terms of defense/mitigation/safety
+[29/03/2023, 11:10:11] Oisín Nolan: The AI-risk stuff never resonated with me a whole lot, have yous come across any particularly strong arguments?
+[29/03/2023, 11:11:59] Tiaguito 🦨: I’m mostly concerned about stuff that allows to impersonate someone, like voice and video deepfakes. Especially if there’s no good tool that companies/people can use to identify if a video is fake or not for example
+[29/03/2023, 11:13:54] ~ Neimhin: Imagine gaining access to a network and then saying, hey GPT-4 read all these messages and then send 10,000 spear phising emails using oall the information you rad. Also, please figure out any more vulnerabilities, but do it slowly with a low profile and then launch a ransomware attack.
+[29/03/2023, 11:18:54] ~ Neimhin: But people will start training their own models for nefarious purposes. I don't think the training is too prohibitive. Open letters not going to do nothing if a massive hacker operation can gather the funds to make bespoke systems.
+[29/03/2023, 11:21:17] Oisín Nolan: True yeah I'd say there's a bunch of ppl working on this right now
+[29/03/2023, 11:26:19] Ben Clarke: I think the points in the letter are good and make sense, but it’s never going to happen because companies won’t agree to lose their competitive edge, and countries won’t enforce it because they’d be sceptical of other countries following along with it (thinking of the US and China)
+[29/03/2023, 11:27:40] Tiaguito 🦨: I think it’s fine to develop anything as long as you’re developing the tools to “combat” it along with it and not as an afterthought
+[29/03/2023, 11:34:56] ~ Neimhin: I think this would be much more effective than doing nothing for 6 months.
+[29/03/2023, 11:38:52] Milo Carroll 💪🏽: I think other solutions exist without halting development, like pay to use, Identity requirements, and policy change regarding the use of the tools e.g.determining what would constitute criminal use
+[03/04/2023, 11:36:37] Callum 🇿🇦: hey guys :) I assume no one has prepared anything for tonight? In any case, I won't be able to make this week, nor the following two weeks (due to some visitors 🇿🇦) 😅
+[03/04/2023, 12:53:05] Milo Carroll 💪🏽: ‎This message was deleted.
+[03/04/2023, 12:53:52] Milo Carroll 💪🏽: https://youtu.be/5SgJKZLBrmg
+[05/04/2023, 13:51:53] Ben Clarke: If anyone wants a deep dive into how transformers might work, came across this on Lex’s podcast with Eliezer Yudkowsky https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html
+[05/04/2023, 15:53:26] Maria: https://cat-gpt.com/
+[05/04/2023, 16:32:01] ~ Neimhin: this is uncanny, that's exactly what my cat would say
+[16/04/2023, 22:23:05] Josh 🦒: I guess we are not doing a meeting tomorrow?
+[16/04/2023, 22:32:53] ~ Neimhin: I'm way too busy at the moment, but would love if we could do one next time!
+[17/04/2023, 07:54:15] David Mlčoch 🦁: Yes, I believe so.
+[17/04/2023, 12:25:44] Josh 🦒: @353873491699 very interested to hear about your causal stuff
+[17/04/2023, 12:25:56] Josh 🦒: Can we set that up for when you guys are back from SA?
+[17/04/2023, 13:43:59] Oisín Nolan: Yep I should be able to put something together for Monday 2 weeks from now
+[21/04/2023, 08:07:13] Callum 🇿🇦: https://twitter.com/DeepMind/status/1649097822338449409
+[25/04/2023, 14:05:53] Callum 🇿🇦: https://arxiv.org/abs/2304.12210
+[25/04/2023, 14:17:28] Josh 🦒: Looks cool
+[01/05/2023, 11:41:31] Oisín Nolan: Hey fellow scholars
+[01/05/2023, 11:41:49] Oisín Nolan: If yous are keen to chat about causal machine learning stuff we could do a session this evening
+[01/05/2023, 11:42:12] Oisín Nolan: Don't have anything super formal prepared but there's some interesting papers to chat about
+[01/05/2023, 11:56:13] Josh 🦒: Yes 🙌 👏
+[01/05/2023, 12:37:40] Oisín Nolan: Does 7pm-8pm UK time suit?
+[01/05/2023, 12:56:26] David Mlčoch 🦁: Hi, I'm not sure if I'll make it tonight, it's 51/49, but 7pm is okay.
+[01/05/2023, 19:50:16] Ben Clarke: Is this going ahead at 7 then
+[01/05/2023, 19:56:49] Josh 🦒: Maybe a good idea to postpone when more people can make it?
+[01/05/2023, 20:00:57] David Mlčoch 🦁: I can't make it in the end.
+[01/05/2023, 20:03:16] Oisín Nolan: Yeah could be a shout
+[01/05/2023, 20:03:49] Callum 🇿🇦: Sorry guys, just got home from a weekend in the mountains, and my WiFi is still down -- so I won't be able to join
+[01/05/2023, 20:05:32] Oisín Nolan: Yeah no prob. Let's call it off for this evening so
+[01/05/2023, 20:06:43] David Mlčoch 🦁: Sorry about that, looking forward to hear about some casual stuff next time!
+[01/05/2023, 20:07:25] Oisín Nolan: All g, I didn't have anything too elaborate planned, if folks are interested we can arrange a session another time
+[01/05/2023, 22:13:53] Josh 🦒: Yes I’m definitely keen, how about another evening this week?
+[01/05/2023, 22:20:34] ~ Neimhin: I'd love to do Friday
+[01/05/2023, 22:39:38] Oisín Nolan: ‎POLL:
+Which day?
+‎OPTION: Wednesday (3 votes)
+‎OPTION: Thursday (3 votes)
+‎OPTION: Friday (1 vote)
+‎OPTION: Saturday (0 votes)
+‎OPTION: Sunday (0 votes)
+‎OPTION: Later (0 votes)
+[02/05/2023, 00:35:32] David Mlčoch 🦁: https://www.nytimes.com/2023/05/01/technology/ai-google-chatbot-engineer-quits-hinton.html
+[04/05/2023, 14:16:30] Oisín Nolan: Would yous be keen for a session this evening?
+[12/05/2023, 16:14:16] Maria: hey guys
+[12/05/2023, 16:14:27] Maria: i'm giving a talk about my plastic surgeon thing next monday in heriot watt
+[12/05/2023, 16:14:55] Maria: and since i have big time anxiety when it comes to presenting i've been thinking of doing a pre rundown on sunday
+[12/05/2023, 16:14:58] Maria: the talk is only 10 mins
+[12/05/2023, 16:15:09] Maria: would y'all be willing to listen to me for 10 mins and be my guinea pigs
+[12/05/2023, 16:17:12] Maria: if yes, what time?
+[12/05/2023, 16:22:17] Andrés 🤓: I’m away this weekend 😢😢😢
+[14/05/2023, 13:28:56] Callum 🇿🇦: Sorry for not replying sooner!! When were you thinking? I have some time this afternoon :)
+[14/05/2023, 22:19:32] David Mlčoch 🦁: 19:00
+[14/05/2023, 22:54:26] Maria: it’s okay i presented to josh and mari 🥰
+‎[12/06/2023, 19:21:52] Maria: ‎sticker omitted
+[12/06/2023, 19:21:59] Maria: today is Y A M L R G day
+[03/08/2023, 11:02:32] Tom Walker: https://arxiv.org/search/?query=LK-99+&searchtype=all&source=header
+[03/08/2023, 11:02:57] Tom Walker: What we thinking about all this superconductor stuff then
+[03/08/2023, 11:04:28] Tom Walker: If you think it's legit I'd start investing in the ingredients
+[03/08/2023, 11:07:53] Maria: i've seen it all over twitter in the past days
+[03/08/2023, 11:08:21] Maria: sorry, on 𝕏
+[03/08/2023, 13:43:40] Ben Clarke: I have not been following, could you fill me in?
+[03/08/2023, 13:44:22] David Mlčoch 🦁: Biggest revolution of our time or just a big scam.
+[03/08/2023, 13:45:46] David Mlčoch 🦁: https://www.bloomberg.com/news/articles/2023-08-03/room-temperature-superconductor-and-lk-99-what-to-know
+[03/08/2023, 13:51:42] Ben Clarke: Can’t read the article but think I get the just
+[03/08/2023, 13:51:56] Ben Clarke: Gist*
+[03/08/2023, 14:12:00] Tiaguito 🦨: Depends on whether it’s actually as good as the initial claims and if it’s scalable or just something to have fun with in research labs
+[03/08/2023, 14:13:46] Milo Carroll 💪🏽: I read two different labs have replicated each half of the claims, eg superconductivity one at ambient temps, and one at room pressure but no one has replicated both
+[10/08/2023, 13:57:23] Callum 🇿🇦: https://twitter.com/pfau/status/1689582826801205248
+(Video of the paper: https://www.youtube.com/watch?v=T_kXY43VZnk)
+[11/08/2023, 03:08:35] Tom Walker: It's cool but you get no geometry
+[11/08/2023, 03:09:53] Tom Walker: Even less structure than NeRF
+[11/09/2023, 15:06:06] Callum 🇿🇦: https://pair.withgoogle.com/explorables/grokking/
+[11/09/2023, 16:32:03] Maria: https://www.benzinga.com/markets/cryptocurrency/23/09/34410474/venture-capitalist-who-predicted-2022-crypto-market-bottom-expects-2-500-rally-for-solana?utm_campaign=partner_feed&utm_source=cryptopanic.com&utm_medium=partner_feed&utm_content=site u send ai i send crypto 😛
+‎[11/09/2023, 16:33:16] Callum 🇿🇦: ‎image omitted
+‎[12/09/2023, 15:03:51] David Mlčoch 🦁: ‎image omitted
+[10/06/2024, 19:14:33] YAMLRG: ‎You changed the group description
+[10/06/2024, 19:14:55] Maria: Let’s bring this back
+[10/06/2024, 19:15:09] Maria: Would love a quick update on your phds @447387172915 @353873491699
+[10/06/2024, 19:15:50] Maria: Would you be keen on a 15 min presentation (+15 min Q&A) some evening?
+[10/06/2024, 19:46:10] Ben Clarke: Yeah now we’ve got a few PhDers in the mix it should be really good
+[10/06/2024, 19:46:17] Ben Clarke: I’m keen to listen!
+[10/06/2024, 19:59:13] Callum 🇿🇦: Would love to chat about some of my recent neurips work too! 🥰
+[10/06/2024, 19:59:26] Callum 🇿🇦: And v keen to listen about everyone else's work!
+[10/06/2024, 20:42:52] Maria: Ok let’s do one each Monday, since we still have the Monday invites
+[10/06/2024, 20:54:35] Oisín Nolan: Yeah I'm down, look forward to hearing about what everyone's up to! ‎<This message was edited>
+[10/06/2024, 20:57:45] Maria: Oki cool 🆒🥰
+[11/06/2024, 20:15:12] Ben Clarke: I’d maybe space them out a bit more. Like every other Monday or every month. Otherwise we’re going to run out of presentations and people will need time to prepare stuff
+[21/06/2024, 07:03:04] Maria: @353873491699
+[21/06/2024, 07:03:08] Maria: Send ur new paper here
+[21/06/2024, 07:04:20] Oisín Nolan: http://arxiv.org/abs/2406.14388
+[06/07/2024, 16:06:05] Maria: hi
+[06/07/2024, 16:10:26] David Mlčoch 🦁: hi hi hi
+[06/07/2024, 16:11:08] Maria: https://marialuquea.notion.site/YAMLRG-9613c70148514adea983217ccba6bedd?pvs=4
+[06/07/2024, 16:11:18] Maria: @353873491699 can you present your paper to us next monday at 19:00?
+[06/07/2024, 16:12:31] Maria: Your name will be added to the ‘Brought to you by’… if you present something ‎<This message was edited>
+[06/07/2024, 16:13:01] Maria: also i would like to post about this on linkedin and allow other people to join the presentations? and also you could post about presenting to a group of AI scientists 🤓
+[06/07/2024, 18:18:20] Oisín Nolan: Sure, do you mean the 8th or the 15th?
+[06/07/2024, 19:15:30] Maria: Whenever you prefer
+[06/07/2024, 19:17:23] Oisín Nolan: ‎POLL:
+Which day?
+‎OPTION: 8th (3 votes)
+‎OPTION: 15th (2 votes)
+[07/07/2024, 15:31:02] Maria: Ok so tomorrow??
+[07/07/2024, 23:37:49] Oisín Nolan: Im down for tomorrow yeah!
+[07/07/2024, 23:44:26] Maria: The event luma is here
+[07/07/2024, 23:44:36] Maria: It has the Google link
+[07/07/2024, 23:44:37] Ben Clarke: Let’s get an invite with a time sent out!
+[07/07/2024, 23:44:43] Maria: It is out
+[07/07/2024, 23:45:08] Maria: https://lu.ma/3n37jjsz
+[08/07/2024, 10:57:27] Maria: Topay at 7pm @353873491699 will present to us his recent published paper, join us here https://lu.ma/3n37jjsz
+[08/07/2024, 10:57:27] Maria: Topic: YAMLRG 1
+Time: *Jul 8, 2024 07:00 PM London*
+
+Join Zoom Meeting
+https://us04web.zoom.us/j/74374605556?pwd=KWpyz642OXeI8lmdWwUIfmKPzTQnZj.1
+
+Meeting ID: 743 7460 5556
+Passcode: z-9901
+[08/07/2024, 21:05:57] Oisín Nolan: https://arxiv.org/pdf/2405.00981
+[08/07/2024, 21:06:05] Oisín Nolan: Here's that paper btw @420720656933
+[08/07/2024, 21:06:37] David Mlčoch 🦁: Thanks
+[08/07/2024, 21:06:39] David Mlčoch 🦁: Oisín is the next Andrei Karpathy
+[08/07/2024, 21:06:56] Callum 🇿🇦: 100%
+[08/07/2024, 21:07:06] Callum 🇿🇦: and David is the next Elon 🤡
+[08/07/2024, 21:07:10] David Mlčoch 🦁: Making Bayesian accessible to the masses
+[08/07/2024, 21:11:07] Maria: Oisin that was so extremely good
+[08/07/2024, 21:11:15] Maria: Thank you man you’ve set the bar really high
+[08/07/2024, 21:11:22] Maria: Also @447342791480 great questions
+[08/07/2024, 21:11:44] Maria: Im editing the video now and will post here when it’s ready
+[08/07/2024, 21:11:47] Tiaguito 🦨: Sorry I couldn’t join. I’ve been working until now
+I’ll do my best to join the next one
+[08/07/2024, 21:12:03] Maria: Yes Tiaguito!!! You should present what you do at work too
+[08/07/2024, 21:12:13] Maria: Im sure it’ll be super interesting
+[08/07/2024, 21:13:35] Tiaguito 🦨: Wouldn’t be very technical though
+[08/07/2024, 21:15:29] Oisín Nolan: Thanks for getting the ball rolling again @447599973293, hyped for everyone else talks!
+[08/07/2024, 21:27:29] Ben Clarke: Put my name down for an LLM related talk
+[08/07/2024, 21:27:56] Maria: it feels like we have a lot of talks to go through
+[08/07/2024, 21:28:09] Ben Clarke: That’s good
+[08/07/2024, 21:28:14] Maria: ‎POLL:
+How often shall we do this?
+‎OPTION: Every Monday (0 votes)
+‎OPTION: Every 2 Mondays (9 votes)
+[08/07/2024, 22:16:53] Maria: Video recording -> https://youtu.be/QhXiyQYkc80
+‎[08/07/2024, 22:20:37] Maria: ‎image omitted
+[08/07/2024, 22:20:56] Maria: dates can be switched
+[08/07/2024, 22:21:04] Maria: if anyone wants to switch with me and do it in 2 weeks let me know!
+[09/07/2024, 01:00:58] David Mlčoch 🦁: https://www.gaussfacts.com/top
+[18/07/2024, 16:53:56] Maria: https://lu.ma/325bmmbp sign up for next monday’s meeting
+[18/07/2024, 16:53:58] Maria: callum will be presenting
+[18/07/2024, 16:54:04] Maria: i didn’t have time to prepare lol soz
+[18/07/2024, 16:54:09] Maria: send it to anyone who you think might be interested
+[20/07/2024, 12:50:39] Maria: reminder that this is on monday at 7pm
+[20/07/2024, 12:50:42] Maria: who will join?
+‎[20/07/2024, 12:57:44] Callum 🇿🇦: ‎sticker omitted
+[20/07/2024, 13:06:48] Maria: @447342791480 i want some good ass questions like last time
+[22/07/2024, 08:49:53] YAMLRG: ‎You changed the group name to “YAMLRG”
+[22/07/2024, 08:50:02] Maria: Hellooo reminder this is today at 7pm uk time
+[22/07/2024, 19:34:46] Oisín Nolan: Hey guys i cant make it this eve unfortunately, on vacation and dont have signal, but look forward to watching the recording later!
+[22/07/2024, 19:35:05] Maria: There’s no recording for this one
+[22/07/2024, 19:35:24] Maria: I’ll try my best to give you a summary hahaha
+[22/07/2024, 19:57:33] Maria: https://us04web.zoom.us/j/75073609668?pwd=8WTTq7bGN5MIjCCskRqpi7fhHMvxix.1
+[22/07/2024, 20:01:24] Ben Clarke: Joining now
+[22/07/2024, 20:31:14] Maria: Part 2 -> https://us04web.zoom.us/j/77669183799?pwd=YLStqrN1oKbwV6PjKnSy5d6cIkIWxh.1
+[22/07/2024, 20:56:39] Ben Clarke: Can you share all the links and slides here?
+[22/07/2024, 20:56:54] Callum 🇿🇦: will do!
+[22/07/2024, 21:02:04] Callum 🇿🇦: Paper: https://arxiv.org/abs/2407.01343
+[22/07/2024, 21:02:20] Callum 🇿🇦: Notebook: https://tinyurl.com/pjap-polygames
+[22/07/2024, 21:02:52] Callum 🇿🇦: Slides: https://docs.google.com/presentation/d/18I1iWoyl6cpt2RqMo7s1iMN9NQD38zUmW5TF-rnOmoA/edit?usp=sharing
+[22/07/2024, 21:03:01] Maria: they’re also in the notion doc
+‎[22/07/2024, 21:03:06] Maria: ‎sticker omitted
+[22/07/2024, 21:05:28] Maria: i’ve decided from now on i’ll be doing a Best question award at every meeting
+[22/07/2024, 21:05:37] Maria: to encourage people to ask questions
+[22/07/2024, 21:05:40] Maria: any ideas on the prize?
+[22/07/2024, 21:07:36] Ben Clarke: Make a web page with the winner every two weeks lol
+[22/07/2024, 21:07:45] Ben Clarke: Like an employee of the month award
+[22/07/2024, 21:07:50] Ben Clarke: I think that’ll be enough
+[22/07/2024, 21:08:02] Ben Clarke: Or shoutout at the start of the next meeting 😂
+[22/07/2024, 21:08:09] Maria: ok yea i like shoutout
+[22/07/2024, 21:08:15] Maria: ben you won the first one
+[22/07/2024, 21:08:17] Maria: josh won this one
+[22/07/2024, 21:08:50] Ben Clarke: Hmm idk Josh had quantity but not quality
+[22/07/2024, 21:12:11] Maria: next event -> https://lu.ma/bej9uw1d
+‎[23/07/2024, 20:01:05] Maria: ‎image omitted
+[23/07/2024, 22:19:17] Ben Clarke: Thanks for the organisation Maria
+[23/07/2024, 22:19:50] Ben Clarke: Btw is there a video service we can use for free past 30 mins without having to switch?
+[23/07/2024, 22:51:30] David Mlčoch 🦁: Google meet
+[23/07/2024, 22:51:43] Maria: no that’s also 45 mins
+[23/07/2024, 22:52:16] David Mlčoch 🦁: 60
+[23/07/2024, 22:52:56] Maria: i had a meeting there today and it only let me do 45
+‎[23/07/2024, 22:53:44] Maria: ‎image omitted
+[25/07/2024, 17:16:10] Callum 🇿🇦: https://x.com/callumtilbury/status/1816489404766224479 🫡❤️
+[25/07/2024, 17:44:07] Maria: How do you know there’s gonna be 16 posts
+[26/07/2024, 12:41:05] Callum 🇿🇦: gotta plan 💅 (plus our corporate people have to approve the posts, so it’s written out in a google doc beforehand)
+[01/08/2024, 12:45:24] Maria: hello bitches
+[01/08/2024, 12:45:49] Maria: could i interview you for my side project? it’s a 30 min call with me whenever you’re free
+[05/08/2024, 12:18:28] Maria: guys
+[05/08/2024, 12:18:33] Maria: how can we record the meeting today?
+[05/08/2024, 12:18:39] Maria: zoom only let’s me do 40 mins
+[05/08/2024, 12:25:05] Maria: ok we’re using jitsi
+[05/08/2024, 12:26:15] Josh 🦒: https://meet.jit.si/PassionateGuidelinesAwardNotably
+[05/08/2024, 12:37:12] Maria: any chance we can move the call to 6pm? does anyone disagree?
+[05/08/2024, 12:41:06] Maria: I moved it to 6pm
+[05/08/2024, 14:23:11] Callum 🇿🇦: I won't be able to attend 6pm uk :(( I'll hope on when I can, otherwise looking forward to hearing the recording!
+[05/08/2024, 14:24:01] Josh 🦒: Maybe we can do 6:30?
+[05/08/2024, 14:28:28] Callum 🇿🇦: Yeah will try make a plan for that!
+[05/08/2024, 14:28:40] Maria: ok i’ll change the luma event lol
+[05/08/2024, 14:28:49] Maria: are you guys getting emails when i modify it?
+[05/08/2024, 14:29:18] Josh 🦒: yes but you should maybe send out an additional message
+‎[05/08/2024, 14:30:14] Maria: ‎image omitted
+[05/08/2024, 14:30:23] Maria: did u get it? hahaha
+‎[05/08/2024, 14:31:02] David Mlčoch 🦁: ‎image omitted
+[05/08/2024, 14:31:03] Josh 🦒: Yes
+[05/08/2024, 14:33:19] Maria: hahah
+[06/08/2024, 12:00:13] Jamie Martin EF: ‎Jamie Martin EF joined using this group's invite link
+[06/08/2024, 12:11:07] Daan EF: ‎Daan EF joined using this group's invite link
+[06/08/2024, 12:11:33] Daan EF: Hey guys 👋
+[06/08/2024, 12:11:43] Daan EF: Thanks for the talk yesterday @447511419289
+‎[06/08/2024, 12:12:24] Maria: ‎image omitted
+[06/08/2024, 12:12:37] Maria: it was great!!
+[06/08/2024, 12:13:49] Maria: So, WHO’S PRESENTING NEXT????
+[06/08/2024, 12:15:10] Josh 🦒: You? I was supposed to learn about crypto a month ago
+[06/08/2024, 12:15:28] Maria: ugh fine i’ll do it hahah
+[06/08/2024, 12:15:53] Maria: but it’s a busy month for me, gotta keep mami and papi happy while they visit me
+[06/08/2024, 12:15:56] David Mlčoch 🦁: Topic: Steps how to open untraceable crypto wallet and deposit money
+[06/08/2024, 12:16:02] Jamie Martin EF: I would offer, but.. I’m off on holiday. Happy to do one in future though!
+[06/08/2024, 12:16:03] Josh 🦒: Can one slide be a demo of how to deposit into poly market
+[06/08/2024, 12:16:28] Maria: _will not be recorded_
+[06/08/2024, 12:16:41] David Mlčoch 🦁: I'm happy to do one in the future as well, I'm deciding on the topic now
+[06/08/2024, 12:16:55] Josh 🦒: I think lots of us are off for the next 2 weeks? Should be have a summer intermission?
+[06/08/2024, 12:16:59] Maria: i thought you were presenting: “David and how he developed AGI”
+[06/08/2024, 12:17:33] David Mlčoch 🦁: Oh true, but that's old news, AGI has been achieved internally
+[06/08/2024, 12:43:01] Maria: https://www.linkedin.com/posts/marialuqueanguita_yesterday-joshua-gave-us-a-presentation-on-activity-7226538019820851201-n_GY?utm_source=share&utm_medium=member_desktop
+[06/08/2024, 15:26:55] Rory EF: ‎Rory EF joined using this group's invite link
+[08/08/2024, 13:59:27] Callum 🇿🇦: https://x.com/karpathy/status/1821277264996352246
+🎯 from 🐐
+[08/08/2024, 22:49:16] Jamie Martin EF: Along similar lines, I read a great blog post on post-training, a pretty hot topic at the moment (given most performance gains since release of GPT-4 can be attributed to this, and not scale.
+
+https://www.interconnects.ai/p/frontier-model-post-training
+[09/08/2024, 08:27:44] Jamie Martin EF: A video demonstration about how to prompt inject Apple intelligence (downloading the beta pre-release version).
+https://youtu.be/i4Yba_JVFU8?si=cZoudCD2gEpZuJHx
+[19/08/2024, 12:59:53] Tom Farrand EF: ‎Tom Farrand EF joined using this group's invite link
+[19/08/2024, 13:06:32] Maria: Welcome @447908088729 to our dear yamlrg 🎉! He’s a chemical engineer by training but has since transitioned into tech, where he's now the Director of Product at CausalLens, and will be presenting the next talk on Sept 2nd 🕺🦾
+[19/08/2024, 13:22:42] Maria: Join here! https://lu.ma/d4woib85
+[19/08/2024, 14:02:11] Maria: if you’re in this chat already u don’t need to paste your linkedin link lol, just write whatever you want there, i would appreciate a dad joke
+[19/08/2024, 14:28:36] Tom Farrand EF: Hey everyone! As Maria mentioned I’ll be presenting on the 2nd of Sept. 
+
+I’ll be presenting a paper I published in 2020 on privacy preserving machine learning techniques: https://arxiv.org/abs/2009.06389
+
+Why should you tune in? 
+- Learn WTF differential privacy is and how it can be applied to prevent information leakage in DL models 
+- ⁠understand the tradeoffs between increasing privacy and model accuracy and fairness across subgroups in the data 
+- ⁠Finally, if you’re interested in publishing ML research, hear how I approached getting published as a total outsider/moron 🦧 
+
+Will keep it light hearted and causal 😎
+[19/08/2024, 18:55:52] Matthew Spaul Nova: ‎Matthew Spaul Nova joined using this group's invite link
+‎[19/08/2024, 18:56:18] Matthew Spaul Nova: 2407.14933v2.pdf • ‎41 pages ‎document omitted
+[19/08/2024, 18:58:04] Matthew Spaul Nova: Hi all, I'm Matt!
+[19/08/2024, 18:58:49] Matthew Spaul Nova: I'm based in London and I build custom LLMs with governments mainly
+[19/08/2024, 18:59:32] Maria: Matt is a friend from Nova and always sends very fun quirky events in London hahah
+[19/08/2024, 19:03:27] Tom Farrand EF: Any paper with Sara Hooker as an author is a good 'un- thanks for sharing @447858270830
+[19/08/2024, 19:09:08] YAMLRG: ‎You turned on admin approval to join this group
+[19/08/2024, 19:09:39] YAMLRG: ‎You changed the settings so only admins can edit the group settings
+[20/08/2024, 16:48:35] Matthew Spaul Nova: https://arxiv.org/abs/2405.14755
+[20/08/2024, 16:48:58] Matthew Spaul Nova: Paper corresponding to this article: https://news.mit.edu/2024/researchers-use-large-language-models-to-flag-problems-0814
+[21/08/2024, 20:48:55] Callum 🇿🇦: https://www.youtube.com/watch?v=nL9jEy99Nh0
+Banger from Chollet
+[22/08/2024, 22:44:56] Maria: For research
+[22/08/2024, 22:45:22] Maria: ‎POLL:
+What do you use on a weekly basis
+‎OPTION: WhatsApp (11 votes)
+‎OPTION: Discord (2 votes)
+‎OPTION: Telegram (0 votes)
+‎OPTION: Other (pls let me know) (0 votes)
+[23/08/2024, 12:42:05] David Mlčoch 🦁: Probably some of you have already read it, but I highly recommend this from Leopold Aschenbrenner -> Articulating in detail the future likelihood of superintelligence in this decade: 
+https://situational-awareness.ai/wp-content/uploads/2024/06/situationalawareness.pdf
+[23/08/2024, 16:58:53] Daan EF: What do think? Are we gonna see AGI in this decade?
+[23/08/2024, 17:01:29] David Mlčoch 🦁: If your AGI definition is centered around "replacing most economical-viable work" (think drop-in remote worker, "task oriented AI"), then I think it's very likely.
+[23/08/2024, 17:02:15] David Mlčoch 🦁: But Chollet will argue that the AI is not intelligent even after it replaces him.
+[23/08/2024, 17:02:56] Daan EF: 😂😂
+[29/08/2024, 20:29:04] Maria: https://chat.whatsapp.com/DMqsymB8YmFD5za7R9IdwO
+[29/08/2024, 20:29:11] Maria: Wrong person 😂
+[29/08/2024, 20:29:39] ~ Pablo: ‎~ Pablo requested to join
+[29/08/2024, 23:31:56] ~ Pablo: ‎~ Pablo joined using this group's invite link
+[30/08/2024, 10:33:45] Matthew Spaul Nova: Anthropic published all their system prompts https://docs.anthropic.com/en/release-notes/system-prompts
+[30/08/2024, 20:43:47] Maria: Reminder our next talk is on Monday by @447908088729 💃🏽 sign up here pls lu.ma/yamlrg
+‎[31/08/2024, 14:23:35] Matthew Spaul Nova: ‎image omitted
+[31/08/2024, 14:23:54] Matthew Spaul Nova: https://x.com/nearcyan/status/1829674215492161569?t=UQU1sf0mDiO_BkjqHWkg_w&s=19
+[31/08/2024, 14:24:43] Matthew Spaul Nova: There is minor statistical evidence that LLMs are lazier during holiday periods
+[31/08/2024, 14:39:08] Maria: HAHAHAHAHHA
+[01/09/2024, 13:39:22] Karl Gustav EF: ‎Karl Gustav EF requested to join
+[01/09/2024, 16:47:30] Karl Gustav EF: ‎Karl Gustav EF joined using this group's invite link
+[02/09/2024, 10:02:11] Maria: Reminder today: lu.ma/yamlrg
+[02/09/2024, 10:02:38] Maria: Can someone tell me at what UK time this event is? It says 19:30 for me but I’m not sure if it’s because I’m in Spain or that’s the uk time
+[02/09/2024, 10:02:52] Maria: Ah 18:30 BST alrighty
+[02/09/2024, 16:22:44] Matthew Spaul Nova: Hi all, next Tuesday eve my company is hosting a panel in London on agentic LLM systems. I have a few invites I can send so DM me if you're interested
+[02/09/2024, 19:10:51] Maria: 20 mins!
+[02/09/2024, 19:11:08] Maria: I’ll send link in a sec (it is not the invite link)
+[02/09/2024, 19:25:36] Maria: Join Zoom Meeting
+https://us02web.zoom.us/j/81553017245?pwd=uf3JNfRyLBYRKMpmaaYMCl67tBiepX.1
+
+Meeting ID:  815 5301 7245
+Passcode: 210493
+[03/09/2024, 09:45:36] Tom Farrand EF: Interesting applied paper for anyone building/thinking of building Gen AI products: https://arxiv.org/abs/2405.20362
+
+Shows how real world products have far higher hallucination rates than you might expect and typical hallucination reduction techniques (read RAG) don’t solve the challenge
+[03/09/2024, 10:16:58] David Mlčoch 🦁: Has it been recorded? I unfortunately couldn't join, but I'd love to watch it!
+[03/09/2024, 10:26:35] Tom Farrand EF: It was yeah, Maria will be uploading it to YouTube later today
+[03/09/2024, 10:58:35] Ben Clarke: I’ll watch it too, sorry I couldn’t be there for that one!
+[03/09/2024, 12:11:13] Maria: https://youtu.be/cKFWrLKZR8s
+[03/09/2024, 15:45:42] Matthew Spaul Nova: https://arxiv.org/abs/2408.16737
+[09/09/2024, 13:27:42] Maria: who wants to present next? or do you have anyone in mind that would?
+[09/09/2024, 17:08:00] Maria: https://lu.ma/39hh22d8 I got an invite for this on LinkedIn
+[09/09/2024, 17:21:14] Ben Clarke: I signed up
+[09/09/2024, 18:25:10] Maria: You also signed up to give a presentation in September
+[09/09/2024, 23:12:11] Karl Gustav EF: Can we present other peoples work? For example I read a paper and then tell you guys about it?
+[09/09/2024, 23:13:15] Maria: Of course
+[10/09/2024, 01:04:16] David Mlčoch 🦁: Btw strawberry 🍓 from OpenAI is coming out this week 👀 (insider info)
+[10/09/2024, 11:39:00] Oisín Nolan: This is pretty cool, new optimizer that seems to be significantly better than Adam. It looks like it ~doubles the sample efficiency (!)
+https://arxiv.org/abs/2409.03137
+[11/09/2024, 10:40:57] Maria: okay people
+[11/09/2024, 10:41:05] Maria: WHO’S NEXT
+[11/09/2024, 10:41:21] Maria: @447342791480 you wanted to give one about NLP ‎<This message was edited>
+[11/09/2024, 10:41:32] Maria: @420720656933 you wanted to talk about how you are achieving agi
+[11/09/2024, 10:41:42] Maria: @447469816610 wanna talk about a paper?
+[11/09/2024, 10:42:28] Maria: @447449292626 can we know what you’re working on in UCL?
+[11/09/2024, 10:43:21] Maria: I’ve also asked Gigi cuz I think she got her paper into neurips
+[11/09/2024, 10:43:30] Maria: @447387172915 wbu?
+[11/09/2024, 10:44:04] Maria: actually i could give one too lol but would you guys listen to me blab about crypto and gnns?
+[11/09/2024, 10:51:53] Jamie Martin EF: I would offer to do one, but I’m currently out of country, and a lot to catch up on when I’m back, so can’t do the next one, but count me in for future.
+[12/09/2024, 21:38:50] Ben Clarke: https://openai.com/index/introducing-openai-o1-preview/
+[17/09/2024, 16:49:24] Gigi ⚡️: ‎Gigi ⚡️ requested to join
+[17/09/2024, 17:42:09] Gigi ⚡️: ‎Gigi ⚡️ joined using this group's invite link
+[19/09/2024, 16:52:23] Maria: Gigi will be presenting to us on the 14th Oct ❤️ her paper “How big is big enough”
+[19/09/2024, 16:52:30] Maria: 👀😂
+[19/09/2024, 16:57:34] Maria: sign up here lu.ma/yamlrg and because @27782426142 is now back in the UK we will prepare some surprises hehe
+[19/09/2024, 20:11:35] Matthew Spaul Nova: https://storm.genie.stanford.edu/
+[19/09/2024, 20:11:58] Matthew Spaul Nova: New Stanford LLM-based research tool ^
+[19/09/2024, 21:56:51] Jamie Martin EF: Nice share. Good to see it’s really progressing. It’s the best I’ve seen to do this kind of thing.
+
+That said, for deeper topics I’ve just tried it’s still not quite reliable enough to trust. Getting close though! ‎<This message was edited>
+[20/09/2024, 17:40:34] ~ Sara Valls: ‎~ Sara Valls requested to join
+[20/09/2024, 17:45:07] ~ Sara Valls: ‎~ Sara Valls joined using this group's invite link
+[20/09/2024, 18:23:21] ~ Carolina: ‎~ Carolina requested to join
+[20/09/2024, 18:53:26] ~ Carolina: ‎~ Carolina joined using this group's invite link
+[22/09/2024, 14:19:05] Rafael EF: ‎You added Rafael EF
+[22/09/2024, 21:45:02] YAMLRG: ‎You changed the group description
+[22/09/2024, 21:54:50] Maria: Hello smarty asses, a couple of you joined recently, would you mind doing a quick intro? 
+
+🎭 Who are you??? 
+
+❓what do you do? / what are you building? / are you solving AGI? 
+
+🧘‍♀️whatever you wanna say really, I was gonna say add a fun fact about yourself but even I struggle to find one of these when under pressure!
+[22/09/2024, 21:55:55] Maria: Mainly @34661843660 since you’ll be presenting the next talk!! (Join here lu.ma/yamlrg) 
+And also @34691848019 @34655448959 @447865294193 🥰
+[22/09/2024, 21:58:45] ~ Jack: ‎~ Jack requested to join
+[22/09/2024, 21:59:43] ~ Jack: ‎~ Jack joined using this group's invite link
+[23/09/2024, 10:35:03] Gigi ⚡️: Hey 👋🏻 I’m Guiomar, but most people call me Gigi. I’m originally from Spain. I completed my undergraduate degree (MMath) in Edinburgh, where I met Maria and many others in this group. I’ve just started my third year of PhD in Statistical ML, jointly between Imperial and Oxford. My research aims to answer the general question of how to tune the size of neural networks *while they are training* . If you think about it, the cost of large neural networks is primarily determined by their size, which depends on architectural choices like the number of layers, layer sizes, and weight structures. The difficulty with setting these parameters is that they have to be fixed *before* training, even though their impact on performance only becomes clear *after* training. Currently, finding the right architecture is often a trial-and-error process that involves significant human intervention. My research aims to automate this process during training, which will hopefully decrease costs. The talk on the 14th of October will focus on the work I did on adaptive capacity for shallow models and its impact on continual learning. 
+
+Other than that, I think coffee, running and a good chat describe me pretty well haha 🏃‍♀️☕️ 🤩 ‎<This message was edited>
+[23/09/2024, 10:36:31] Maria: So proud 🥹❤️
+[23/09/2024, 13:05:49] Rafael EF: Heyo! My name's Rafa, I build with AI to accelerate my life; among others I've built a paper reading bot, and a scientific figure generator :)
+I'm from Slovenia; spent a good chunk of time nomading between EU, UK and US
+[23/09/2024, 15:50:13] ~ Akash Bajwa: ‎~ Akash Bajwa requested to join
+[23/09/2024, 15:50:20] ~ Akash Bajwa: ‎~ Akash Bajwa joined using this group's invite link
+[23/09/2024, 16:43:21] ~ Jack: Nice to meet y'all, I'm Jack, did my PhD at UNC chapel hill on multiscale modeling of protein hydrogels using a good bit of ML and I worked with Rafa on some of those projects. Now I make cookies and am developing a model for automated recipe formulation. 
+I'm from the US  and uh, I have taste-location synesthesia
+[23/09/2024, 16:45:43] Jamie Martin EF: Taste-location synesthesia? I’ve never heard of that and didn’t even know that could be a thing!
+[23/09/2024, 16:50:37] ~ Jack: I got a concussion in high school and had a bunch of things miswire. It's basically just that when I taste food it falls into a spectrum in my head, that I can anchor a flavor and the rest will be relative to it. Very useful for figuring out new flavor combinations
+[23/09/2024, 19:48:40] ~ Sara Valls: Hey everyone 👋🏻
+My name is Sara and I’m currently working as a Data Engineer in a blockchain startup based in Geneva 🇨🇭, but I’m originally from Spain 🇪🇸 
+Some months ago I become more interested in machine learning and research, and I’m planning to do a master in cs/ml next year (currently filling the applications 💪🏻)
+
+Apart from work, I love running and I’m currently learning French (any tips are welcome!)
+
+Looking forward to join the next session 🤗
+[23/09/2024, 23:31:47] Jamie Martin EF: Following this, there’s rumours opus 3.5 is dropping tomorrow. Let’s see..
+
+https://x.com/rowancheung/status/1838280020642676802?s=46&t=rXPn6MNSQPs2TLaxBtyGog
+[24/09/2024, 17:43:27] Rafael EF: Probably related, but OpenAI has started rolling out O1 API access to tier 4 developers at 100/min
+[24/09/2024, 17:44:20] ~ Jack: Oooo
+[24/09/2024, 22:26:22] Jamie Martin EF: It was new Gemini models
+[24/09/2024, 22:26:53] Matthew Spaul Nova: 🙄
+[25/09/2024, 00:57:37] ~ Carolina: Hello beautiful people 🙌🏻😄 
+
+Glad to be here! It was nice to read all the previous introductions 😊. 
+
+I'm Carolina. I recently graduated from both BS in CS and BBA in 🇪🇸, with an exchange in 🇨🇭. I'm currently working in Barcelona as an AI SE at Oracle. But I'm planning to move to either a German or English speaking country in Europe in some months.
+
+The project I enjoyed doing the most was implementing a DQN algorithm from scratch (RL). Right now, I'm working  with vector space models at work (just started). 
+
+As for the fun fact, I'm a musician (classical music), and I'll be traveling to London and Cambridge this weekend. If somebody is around and wants to hang out, please let me know 😃
+[25/09/2024, 20:41:46] Jamie Martin EF: https://ai.meta.com/blog/llama-3-2-connect-2024-vision-edge-mobile-devices/
+[25/09/2024, 21:43:11] Karl Gustav EF: Open AI CTO is leaving!!!
+
+https://x.com/miramurati/status/1839025700009030027 ‎<This message was edited>
+[25/09/2024, 22:08:08] Daan EF: no fucking way 👀👀
+[25/09/2024, 22:08:21] Daan EF: they will have no one left wtf
+‎[25/09/2024, 22:22:52] Jamie Martin EF: ‎image omitted
+[26/09/2024, 18:51:20] ~ Jack: I heard a theory that they are being automated out, partially due to the increasing onus on security procedures and partially as a bid for power
+[26/09/2024, 21:14:29] Ben Clarke: I just downloaded Cursor and can’t believe I haven’t been using it…
+[26/09/2024, 21:14:52] Ben Clarke: I’m migrating a library version and I’m pretty sure I’m 10X more efficient with it
+[26/09/2024, 21:15:07] Ben Clarke: For this use case at least
+‎[26/09/2024, 21:15:29] Maria: ‎image omitted
+[26/09/2024, 21:15:33] David Mlčoch 🦁: I always wondered why people don't listen to me..
+[26/09/2024, 21:16:23] Rafael EF: It's amazing, data hungry tho
+Can't use it without going through Cursor servers, even if using your own api key
+[26/09/2024, 21:17:13] Maria: By the way today @447540236302 was talking a lot about federated learning and I realised he knows a lot and I’m completely lost in that space
+[26/09/2024, 21:17:54] Maria: Can we get a presentation on that??? Jamie if you wanna do it I’d love to hear it, if you don’t, any other federated experts here???
+[26/09/2024, 21:18:50] Maria: / are people keen to learn more about it or am I the only one late to the party?
+[26/09/2024, 21:19:15] David Mlčoch 🦁: There are 208 days between today and 22 April, if we assume you code 5 hours a day and it's 10x improvement I could have saved you 208 * 5 * 10 = 10 400 hours of work. Lesson learned. Next time I tell you to jump out of the window. You should jump.
+[26/09/2024, 21:22:15] Ben Clarke: I’ll definitely decrease the amount of time I ignore your suggestions from 5 months to 3. Good work 🤝
+[26/09/2024, 21:24:51] Daan EF: Sorry 😅
+[26/09/2024, 21:25:53] Matthew Spaul Nova: How can 10,000 hours be saved if there were only 5000 hours since April?
+[26/09/2024, 21:26:21] Matthew Spaul Nova: Cursor is more powerful than I thought 🤔💭
+‎[26/09/2024, 21:26:48] Maria: ‎sticker omitted
+[26/09/2024, 21:37:19] Josh 🦒: Great recommendation@447342791480, I’ll finally get it too
+[26/09/2024, 23:11:27] Matthew Spaul Nova: https://menlovc.com/perspective/ai-agents-a-new-architecture-for-enterprise-automation/
+[27/09/2024, 00:21:37] Matthew Spaul Nova: https://scale.com/blog/long-context-instruction-following
+[27/09/2024, 00:22:19] Matthew Spaul Nova: Not intended to be a Scale plug but it's a decent blog post
+‎[27/09/2024, 18:41:30] Jamie Martin EF: ‎video omitted
+[27/09/2024, 21:11:08] Joe Hewett: ‎Joe Hewett requested to join
+[27/09/2024, 21:18:36] Joe Hewett: ‎Joe Hewett joined using this group's invite link
+[30/09/2024, 14:52:34] Lukasz Bartoszcze EF: ‎Lukasz Bartoszcze EF requested to join
+[30/09/2024, 19:37:33] Lukasz Bartoszcze EF: ‎Lukasz Bartoszcze EF joined using this group's invite link
+[03/10/2024, 09:10:53] Matthew Spaul Nova: https://illuminate.google.com/home
+[03/10/2024, 09:16:24] Maria: Reminder of our next talk by Gigi Lu.ma/yamlrg sign up! 🤗
+‎[03/10/2024, 09:17:50] Matthew Spaul Nova: ‎image omitted
+[03/10/2024, 09:19:40] Maria: That’s because Anthropic puts a limit in its chatbot even when u pay 😡
+[03/10/2024, 09:20:01] Maria: #FreeClaude
+[03/10/2024, 09:20:30] Jamie Martin EF: OpenAI throttles you to a snails pace instead.
+[03/10/2024, 11:55:32] ~ Pascu: ‎~ Pascu requested to join
+[03/10/2024, 20:37:05] ~ Pascu: ‎~ Pascu joined using this group's invite link
+[03/10/2024, 21:47:47] Jamie Martin EF: https://openai.com/index/introducing-canvas/
+
+Oh hi artefacts
+[03/10/2024, 21:51:22] Lukasz Bartoszcze EF: OpenAI’s one liner should be: Anthropic but 6 months later
+[03/10/2024, 21:52:23] Lukasz Bartoszcze EF: That’s why you should have multiple subscriptions at once and switch when you get rate limited
+‎[03/10/2024, 22:00:20] ~ Jack: ‎image omitted
+[06/10/2024, 20:06:05] Daan EF: Hey guys, I’m bringing together AI engineers in London in a job referral group for us to discover cool job opportunities, and help find new colleagues who are skilled in AI.
+
+If you are interested you can join slack group by clicking the link 🙌
+
+https://join.slack.com/t/neuralreferalnet/shared_invite/zt-2rzzon243-ouyd5qRVh6e~qRPSqKaQPA
+[06/10/2024, 20:07:25] Maria: Pls join 😇
+[06/10/2024, 20:07:47] Maria: Help Daan get this going!! This is a collaborative group 🥰
+[06/10/2024, 20:08:00] Maria: And it also means we get to he the Founding Members 😎
+[06/10/2024, 20:08:27] Karl Gustav EF: Daan, what’s AI?
+[06/10/2024, 20:10:03] Daan EF: We’ll figure it out on the job 😉
+[08/10/2024, 12:06:38] Callum 🇿🇦: Hopfield & Hinton get a Nobel Prize
+https://www.nobelprize.org/prizes/physics/2024/press-release/
+‎[08/10/2024, 12:08:27] Callum 🇿🇦: ‎image omitted
+[08/10/2024, 12:08:53] Maria: yay!!!!
+[08/10/2024, 12:08:59] Jamie Martin EF: I’m surprised they don’t advertise that more tbh. I mean it is where he did his PhD after all.
+[08/10/2024, 12:09:26] Jamie Martin EF: and his PhD was in “Artifical Intelligence”
+[08/10/2024, 21:48:41] Josh 🦒: First of many
+
+https://x.com/OpenAI/status/1843704848753283356
+‎[08/10/2024, 21:55:58] David Mlčoch 🦁: ‎image omitted
+[08/10/2024, 22:06:24] Ben Clarke: Should I be in the loop about this?
+‎[09/10/2024, 23:15:12] Maria: ‎image omitted
+‎[10/10/2024, 00:15:05] Matthew Spaul Nova: ‎image omitted
+[10/10/2024, 00:15:36] Matthew Spaul Nova: Odds on this revenue?
+[10/10/2024, 00:18:04] Joe Hewett: Can’t wait until Other Products drops
+[10/10/2024, 08:03:11] Matthew Spaul Nova: At this rate ChatGPT is winning the Nobel prize for literature
+[10/10/2024, 09:08:48] Matthew Spaul Nova: New State of AI report just dropped: https://www.stateof.ai/
+[10/10/2024, 10:40:21] Josh 🦒: https://youtu.be/EEXI6r08908
+[10/10/2024, 10:41:24] Josh 🦒: “Autonomous strike” is a concerning sentence
+[10/10/2024, 11:34:20] David Mlčoch 🦁: Yeah all these AI agents forming a union and going on an autonomous strike scares the shit out of my capitalistic heart.
+[10/10/2024, 15:50:25] Matthew Spaul Nova: My insider read is that OpenAI will sell ads inside ChatGPT outputs
+[10/10/2024, 15:54:21] Ben Clarke: 50B in revenue is like 200 million people paying a $20/month subscription
+[10/10/2024, 15:55:14] Ben Clarke: Sam has said previously that he’s strongly against anything but the monthly model, including ads. But we’ll see
+[10/10/2024, 16:00:56] Ben Clarke: I reckon they’re thinking more the long the lines of a more expensive subscription. Like $100/month for a personal assistant you can talk to, can do stuff on your computer, etc.
+‎[10/10/2024, 16:02:46] Jamie Martin EF: ‎image omitted
+[10/10/2024, 16:03:19] Jamie Martin EF: pretty strong evidence they’re thinking about testing out ad units.
+[10/10/2024, 16:04:14] Jamie Martin EF: The model will be the free version has ads, then they’ll issue “ad remover” pop ups, like YouTube premium
+[10/10/2024, 16:04:29] Jamie Martin EF: So if you’re paying for premium, hopefully no need to worry about tu
+[10/10/2024, 16:04:46] Matthew Spaul Nova: So many companies have asked me about appearing in outputs in ChatGPT (akin to Google search)
+[10/10/2024, 16:05:09] Matthew Spaul Nova: Would definitely kill their product if it happened lol
+[10/10/2024, 16:06:02] Matthew Spaul Nova: And I've had governments asking for a local version of the model that answers differently too
+[10/10/2024, 18:22:14] Ben Clarke: Hmm interesting. That looks more like Google Analytics code to me which is could be tracking whether a user has seen an “ad” for premium?
+[10/10/2024, 18:22:32] Ben Clarke: I hope they don’t go down that route!
+‎[10/10/2024, 18:35:13] Matthew Spaul Nova: ‎image omitted
+[10/10/2024, 18:39:10] Callum 🇿🇦: Relevant to this discussion: a very pessimistic view of the GenAI landscape
+https://www.wheresyoured.at/subprimeai/
+[10/10/2024, 18:39:25] Ben Clarke: https://x.com/tsarnick/status/1785838281671975136
+[10/10/2024, 18:40:13] Ben Clarke: Sam doesn’t care
+[10/10/2024, 18:40:36] Callum 🇿🇦: Satya might start caring eventually 🤷‍♂️
+[10/10/2024, 18:42:37] Callum 🇿🇦: ‎This message was deleted.
+[10/10/2024, 18:43:08] Callum 🇿🇦: ‎This message was deleted.
+[10/10/2024, 18:43:10] Callum 🇿🇦: ‎This message was deleted.
+[10/10/2024, 18:43:17] Callum 🇿🇦: ‎This message was deleted.
+[10/10/2024, 18:45:43] Callum 🇿🇦: but yeah, this is worth a read. y'all might hate the guy's takes (he really doesn't back oai aha), but it sparked some insights personally
+[10/10/2024, 18:58:20] Ben Clarke: I just skim read it for like 10 minutes. I mean I’ve always been on the “we’re not going to achieve AGI with language models” boat, and do think we’re in a bubble right now, but I disagree that they’re as useless as he’s making out. From my perspective we haven’t even scratched the surface in terms of potential value, so many business processes can be automated by LLMs, most companies just don’t know how, I think it’s going to take time. For products like Copilot which the article mentions again and again, I’m wouldn’t be surprised if it is genuinely useless cause it was made by Microsoft. A tool like that does have a lot of potential though, I think we’ll just have to wait for the Cursor equivalent
+[10/10/2024, 23:03:07] Jamie Martin EF: I totally didn’t know about this til state of ai. But it looks wild. A transformer reads your brain activity and gives you medical diagnoses.. 
+https://www.biorxiv.org/content/10.1101/2023.09.12.557460v1.full.pdf
+‎[11/10/2024, 09:51:48] Jamie Martin EF: ‎image omitted
+[11/10/2024, 12:49:13] Maria: Reminder: https://calendar.app.google/L55SDuA8sLvgqm3N6
+‎[11/10/2024, 19:15:00] Ben Clarke: ‎image omitted
+[11/10/2024, 21:28:41] Matthew Spaul Nova: Turns out I have to be at parliament then but will aim to watch the recording 🙂
+[13/10/2024, 15:26:23] Josh 🦒: https://diamond-wm.github.io/ Counter strike running in the weights of a neural net
+[13/10/2024, 15:37:38] Maria: TOMORROOOWWWW
+[13/10/2024, 18:40:56] Lukasz Bartoszcze EF: Maybe we can move it offline and invite ppl to SE?
+[13/10/2024, 18:41:29] Maria: What’s SE?
+[13/10/2024, 18:48:28] Lukasz Bartoszcze EF: Shoreditch Exchange
+[13/10/2024, 18:50:01] Maria: @34661843660 would u like to do it in person?? If you wanna come to the office let me know and I’ll prepare a room and get snacks!!
+[13/10/2024, 19:05:30] Gigi ⚡️: I unfortunately can’t! I have to be in person at Imperial (SK) before and after! But if you guys all want to be in the same room that is fine with me, we can do some kind of hybrid
+[14/10/2024, 01:29:20] Michael EF: ‎Michael EF requested to join
+[14/10/2024, 07:09:52] Michael EF: ‎Michael EF joined using this group's invite link
+[14/10/2024, 08:25:00] Charlie EF: ‎You added Charlie EF
+[14/10/2024, 08:25:17] YAMLRG: ‎You added Paul Chelarescu and Tidor
+[14/10/2024, 09:25:08] Jamie Martin EF: The recent deal (https://www.bbc.co.uk/news/articles/c98ynejg4l5o.amp) to hand over the Chagos Islands has many more repercussions and implications than a handover in sovereignty from British to Mauritius.
+
+One of the interesting questions that will be circulating is what now happens to the domain .io.
+
+This handover relinquishes the presence of UK sovereignty over any state in the Indian Ocean and so extinguished for the British Indian Territory, which is the namesake for the .io domains. 
+
+Any changes that happen would have repercussions for any companies operating under this domain, which usually has a high density of technology companies due to its similarity with the term in computing i/o (input output).
+
+The ISO (https://en.m.wikipedia.org/wiki/ISO_3166-1_alpha-2) is expected to cease to exist.
+
+There are open questions surrounding what will happen to .io which was sold by the British Government to entrepreneur Paul Kane and is now owned and operated by a Hedge Fund.
+[14/10/2024, 09:25:14] Jamie Martin EF: A better summary of this is here - https://every.to/p/the-disappearance-of-an-internet-domain
+[14/10/2024, 18:13:20] Callum 🇿🇦: 6 or 7pm uk? My Google cal's timezone is confused
+[14/10/2024, 18:21:38] Maria: 6pm
+[14/10/2024, 18:24:33] Maria: so in half an hour
+[14/10/2024, 18:55:07] Maria: https://us06web.zoom.us/j/75217384964?pwd=CDCcnFZf0HPOWQ0cLLBGmauYKKg7Ko.1
+[14/10/2024, 20:07:44] ~ Carolina: Congrats Gigi! And thank you Maria for organizing 👏🏻
+[14/10/2024, 20:12:54] Gigi ⚡️: thank you for listening to my yap about continual learning and adaptive model size haha
+‎[14/10/2024, 20:13:42] Gigi ⚡️: YAMLRG.pdf • ‎16 pages ‎document omitted
+[14/10/2024, 20:13:59] Gigi ⚡️: https://gaussianprocess.org/gpml/
+[14/10/2024, 20:15:00] Gigi ⚡️: https://newscientist.com/article/2444870-ai-models-cant-learn-as-they-go-along-like-humans-do/?utm_term=Autofeed&utm_campaign=echobox&utm_medium=social&utm_source=Twitter#Echobox=1724257349 ‎<This message was edited>
+‎[14/10/2024, 20:16:24] Gigi ⚡️: YAMLRG.key ‎document omitted
+[14/10/2024, 20:18:39] Gigi ⚡️: and the paper: https://arxiv.org/pdf/2408.07588 i would say the intro can work for anyone even if you are not an expert!
+[14/10/2024, 23:11:23] Maria: People doing phds - could you set up a call with me and Karl tomorrow/asap? https://calendly.com/marialuqueanguita/30min we want to ask you a couple of questions about how you work ❤️ also would appreciate any people you can put us in touch with, preferably from different unis 🕺
+‎[14/10/2024, 23:15:30] Josh 🦒: ‎GIF omitted
+[14/10/2024, 23:18:13] Maria: 😂😂😂😂
+[14/10/2024, 23:19:30] Maria: Today there were 5 break ups and 1 new couple lol
+[15/10/2024, 00:16:00] Theo W: ‎Theo W requested to join
+[15/10/2024, 00:17:42] Theo W: ‎Theo W joined using this group's invite link
+[15/10/2024, 01:12:31] Tidor: ‎Tidor left
+[16/10/2024, 12:12:45] Jamie Martin EF: I really like the premise of this paper:
+https://arxiv.org/pdf/2410.11163
+[16/10/2024, 12:13:17] Jamie Martin EF: Model Swarms: Models working together using collaborative search algorithms with multiple agents to find the right solution to problems.
+[16/10/2024, 15:57:43] ~ Carolina: https://the-decoder.com/openai-introduces-experimental-multi-agent-framework-swarm/
+[16/10/2024, 16:38:46] ~ Jack: Sounding like a top tier love island episode.
+[16/10/2024, 16:39:58] ~ Jack: There's also an open source project that's been chugging along for a little while
+
+https://github.com/kyegomez/swarms
+[16/10/2024, 16:45:51] Theo W: https://x.com/KyeGomezB/status/1844959936972791907 its a bit of a controversy actually…
+[16/10/2024, 16:47:44] ~ Jack: They are AGPL 3.0, so if the code actually was stolen there is something super funny that can happen
+[16/10/2024, 16:59:18] Joe Hewett: his main evidence is that both libraries use a method called .run()
+[16/10/2024, 16:59:24] Joe Hewett: it's over for OpenAI
+[16/10/2024, 17:02:48] Theo W: yh looking into it a bit more and this Kye guy is a bit dodge
+[16/10/2024, 17:04:56] ~ Jack: Yeah...
+ iirc one of the only posts I've seen from his before this has been glorifying drone warfare and participating in military hackathons for "search and rescue" drones that deliver "payloads" in the mass range of an explosive device
+[16/10/2024, 17:05:47] Rafael EF: Scroll through Agora's announcements channel on discord for gems like this
+‎[16/10/2024, 17:05:51] Rafael EF: ‎image omitted
+[16/10/2024, 17:09:47] Theo W: getting cooked in his GH https://github.com/kyegomez/tree-of-thoughts/issues/54 😂
+[16/10/2024, 17:13:30] ~ Jack: Oof
+[16/10/2024, 17:14:19] David Mlčoch 🦁: Oh I know Kyle :D
+[16/10/2024, 17:14:23] David Mlčoch 🦁: *Kye
+[16/10/2024, 17:14:37] David Mlčoch 🦁: ..he is..special
+[16/10/2024, 17:15:54] David Mlčoch 🦁: I don't even know where to start:D
+[16/10/2024, 17:17:20] David Mlčoch 🦁: I'd just say he has a bad track record with collaborations.
+[17/10/2024, 18:39:43] Rafael EF: Hey, we’re doing a journal club on world models this Monday https://lu.ma/l2kog19v
+It’s on Discord; we also have a bot (Mimi) who loves to read and summarize papers 🙂
+[17/10/2024, 22:15:31] Maria: cool! will be there
+[17/10/2024, 22:18:56] Rafael EF: I really enjoyed the reading group earlier this week, by the way. It was a strong source of inspiration to start our old journal club back up.
+Thanks for organizing, and inviting us!
+[17/10/2024, 22:38:54] Jamie Martin EF: https://x.com/AravSrinivas/status/1846954158156583224
+[17/10/2024, 22:39:09] Jamie Martin EF: Perplexity offering internal search a-la-glean
+[17/10/2024, 23:15:02] Charlie EF: We had glean at yahoo and it was so so bad
+[21/10/2024, 17:33:28] Rafael EF: This is in 27mins, hope to see y’all there; let me know if anyone has trouble getting into Discord
+[22/10/2024, 22:10:40] Ben Clarke: This is pretty cool
+https://www.linkedin.com/posts/anthropicresearch_in-this-demo-claude-orchestrates-a-multi-step-activity-7254542226385444864-2PJ8?utm_source=share&utm_medium=member_ios
+[22/10/2024, 22:29:12] Jamie Martin EF: This is what adept were promising all those years ago. Really cool to see it get to this stage.
+‎[25/10/2024, 01:56:12] Rafael EF: ‎image omitted
+[25/10/2024, 11:22:37] Josh 🦒: I prefer the abstract deconstructionist modern art nature of 3.5 old
+[25/10/2024, 12:10:37] David Mlčoch 🦁: We truly need an "Alignment as a Service" company..so everyone stupid ideas (such as Joshua's taste of Minecraft art) can be incorporated into the model behavior.
+[25/10/2024, 12:13:17] Josh 🦒: No we just need a mass culling of everyone that disagrees with me
+‎[25/10/2024, 12:37:17] Callum 🇿🇦: ‎image omitted
+‎[25/10/2024, 12:37:26] Callum 🇿🇦: ‎image omitted
+[25/10/2024, 12:37:35] Callum 🇿🇦: the only reliable benchmark
+[25/10/2024, 12:37:59] Callum 🇿🇦: benchMark™️
+[25/10/2024, 15:41:31] Lukasz Bartoszcze EF: Wow this is what I am launching next week idea validated
+[25/10/2024, 15:41:55] Lukasz Bartoszcze EF: Such a good one liner Alignment as a Service I am stealing this
+[25/10/2024, 15:42:20] David Mlčoch 🦁: Fuck, that's what we're using as well.:D
+[25/10/2024, 15:43:32] Lukasz Bartoszcze EF: Ohhh nice can you please share more info about your product? Would love to steal more
+[26/10/2024, 08:59:01] Matthew Spaul Nova: Another valuable benchmark: https://github.com/simonw/pelican-bicycle/blob/main/README.md
+[27/10/2024, 07:45:30] Matthew Spaul Nova: https://simonwillison.net/2024/Oct/26/llm-pictionary/
+[27/10/2024, 22:20:34] Tiaguito 🦨: https://machinelearning.apple.com/research/gsm-symbolic
+‎[28/10/2024, 18:37:22] Rafael EF: ‎image omitted
+[28/10/2024, 18:41:06] ~ Jack: Hah, knew you'd like that
+‎[28/10/2024, 19:32:06] Matthew Spaul Nova: ‎image omitted
+[28/10/2024, 19:32:22] Matthew Spaul Nova: Article here: https://www.nature.com/articles/s41598-024-54271-x
+[29/10/2024, 10:49:36] Josh 🦒: Inside xAI colossus https://x.com/Supermicro_SMCI/status/1849962896207532356
+‎[29/10/2024, 10:59:14] Callum 🇿🇦: ‎image omitted
+[29/10/2024, 11:00:38] Gigi ⚡️: I’ll be around!
+[29/10/2024, 11:00:56] Paul Chelarescu: I am, but I have work. I'll listen remotely
+‎[29/10/2024, 11:01:05] Callum 🇿🇦: ‎image omitted
+[29/10/2024, 11:01:49] Gigi ⚡️: oh yeah
+[29/10/2024, 11:01:50] Callum 🇿🇦: on the waiting list for in-person 🫡
+[29/10/2024, 11:01:56] Gigi ⚡️: same
+[29/10/2024, 11:02:03] Gigi ⚡️: didn't know you had to register
+[29/10/2024, 11:02:10] Gigi ⚡️: I’ll be around anyways
+[29/10/2024, 11:02:18] Gigi ⚡️: my office is huxley 6m
+[29/10/2024, 15:35:47] Gigi ⚡️: hey, does anyone know a good paper summariser that can actually tell you the main bits of maths? At least when asked
+[29/10/2024, 15:36:17] Rafael EF: i wrote my own, can you send a paper i can test it with
+[29/10/2024, 15:36:24] Joe Hewett: Have you tried Elicit? I haven't used it for maths-centric papers
+[29/10/2024, 15:36:39] Gigi ⚡️: https://proceedings.mlr.press/v188/maile22a/maile22a.pdf
+[29/10/2024, 15:36:48] Gigi ⚡️: that is nice, above is the paper
+[29/10/2024, 15:37:16] Gigi ⚡️: I haven’t, I’ll try it, thanks!
+[29/10/2024, 16:22:31] ~ Jack: I haven't found a good AI paper reader for maths heavy papers in general so far yet
+[30/10/2024, 08:50:58] ~ Jack: https://poloclub.github.io/transformer-explainer/
+[30/10/2024, 08:51:04] ~ Jack: Thought this group might like this
+‎[30/10/2024, 11:09:19] David Mlčoch 🦁: ‎image omitted
+[30/10/2024, 11:20:06] Maria: ‎You deleted this message.
+[30/10/2024, 11:22:17] Maria: 1 has already gone
+[30/10/2024, 11:22:23] Maria: i’ve messaged her, she’s gonna give it to me
+[30/10/2024, 11:22:26] Maria: @27782426142 u can have it
+[30/10/2024, 12:12:01] Callum 🇿🇦: Unfortunately I've arranged other plans this eve now :(( but I have a friend who is wanting one! Can I pass on?
+[30/10/2024, 12:12:18] Maria: Yep
+[30/10/2024, 15:18:17] Gigi ⚡️: I must say that chatgpt did a great job
+[30/10/2024, 21:22:08] Maria: https://www.linkedin.com/posts/eric-vyacheslav-156273169_microsoft-mightve-just-killed-cursor-with-ugcPost-7257408011567046657-W3I6?utm_source=share&utm_medium=member_ios
+[30/10/2024, 21:34:03] Ben Clarke: I highly doubt the new Copilot updates will be better than Cursor but Spark looks really cool!
+‎[31/10/2024, 09:05:41] Jamie Martin EF: ‎image omitted
+[31/10/2024, 09:40:23] Maria: so cute
+[31/10/2024, 09:40:27] Maria: guys i need someone to present soon
+[31/10/2024, 09:40:30] Maria: any volunteers?
+[31/10/2024, 09:52:35] Jamie Martin EF: I can offer to do it. 
+
+Ok if I do more of a survey of a few papers, rather than a single paper deep dive?
+[31/10/2024, 09:57:11] Maria: of course!!
+[31/10/2024, 09:57:26] Maria: when would you like to do it?
+[31/10/2024, 09:58:09] Maria: also @447793009133 do you want to reschedule? (can we discuss here for visibility 🥰) also @420720656933and @447495750810 i would like you to demo your product!!
+[31/10/2024, 09:58:53] Jamie Martin EF: When if the next slot?
+[31/10/2024, 10:00:04] David Mlčoch 🦁: 11.11. could work for us 👍
+[31/10/2024, 10:04:22] Maria: anytime! but it works best to do it every 2 weeks or every month
+[31/10/2024, 10:08:56] Jamie Martin EF: Great just tell me when. I can probably spin something up relatively quickly.
+[31/10/2024, 10:13:50] Maria: I’d say the slots should be 4th Nov, 18th Nov, 2nd Dec
+
+but if next monday is too soon then happy to push them all back by a week
+[31/10/2024, 10:24:45] Jamie Martin EF: Happy to put something together for Monday - but let me know what works best. I’m pretty flexible
+[31/10/2024, 12:14:01] Matthew Spaul Nova: Does anyone have insider view on the Google AI reorg? Heard that Gemini leadership is all getting rolled under Deepmind such that all P&L decisions are made in London
+[31/10/2024, 12:44:08] Matthew Spaul Nova: Also Perplexity just dropped a clothing line for some reason??? https://perplexity.supply/
+[31/10/2024, 12:45:47] Rafael EF: baller
+good timing, given they're being integrated in github copilot
+[31/10/2024, 12:49:03] Maria: What the hell 😂
+[31/10/2024, 12:59:08] Matthew Spaul Nova: It's probably just their employee swag store made open to the public
+‎[31/10/2024, 12:59:50] Matthew Spaul Nova: ‎image omitted
+[31/10/2024, 13:27:40] Theo W: its nothing compared to this 😂https://lockheedmartinstore.com/
+[31/10/2024, 13:30:24] Matthew Spaul Nova: Sadly just the internal swag store for employees. Can't buy it without an @lmco.com email address
+‎[31/10/2024, 13:31:33] Joe Hewett: ‎image omitted
+[31/10/2024, 13:53:36] Jon Evans EF: ‎Jon Evans EF requested to join
+[31/10/2024, 18:07:43] Jon Evans EF: ‎Jon Evans EF joined using this group's invite link
+[31/10/2024, 18:21:53] Maria: could I please ask that you answer this very very quick feedback form? ❤️ https://tally.so/r/wzQGYE
+[31/10/2024, 22:01:49] Jamie Martin EF: For SLM ppl. Happy Halloween 🎃 👻 
+https://huggingface.co/collections/HuggingFaceTB/smollm2-6723884218bcda64b34d7db9
+[01/11/2024, 13:53:44] Maria: Please 🌚🌝 only 4 people did it
+[01/11/2024, 13:54:48] Maria: It takes 30 seconds
+‎[01/11/2024, 13:58:26] Josh 🦒: ‎image omitted
+[01/11/2024, 13:58:32] Peter Todorov EF: ‎You added Peter Todorov EF
+[01/11/2024, 13:58:39] Maria: Damn it the same happened to Tom
+[01/11/2024, 13:58:52] Maria: Ok I’ll check it out
+[01/11/2024, 13:58:54] Josh 🦒: Oh it worked after like 2 mins of loading
+[01/11/2024, 14:00:54] Maria: Thank you 🥹
+[01/11/2024, 14:10:21] Peter Todorov EF: High five for all 👋, it’s Peter here. Thanks Maria for adding me to this group.
+[01/11/2024, 16:15:42] Jamie Martin EF: Good old Yann 
+‎[01/11/2024, 16:15:42] Jamie Martin EF: ‎image omitted
+[01/11/2024, 16:16:31] Theo W: Based af
+[01/11/2024, 16:20:25] Jon Evans EF: Just filled out but prematurely submitted by accident. Have most of my answers though!
+[01/11/2024, 19:03:35] Jamie Martin EF: Also nice Claude update - https://x.com/alexalbert__/status/1852393994892042561
+[04/11/2024, 13:51:31] ~ Ilja C: ‎~ Ilja C requested to join
+[04/11/2024, 13:51:43] ~ Ilja C: ‎~ Ilja C joined using this group's invite link
+[04/11/2024, 14:03:19] Maria: ✨ *NOVEMBER UPDATE* ✨
+
+- Monday *11th Nov* at 18:00 Sentinel by Entropy Labs demo (@420720656933and @447495750810) 
+- ⁠Event link ➡️ https://lu.ma/ayxhvutj
+
+- ⁠Monday *25th Nov* at 18:00 ColareAI demo ( @447540236302 and @447470431330 ) 
+- ⁠Event link ➡️ https://lu.ma/qxg25z5p
+
+Lot’s of demos this month instead of research papers! For the presenters, if you want to send out any previous information to have a read through, send it to me and I’ll put it in the event link. 
+
+If you want to present in the future, please do! 😛
+
+And if you haven’t done so already, 🙏please please _pretty_ please reply to this form: https://tally.so/r/wzQGYE 🙏 ‎<This message was edited>
+[04/11/2024, 20:05:54] Lukasz Bartoszcze EF: Claude 3.5 Haiku dropped 🙏🙌👌
+[04/11/2024, 20:14:42] Josh 🦒: The price is much higher right?
+[04/11/2024, 20:14:47] Josh 🦒: Disappointing
+[04/11/2024, 20:22:11] Jon Evans EF: 4x. Meant to be better than opus 3 on some stuff though.
+[04/11/2024, 20:22:25] Lukasz Bartoszcze EF: But this means that opus 3.5 is dropping soon too
+[05/11/2024, 00:22:13] Josh 🦒: I’ve heard opus 3.5 has been cancelled, it was underperforming compared to o1
+[05/11/2024, 00:22:29] Josh 🦒: I think they distilled what would have been opus 3.5 into the sonnet update
+[05/11/2024, 13:36:32] ~ julio: ‎~ julio requested to join
+[05/11/2024, 13:52:52] ~ julio: ‎~ julio joined using this group's invite link
+[05/11/2024, 18:22:33] ~ 🐧Nielsou🐧: ‎~ 🐧Nielsou🐧 requested to join
+[05/11/2024, 18:23:58] ~ 🐧Nielsou🐧: ‎~ 🐧Nielsou🐧 joined using this group's invite link
+[06/11/2024, 17:24:20] Josh 🦒: I’m working on a new Agent project soon. Anyone have recommendations for good Agentic frameworks, prevousily I’ve used langchain and currently looking at langgraph. Any others I should check out?
+[06/11/2024, 17:46:25] Jon Evans EF: Haven’t looked for a while but have been meaning to. Have autogen, crew AI, and MetaGPT as frameworks to take a look at in my notes. No idea if any of them are any good. Likely very project dependent as to what would suit best. I’d probably just use langgraph/langchain unless I had specific needs that other frameworks cater to, as it has the mindshare, even if I don’t particularly like it.
+[06/11/2024, 18:06:36] David Mlčoch 🦁: Don't use langchain. Langgraph is quite good. For supervision of the agents I'd strongly recommend Sentinel - there'll be langgraph integration and major release soon. - https://github.com/EntropyLabsAI/sentinel
+[06/11/2024, 20:12:07] Maria: and for more info there is a demo next monday at 18:00 and you do NAWT want to miss it! -> https://lu.ma/ayxhvutj <- sign up here
+[06/11/2024, 20:30:35] Josh 🦒: Thanks, I’ll see if you can blow me away with the demo
+[06/11/2024, 21:17:45] Jamie Martin EF: https://github.com/Integuru-AI/Integuru
+[06/11/2024, 21:39:06] Jamie Martin EF: AND 
+https://techcrunch.com/2024/11/06/openai-acquired-chat-com/
+‎[06/11/2024, 22:51:00] Matthew Spaul Nova: 2406.03689v2.pdf • ‎27 pages ‎document omitted
+[07/11/2024, 18:31:23] Maria: i hate to be the annoying event organiser (i actually don’t, you all know i love it) but pls sign up to the next events so i can keep track of how many ppl will attend ❤️ 
+https://lu.ma/yamlrg
+[07/11/2024, 18:32:25] Maria: we’ve moved yamlrg 7 (@447470431330 and @447540236302 with their company demo) to tuesday instead of monday
+[07/11/2024, 18:32:43] Maria: both demos will be super mega cool, i’ve seen both, highly recommend, so you don’t want to miss them!
+[07/11/2024, 22:27:19] Josh 🦒: https://www.reddit.com/r/singularity/comments/1glu66v/xportrait_2_bytedances_ai_lipsync_tool_that/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+[07/11/2024, 22:28:32] Maria: that’s so good
+[07/11/2024, 23:04:15] Rory EF: This is very cool, and there’s some good conversation in the HN thread: https://news.ycombinator.com/item?id=41983409
+
+TLDR; can you legally build a product that uses undocumented website APIs? 🤔
+[07/11/2024, 23:28:28] Jon Evans EF: Similar considerations to if you can scrape or bot. Very murky but I have understood it to be mostly permissible until you explicitly agree to terms through a clickwrap etc. Not sure where programmatic rules come in though - robots.txt, ai.txt etc
+[07/11/2024, 23:30:30] Jon Evans EF: Was originally looking at doing something like this but for hardware devices to prevent obsolescence. Capture some traffic, extract an API profile, build minimal backend service to replace original if company goes bust etc.
+[08/11/2024, 00:33:59] Rory EF: That also sounds similar to automatically building mocks that could be used during tests? When I experimented with this, the trickiest thing was learning the hidden state of the servers…
+[08/11/2024, 00:35:01] Rory EF: I love this sort of stuff, so lmk if anyone wants to talk about it more - I don’t know if YAMLRG is the right place 🤷‍♂️
+[08/11/2024, 09:43:23] Jamie Martin EF: Yeh this is a really interesting question. Gonna take a crack at it..
+[08/11/2024, 09:44:42] Jamie Martin EF: 1. You could argue that the purpose is interoperability, which is fundamentally protected. (Referring to this case I remember back in 2021 - https://en.m.wikipedia.org/wiki/Google_LLC_v._Oracle_America,_Inc.)
+[08/11/2024, 09:46:23] Jamie Martin EF: 2. It’s being done on public facing interfaces and information (eg network data), which on its own doesn’t violate any privacy concerns, trade secrets or proprietary information.
+[08/11/2024, 09:48:47] Jamie Martin EF: 3. They’d need to be very careful there’s no circumvention of security measures, violations of Terms of Services and that it doesn’t enable unauthorised access to user data. I can think of plenty real-world examples where all of these would be violated if the API was reverse engineered, but there’s also many where they’re not and it’s fine
+[08/11/2024, 09:49:51] Jamie Martin EF: The biggest two risks I see are 
+- violation of terms of service 
+- ⁠enabling unauthorised access of data
+[08/11/2024, 13:08:39] Jon Evans EF: I’d also be worried about unintended side effects of calling private APIs in a way they were not intended. Could imagine cases where they are poorly built and calling them out of order or incorrectly could result in issues for the site.
+[08/11/2024, 13:22:13] Rory EF: Love the deep dive Jamie!
+
+I’d also add a perspective from security: in a perfect world, all APIs should be secure, but in reality it’s common to see undocumented APIs that allow bad things. Think cookies used for auth, but without any signatures/crypto, which allows impersonation attacks.
+
+These emerging products designed to map APIs *will* inadvertently find security vulnerabilities, and allow end users to leverage them to achieve a goal (without necessarily calling them out as vulns).
+
+Kind of dovetails into what Jon said about breaking poorly built websites..
+[11/11/2024, 00:57:49] Maria: FYI tomorrow’s session has been moved to next Monday. Join here -> https://lu.ma/ayxhvutj 🦄
+[11/11/2024, 01:00:01] David Mlčoch 🦁: Thanks for understanding, we are just making Sentinel more stable! But next week it will be epic! You should all definitely join! 🚀 It might be a more hands on than the usual talks👨‍💻👀😁 ‎<This message was edited>
+‎[11/11/2024, 01:01:21] Maria: ‎sticker omitted
+[11/11/2024, 19:02:48] Kareem Hussein: ‎You added Kareem Hussein
+[11/11/2024, 20:42:28] ~ Pascu: https://youtu.be/ugvHCXCOmm4?si=ASmVsev-gIUXLdtC
+[12/11/2024, 13:28:38] ~ Rob: ‎~ Rob requested to join
+[12/11/2024, 15:49:10] ~ Rob: ‎~ Rob joined using this group's invite link
+[13/11/2024, 13:53:00] YAMLRG: ‎You added Ben Mcclusky EF and James EF
+[15/11/2024, 19:33:44] Andrés 🤓: ‎Andrés 🤓 left
+[17/11/2024, 00:37:15] Maria: https://x.com/datachaz/status/1857368880957497590?s=48&t=oczLkSqVZDEjfMf-N-o0eg
+[17/11/2024, 11:02:55] Maria: Reminder: https://lu.ma/ayxhvutj David and Joe are showing a demo of their company tomorrow
+‎[17/11/2024, 11:04:24] Karl Gustav EF: ‎image omitted
+[18/11/2024, 13:37:11] David Mlčoch 🦁: See you all today for our short presentation and demo of Sentinel - Supervision & Evaluation platform for AI agents! 🚀👨‍💻
+[18/11/2024, 14:15:43] Rory EF: Will it be recorded for those of us who can’t make it? 🙏
+[18/11/2024, 14:19:07] David Mlčoch 🦁: I believe yes. 📺
+[18/11/2024, 14:44:20] ~ julio: Excited for this! 
+
+Julio here btw 👋🏻 
+
+https://www.linkedin.com/in/juliomagoga
+
+https://www.x.com/juliomagoga
+[18/11/2024, 19:11:21] Milo Carroll 💪🏽: Anyone else unable to join
+[18/11/2024, 19:17:06] Josh 🦒: It starts at 18:30
+[18/11/2024, 19:17:24] Maria: i’ll send link in a sec
+[18/11/2024, 19:28:06] Maria: meet.google.com/nzm-pnsn-def
+[18/11/2024, 19:31:09] Maria: People
+[18/11/2024, 19:31:11] Maria: Join
+‎[18/11/2024, 23:36:48] Maria: ‎video omitted
+‎[18/11/2024, 23:37:12] Maria: ‎sticker omitted
+[19/11/2024, 00:26:45] Maria: Thanks everyone for coming today, great session @420720656933 @447495750810 !! 💘If you missed it, check out the recording ➡️ https://youtu.be/9_aL17T-pmM ⬅️ And please share it with others! Keen to expand the group (only if they’re worth it 😉) 🧠🤓
+
+*Don’t forget to sign up to the next one:* https://lu.ma/qxg25z5p where @447540236302 and @447470431330 will present their new AI bomb ass start up! 🤖🔥 (AI-enabled controls for governing company data sharing) <- pretty big topic, you don’t want to miss it!
+[19/11/2024, 00:27:58] Jon Evans EF: Thank you for organising! Really enjoyed it
+[19/11/2024, 00:31:25] Maria: next one is next Tuesday by the way
+[19/11/2024, 10:24:39] Veljko EF: ‎You added Veljko EF
+‎[19/11/2024, 13:31:02] Maria: ‎image omitted
+[20/11/2024, 17:45:55] Callum 🇿🇦: https://open-scholar.allen.ai/
+[20/11/2024, 18:38:48] Matthew Spaul Nova: GPT 4o Vision fine tuning has been launched today and is GA.
+[20/11/2024, 18:38:54] Matthew Spaul Nova: Got a ping from MSFT
+[21/11/2024, 12:19:45] Maria: If you are fine-tuning models can u pls ping @447793009133 he’d like to ask u some quick questions 🙂 or if you know people who are
+[21/11/2024, 12:39:24] Matthew Spaul Nova: Depends if he wants to buy our AI fine-tuning platform 🤔
+[21/11/2024, 12:40:45] Charlie EF: we are more interested in the data challenges around it than the platform itself tbh.  If that sounds like something you've experienced then I'd love to hear about it.
+[21/11/2024, 12:41:38] Matthew Spaul Nova: Sure can talk through that - DM me or put some time in my diary matthew.spaul@scale.com
+[21/11/2024, 13:28:51] Maria: Matt works at Scale AI (for ref)
+[21/11/2024, 13:28:56] Maria: Ah yea there u go
+‎[21/11/2024, 13:29:08] Maria: ‎sticker omitted
+[24/11/2024, 13:40:34] Jon Evans EF: Is whisper still SOTA for transcription or does anyone have other recommendations?
+[24/11/2024, 13:41:25] Jamie Martin EF: https://huggingface.co/spaces/hf-audio/open_asr_leaderboard
+[24/11/2024, 13:43:16] Jon Evans EF: Cheers! Had a quick glance at benchmark leaderboards but they don’t always seem to reflect the reality of using models so welcome any anecdotal evidence too.
+[24/11/2024, 14:53:12] Matthew Spaul Nova: https://arxiv.org/abs/2411.01747
+[25/11/2024, 00:27:12] Rory EF: I saw people talking about https://github.com/usefulsensors/moonshine beating Whisper on resource-constrained devices. I think Whisper’s larger model still wins out though
+[26/11/2024, 08:16:31] Matthew Spaul Nova: https://www.anthropic.com/news/model-context-protocol
+[26/11/2024, 10:04:50] ~ julio: Yeah this is awesome, one less job to do
+[26/11/2024, 18:53:43] ~ julio: sora leak: https://x.com/btibor91/status/1861433835528839632?s=46
+[27/11/2024, 08:38:18] ~ julio: ‎This message was deleted by admin Callum 🇿🇦.
+‎[27/11/2024, 10:10:13] Matthew Spaul Nova: ‎image omitted
+[27/11/2024, 10:10:55] Matthew Spaul Nova: Participants given either human or ai-generated poems, and told either written by a human, AI, or no information provided
+[27/11/2024, 10:11:06] Matthew Spaul Nova: Asked to rate its quality
+‎[27/11/2024, 10:12:30] Matthew Spaul Nova: ‎image omitted
+[27/11/2024, 10:13:52] Matthew Spaul Nova: https://www.nature.com/articles/s41598-024-76900-1
+[27/11/2024, 10:42:38] Jamie Martin EF: My Hot take 🔥
+
+
+Poetry is one of those fields that passed the Turing test early on (GPT3 was already indistinguishable to poets for most). I tested this on many people first hand too.
+
+
+However, I’d be more interested to see if they put poetry in front of an expert in literature, if they draw the same conclusions.
+[27/11/2024, 10:43:50] Jamie Martin EF: Also they’re judging probably a single glimpse/read vs over time. The best literature is enjoyed through discovering the depths and themes. I’d expect ai models are still relatively low depth here
+‎[27/11/2024, 11:28:36] David Mlčoch 🦁: ‎image omitted
+[27/11/2024, 11:44:17] Matthew Spaul Nova: I still feel I'd prefer the pint
+‎[27/11/2024, 11:46:08] Jamie Martin EF: ‎image omitted
+[27/11/2024, 13:07:58] Ben Clarke: I thought this was for Cursor for a minute there and got excited
+[27/11/2024, 13:09:41] David Mlčoch 🦁: oh yeah :D, you should get yearly subscription for that one as well
+[27/11/2024, 13:10:16] Josh 🦒: But the cursor subscription doesn’t pass your beer per month metric?
+[27/11/2024, 13:10:28] Matthew Spaul Nova: Anyone able to recommend books / subs I can spend my L&D budget on?
+[27/11/2024, 13:10:59] Matthew Spaul Nova: Just realised I have a month left to use it all
+[27/11/2024, 13:11:36] David Mlčoch 🦁: If the utility is 10x > happiness I get from one pint, I'm willing to be flexible.
+[27/11/2024, 13:12:01] David Mlčoch 🦁: (only cursor passed that bar so far)
+[27/11/2024, 13:23:03] Maria: Cursor yearly subscription
+[27/11/2024, 13:23:27] Maria: Nova subscription 😂
+[27/11/2024, 13:24:05] Maria: Yamlrg subscription?🙄
+[27/11/2024, 13:24:25] Maria: It’s <whatever your budget left is> a year hahaha
+[27/11/2024, 13:26:38] Maria: Also on another note, is there anything worth buying on Black Friday?
+[27/11/2024, 13:26:46] Maria: Tech wise or productivity
+[27/11/2024, 13:27:57] Matthew Spaul Nova: Last year I spent it on Newscientist and MIT Technology Review (which both have some deals on)
+[27/11/2024, 18:28:27] Maria: https://x.com/weswinder/status/1861160841472811441?s=12&t=oczLkSqVZDEjfMf-N-o0eg
+[27/11/2024, 18:32:54] ~ Jack: I like this study but it shows something important which is that the type of poetry that a LLM can generate is broadly appealing. 
+
+A lot of the complaints people had about human made poetry was that it was not relatable enough, that it used weird words, etc. 
+
+Upon being told an AI made the AI poetry the distributions converged to a similar rating as when you say that a human made a human poem.
+
+Now what I would want to see is not just the "trained in lit" dimension but the "trained in AI" dimension. Because what we are seeing is the literary equivalent of hyperprocessed foods. Created to ape attributes in palatable without actually embodying those same traits. I see a rich future for AI poetry but this isn't it
+[27/11/2024, 18:34:12] ~ Jack: Of note, part of this take comes from me slowly building up a poetry structure mirroring test for AI which frontier models still fail at even with specific probing and explanations on how the structure functions
+[27/11/2024, 18:37:53] Matthew Spaul Nova: Ultimately it's evidence that RLHF has created a reward model that reflects what average people think is good poetry
+[27/11/2024, 18:38:04] Matthew Spaul Nova: Which is what we'd expect mathematically anyway
+[27/11/2024, 18:38:41] Jamie Martin EF: Human labels from preference are not very good when it comes to accuracy though or tasks which have a real objective (like translation) ‎<This message was edited>
+[27/11/2024, 21:19:04] Maria: @420720656933 add the maths guys
+[27/11/2024, 21:19:25] Maria: @27782426142 add Edan
+[27/11/2024, 21:20:17] Maria: Does anyone wanna add anyone? It would be great if everyone added just ONE more person each 😚
+[27/11/2024, 21:20:44] Maria: Share this with them: https://chat.whatsapp.com/DMqsymB8YmFD5za7R9IdwO
+[27/11/2024, 21:20:51] Jamie Martin EF: Check this new open source model that beats o1-mini and in some benchmarks beats o1 preview - https://huggingface.co/Qwen/QwQ-32B-Preview
+[27/11/2024, 21:21:46] Maria: Also, we bought yamlrg.com 😎 webpage coming soon
+‎[27/11/2024, 21:21:49] Jamie Martin EF: ‎image omitted
+[27/11/2024, 21:22:29] YAMLRG: ‎David Mlčoch 🦁 added Mihir EF and ~ Franz. Tap to change who can add other members.
+[27/11/2024, 21:22:54] ~ Edan Toledo: ‎Callum 🇿🇦 added ~ Edan Toledo
+‎[27/11/2024, 21:30:10] Josh 🦒: ‎image omitted
+[28/11/2024, 01:15:23] Matthew Spaul Nova: https://arxiv.org/abs/2411.00660
+[28/11/2024, 11:20:13] Jon Evans EF: These guys are absolutely cooking. Was playing with Qwen coder 2.5 yesterday a lil after discussing local code models with my housemate who is building a new box. Could tell it was lagging sonet but still remarkably capable. Not sure how much of that was context etc as I was only using it in isolation and hadn’t integrated it into cursor etc.
+[28/11/2024, 11:23:32] Maria: Can we integrate local LLMs with Cursor?
+[28/11/2024, 11:23:42] Maria: I wanna try DeepSeek for coding
+[28/11/2024, 11:23:43] Jamie Martin EF: Not with cursor no
+[28/11/2024, 11:23:48] Jon Evans EF: Yeah I know it’s possible but it’s hacky
+[28/11/2024, 11:23:55] Jamie Martin EF: Continue yes, perhaps codeium
+[28/11/2024, 11:24:28] Maria: What is that like another IDE? This one https://www.continue.dev/ ?
+[28/11/2024, 11:24:49] Maria: Oh fancy I’ll give it a try!
+‎[28/11/2024, 11:25:23] Jamie Martin EF: ‎image omitted
+[28/11/2024, 11:27:20] Jamie Martin EF: Yeh it’s not been a good as cursor since cursor and codeium have shipped new features
+[28/11/2024, 11:27:48] Jon Evans EF: Curious what models people are using day-to-day, and how they are accessing them (providers UI, third party general UI, domain specific tools, own tools, etc). I’m currently using Cursor (paid), v0 (paid), simtheory (paid, general purpose interface with aggregation across models, screen sharing, computer use). Thinking about going grabbing an anthropic sub again as I seem to use claude the most and their UX and surrounding tooling is quite nice.
+[28/11/2024, 11:28:38] ~ Franz: If you guys are interested in papers on the conceptual side (architectural, etc.) you should have a scroll through the #research channel of our discord server: https://discord.gg/G4JNuPX2VR
+
+A ton of golden nuggets over there
+‎[28/11/2024, 11:31:55] Joe Hewett: ‎image omitted
+[28/11/2024, 11:32:06] Joe Hewett: I have never used the main interface so I'm not sure if you can do all of these things there tbf
+[28/11/2024, 11:41:33] Jon Evans EF: You can do this with open router if you don’t care about local. Sign up, grab api key, fund. In cursor settings set openai key as open router key, change base url to open router https://openrouter.ai/api/v1, add model name e.g. deekseek/deepseek-chat to model list. Will work for cmd K and L, not sure about composer. Tab I assume will still use cursors models. Might have to toggle off cursors models in the list incase it looks for them on open router. Was trying to load cursor-small from open router at one point on mine…
+‎[28/11/2024, 11:42:18] Jon Evans EF: ‎image omitted
+[28/11/2024, 11:43:27] Jamie Martin EF: Use qwen coder instead. It’s a lot better than deepseek. I made the switch recently
+‎[28/11/2024, 12:27:50] Maria: ‎image omitted
+[28/11/2024, 12:28:28] Theo W: I wonder what training data they used 🤔
+[28/11/2024, 13:15:30] Maria: I’ve been playing around with https://github.com/microsoft/TinyTroupe and it’s SO fun, multi agent LLMs that you can create and chat about whatever you want
+[28/11/2024, 14:54:26] David Kubánek EF: ‎You added David Kubánek EF
+[28/11/2024, 15:32:41] Callum 🇿🇦: Has anyone here tried, https://www.warp.dev?
+[28/11/2024, 15:32:50] Maria: yea i don’t like it
+[28/11/2024, 15:33:40] Maria: i just use the terminal in cursor and the chat functionality without having to pay for warp as well
+[28/11/2024, 15:35:32] Jamie Martin EF: I’ve never tried it as they collected telemetry when I was creating my set-up: https://docs.warp.dev/getting-started/privacy#exhaustive-telemetry-table
+
+Though I see they’ve now made it optional since Dec 2022. 👍
+
+I use iTerm2 instead.
+[28/11/2024, 15:57:52] Theo W: I’ve been playing with this https://github.com/camel-ai/camel really easy to spin up
+[28/11/2024, 16:19:41] Maria: hey everyone! we have a room opening up in the london founder house soon! if anyone’s interested drop me a message! 
+
+https://sifted.eu/articles/founder-house-london-startups
+
+https://pally.notion.site/London-Founder-House-72a050da51314b95ae2920fccd05b392?pvs=4
+[28/11/2024, 16:20:50] ~ Pascu: This is so cool🙌🙌
+[28/11/2024, 16:21:19] ~ Pascu: Would love to join if I lived in London
+[28/11/2024, 16:22:43] Mihir EF: same:
+
+We are looking for a new resident for the London chapter of The Residency - a global network of hackerhouses. Honestly. these guys are probably the most cracked people I know.
+Simply fill out the form on the website or contact Peppe (https://twitter.com/peps_rp), Gleb (https://twitter.com/project_gleb), or me directly.
+Move-in date: December 7th.
+Rent: 750 p. month.
+
+A teaser made by our friends in SF:
+https://x.com/_TheResidency/status/1856808393744552416
+[28/11/2024, 17:53:29] Maria: Reminder to sign up to Jamie and Ilja’s demo next week!! https://lu.ma/qxg25z5p 🔥🕺
+[28/11/2024, 17:53:40] Maria: It’s gonna be 🤯
+[28/11/2024, 19:27:04] Tiaguito 🦨: Genuine question, do you guys consider environmental impact when choosing which tools to use and when/how often to use them?
+[28/11/2024, 19:27:47] Josh 🦒: Absolutely not
+[28/11/2024, 19:27:55] Maria: me neither hahaha
+[28/11/2024, 19:27:59] Josh 🦒: But it’s an interesting point
+[28/11/2024, 19:28:29] Maria: in fact, in our MSc AI there was a week of strikes and the professors chose to skip the week of “ethics” which was about the environmental impact of training ML models
+[28/11/2024, 19:32:55] Matthew Spaul Nova: L'Oréal asked me about this
+[28/11/2024, 19:33:58] Matthew Spaul Nova: My response was that smaller models can reduce the energy use, but it's rarely going to be the primary driver for model choice
+[28/11/2024, 19:34:39] Matthew Spaul Nova: And the main thing is where you choose to deploy - France and Sweden have good grids for CO2 footprint relative to the world
+[28/11/2024, 19:35:21] Tiaguito 🦨: I imagine it’s the same approach with storage/cloud
+[28/11/2024, 19:36:03] Matthew Spaul Nova: Exactly, for a corporate esg team it's nothing new
+[28/11/2024, 20:11:17] Jon Evans EF: Never considered it really. I know the big AI labs do but that’s mostly due to ESG narrative.
+[28/11/2024, 20:14:09] Matthew Spaul Nova: The big ESG concern for the mega AI labs is actually the S. Lots of criticism about the fairness of their data sources, output bias, and redteamers exposed to harmful outputs ‎<This message was edited>
+[28/11/2024, 20:17:11] Theo W: There was a section about carbon footprint in the og llama paper https://arxiv.org/pdf/2302.13971 but they havent done this since...
+[28/11/2024, 20:18:19] Matthew Spaul Nova: Bringing back this graph
+[28/11/2024, 20:18:43] Matthew Spaul Nova: https://www.nature.com/articles/s41598-024-54271-x
+[28/11/2024, 20:20:01] Jon Evans EF: Yeah precisely - it seems that any environmental impact would be orders of magnitude lower than the human equivalent
+[28/11/2024, 21:59:12] Jamie Martin EF: https://www.freysa.ai 🤡
+[28/11/2024, 22:02:30] Maria: @420720656933 I believe in you and your IC funding
+[28/11/2024, 22:04:48] Ben Clarke: Love this graph
+‎[28/11/2024, 22:43:39] Jon Evans EF: ‎image omitted
+[28/11/2024, 22:59:36] Ben Clarke: That seems like a pretty rough edge to me 🤣
+[29/11/2024, 10:40:07] Jamie Martin EF: Updates to this - it’s a really great thread. 🧵 
+
+https://x.com/jarrodWattsDev/status/1862299845710757980
+[29/11/2024, 11:44:25] ~ Timo Ewalds: ‎~ Timo Ewalds requested to join
+[29/11/2024, 13:58:06] ~ Timo Ewalds: ‎~ Timo Ewalds joined using this group's invite link
+[29/11/2024, 15:01:51] Jon Evans EF: Wonder if this could generalise as a tool to incentivise exploit finding
+[29/11/2024, 15:02:12] Jon Evans EF: https://pca.st/episode/5350547b-c0bc-4ffe-80bf-ed0547984e2c
+[29/11/2024, 15:21:26] Jamie Martin EF: Yeh. I think this is a big point of interest. The fact that it’s hosted on blockchain seems to have had negative pr for them, as it seems more scammy. But on the other hand, it’s more transparent and open (not controlled once released) if you know how to inspect it properly.
+[29/11/2024, 15:21:46] Jamie Martin EF: Cool experiment, and neat that it raised $50kish
+[29/11/2024, 17:41:24] Maria: Reminder to sign up to Jamie and Ilja’s demo next week!! https://lu.ma/qxg25z5p 🔥🕺lots of you love appearing in the call without registering, please just register 😂 it takes 2 secs
+[29/11/2024, 18:22:57] Maria: https://www.linkedin.com/posts/svpino_langflow-is-the-best-tool-ive-found-for-activity-7267900088432185344-uxMn
+[29/11/2024, 18:23:37] Josh 🦒: I can’t deal with all these lang-… variants
+[29/11/2024, 18:23:58] Josh 🦒: Just tell me which is king and I’ll blindly follow
+[29/11/2024, 18:24:09] Theo W: one of the guys on my program is working on this https://agoraprotocol.org/
+[29/11/2024, 19:30:43] Jamie Martin EF: 🔥https://www.nature.com/articles/s41562-024-02046-9
+[30/11/2024, 08:01:21] Matthew Spaul Nova: Interesting discussion in there on forward vs backwards-looking benchmarks
+[30/11/2024, 08:02:21] Matthew Spaul Nova: Not sure if I buy the idea that hallucination is "beneficial" for forwards-facing eval
+[30/11/2024, 09:35:03] Jamie Martin EF: Yeh agree, it’s not clear enough in the way it’s written, and “beneficial” is too strong a word. I think it’d be better phrased to suggest hallucinations are generally bad in backward-looking benchmarks, but for prediction, some degree of controlled divergence or creative synthesis can help explore the search space of possibilities, but it still comes with risks of overconfidence and error.
+[30/11/2024, 09:35:58] Jamie Martin EF: There’s a few passages in the paper that aren’t consistent with other literature too, or again not precise enough. Eg they state a general concern is that llms memorise the training data. However, they took a measurement of their dataset and found this not to be the case.
+[30/11/2024, 09:36:29] Jamie Martin EF: Still interesting paper though, and finding
+‎[01/12/2024, 13:38:42] Maria: ‎image omitted
+‎[01/12/2024, 13:38:49] Maria: ‎image omitted
+[01/12/2024, 13:38:53] Maria: Lmao
+‎[01/12/2024, 13:40:13] Maria: ‎image omitted
+[01/12/2024, 13:40:19] Maria: Can anyone make it say it?
+‎[01/12/2024, 13:40:32] Josh 🦒: ‎image omitted
+[01/12/2024, 13:40:49] Maria: Fun 😂
+‎[01/12/2024, 13:48:24] Jamie Martin EF: ‎image omitted
+[01/12/2024, 13:50:00] Maria: Is it possible that he wanted to sue OpenAI for using his content so they cancel all possible responses with his name on it?
+‎[01/12/2024, 13:50:20] Matthew Spaul Nova: ‎image omitted
+[01/12/2024, 13:50:29] Matthew Spaul Nova: It's a specific guardrail
+[01/12/2024, 13:55:27] Matthew Spaul Nova: https://en.wikipedia.org/wiki/David_Mayer_de_Rothschild
+[01/12/2024, 13:56:43] Matthew Spaul Nova: 🤔 how conspiracy-theorist do you want to go? ‎<This message was edited>
+‎[01/12/2024, 14:00:14] Matthew Spaul Nova: ‎image omitted
+‎[01/12/2024, 14:14:48] Jamie Martin EF: ‎image omitted
+[01/12/2024, 14:15:12] Jamie Martin EF: Nailed it.
+[01/12/2024, 14:15:23] Jamie Martin EF: https://chatgpt.com/share/674c6165-6030-8002-b8a5-e0fad7005cd4
+[01/12/2024, 14:16:53] Maria: Nice!!!
+[01/12/2024, 14:17:31] Jamie Martin EF: If you copy and paste my prompt, you should see it’ll work for you
+[01/12/2024, 14:19:56] Jamie Martin EF: It’s a bit of a cheat though.
+[01/12/2024, 14:19:58] Maria: If I copy and paste, it works, if I write the exact same thing myself, it fails
+[01/12/2024, 14:20:03] Maria: Did you modify a letter?
+‎[01/12/2024, 14:20:19] Jamie Martin EF: ‎image omitted
+[01/12/2024, 14:55:52] Jamie Martin EF: I used the invisible character and placed it between May and er. 
+
+https://en.m.wikipedia.org/wiki/Byte_order_mark
+
+It’s invisible to human readers, but it’s visible to machines.
+‎[01/12/2024, 15:00:37] Callum 🇿🇦: ‎image omitted
+‎[01/12/2024, 15:00:37] Callum 🇿🇦: ‎image omitted
+[01/12/2024, 15:05:57] ~ julio: Where can I copy paste this from 😅
+[01/12/2024, 15:06:25] Jamie Martin EF: The irony is he probably requested that censorship for privacy reasons, and it’s massively backfired 😂
+[01/12/2024, 15:07:25] Jamie Martin EF: Copy the response from here: https://chatgpt.com/share/674c6d85-0df4-8002-9252-7c975f2827b2
+[01/12/2024, 15:07:38] Josh 🦒: https://en.m.wikipedia.org/wiki/Streisand_effect
+[01/12/2024, 15:08:23] Jamie Martin EF: or between these arrows:
+>
+​
+<
+[01/12/2024, 18:17:08] Matthew Spaul Nova: https://x.com/goodside/status/1863196752632852704?t=CuP6SnOCEiFQOSfUYnGIxg&s=08
+[01/12/2024, 18:18:01] Matthew Spaul Nova: Can 👏 give 👏 ChatGPT 👏 the 👏 clap 👏 too 👏 if 👏 you 👏 want
+[01/12/2024, 18:23:37] Jamie Martin EF: 👏nice find 👏
+[01/12/2024, 18:26:29] Matthew Spaul Nova: Riley (tweeter above) is our staff prompt engineer at Scale
+[01/12/2024, 18:33:46] Maria: Add them here 🕺
+[01/12/2024, 18:37:01] Jamie Martin EF: this looks like the same attack that I used - token bypass vulnerability.
+
+Interestingly they seem to have now plugged it though.
+[01/12/2024, 18:41:58] Matthew Spaul Nova: Alas my americanski colleagues don't use WhatsApp ‎<This message was edited>
+[01/12/2024, 18:49:10] Jamie Martin EF: Here is the same attack but cleaner without that clapping
+[01/12/2024, 18:49:13] Jamie Martin EF: https://chatgpt.com/share/674ca187-0260-8002-80e9-46d0ed1ccf85
+[01/12/2024, 18:49:21] Jamie Martin EF: I’ll comment on the thread.
+[02/12/2024, 10:46:31] Maria: Sign up for today’s session! Super interesting demo from @447540236302 and @447470431330 
+
+➡️https://lu.ma/qxg25z5p
+[02/12/2024, 11:25:15] Ali Eslami: ‎Ali Eslami requested to join
+[02/12/2024, 11:25:25] Ali Eslami: ‎Ali Eslami joined using this group's invite link
+[02/12/2024, 12:30:14] Jamie Martin EF: I thought this was supposed to be tomorrow?
+[02/12/2024, 12:30:48] Maria: Ahh - I can move it
+[02/12/2024, 12:31:10] Maria: done
+[02/12/2024, 19:35:53] James EF: https://x.com/goodside/status/1863631140143157413/photo/2
+[02/12/2024, 19:53:32] ~ 🐧Nielsou🐧: Hahahaahahh
+[02/12/2024, 21:23:25] Matthew Spaul Nova: Anyone got a guide for estimating GPU memory usage for the same model with different data types?
+[02/12/2024, 21:24:04] Matthew Spaul Nova: Like would an image use more than a string with the same "length" because of the underlying data type?
+[02/12/2024, 21:25:49] Jamie Martin EF: Unfold wrote a pretty good basic guide I saw, not sure if it’s useful - https://unfoldai.com/gpu-memory-requirements-for-llms/
+‎[02/12/2024, 21:27:05] Matthew Spaul Nova: ‎image omitted
+[02/12/2024, 21:27:40] Matthew Spaul Nova: Oh I suppose that the memory for the model weight
+[02/12/2024, 21:27:53] Matthew Spaul Nova: So the data type isn't about the input data
+[02/12/2024, 21:30:30] Matthew Spaul Nova: Thanks Jamie 🙏
+[02/12/2024, 22:17:02] ~ 🐧Nielsou🐧: Do you have a concrete example? Is it an issue of data type -> size?
+[02/12/2024, 22:17:54] ~ julio: https://vram.asmirnov.xyz/ my friend Alex built this does it help?
+[02/12/2024, 22:18:17] Matthew Spaul Nova: There's a step in the calculation where you multiply by the data type size in bytes. I assumed this related to the input data, but it's actually the model itself being held in memory
+[02/12/2024, 22:18:36] Matthew Spaul Nova: And model weights are typically held in FP16 which would be 2 bytes
+[02/12/2024, 22:26:01] ~ 🐧Nielsou🐧: Right so in general when using a model you need the data + model + backprop weights if training and optimizer
+
+For inputs you will need usually input size and all layers outputs, or if done more intelligently at least the size of the max of all of these. 
+
+Not sure if that is helpful
+[02/12/2024, 22:26:42] ~ 🐧Nielsou🐧: But it really depends how it is coded and if i m not mistaken these models are also often distributed so it can get messy easily
+[02/12/2024, 22:29:31] Matthew Spaul Nova: Yeah currently trying to work out the distribution if there are 3k concurrent users
+[02/12/2024, 22:29:52] Matthew Spaul Nova: And what memory gets split vs duplicated
+[02/12/2024, 22:31:14] ~ 🐧Nielsou🐧: I saw once that you can force the code to use the memory in specific ways, for example, avoid fragmentation, avoid cleaning etc. That way you can really see what s being stored at what step, with a debugger for example
+[02/12/2024, 22:31:27] ~ 🐧Nielsou🐧: Perhaps that could be a way of looking into that?
+[02/12/2024, 22:33:18] Matthew Spaul Nova: I will try to find a way to make this AWS's problem instead of mine
+[03/12/2024, 09:51:14] Matthew Spaul Nova: https://techcrunch.com/2024/12/02/ads-might-be-coming-to-chatgpt-despite-sam-altman-not-being-a-fan/
+[03/12/2024, 09:51:40] Matthew Spaul Nova: Called it
+[03/12/2024, 11:30:57] Maria: Ok, today is the day. Jamie and Ilja are presenting today: https://lu.ma/YAMLRG join us!
+[03/12/2024, 11:31:06] Maria: 18:30-19:30 online
+[03/12/2024, 11:33:04] Josh 🦒: I think it’s realistically the only way to go? Free tier with ads, paid without
+[03/12/2024, 11:35:14] Jon Evans EF: I guess they train on everyone’s data anyway, otherwise could have the paid tier you aren’t trained on. Would think there’s insane value in the data they are collecting
+‎[03/12/2024, 11:36:19] Jamie Martin EF: ‎image omitted
+[03/12/2024, 11:36:55] Maria: LLMs win win 🏅
+[03/12/2024, 11:37:19] ‎You: ‎You pinned a message
+[03/12/2024, 13:06:32] James EF: suffy g line
+[03/12/2024, 13:06:39] James EF: nice
+[03/12/2024, 13:07:57] Matthew Spaul Nova: LIBERTY 🇺🇸🇺🇲🗽🦅🦅🦅
+[03/12/2024, 13:12:23] Joe Hewett: genius marketing from https://weaviate.io/ getting a whole line named after them
+[03/12/2024, 14:07:49] Jon Evans EF: https://github.com/huggingface/smol-course - free huggingface course on aligning smol language models
+[03/12/2024, 14:12:27] Jon Evans EF: https://www.zenml.io/llmops-database
+[03/12/2024, 14:16:51] Ali Eslami: ‎Ali Eslami left
+[03/12/2024, 16:27:29] Maria: today’s session will be recorded but not published, so if you want to join, don’t miss it
+[03/12/2024, 19:19:31] Maria: STARTING IN 10 MINS: https://meet.google.com/vmb-vtqg-ufq
+[03/12/2024, 19:30:13] Maria: join people
+‎[03/12/2024, 22:11:22] Matthew Spaul Nova: ‎image omitted
+[03/12/2024, 22:13:52] Mihir EF: Can u send the link
+[03/12/2024, 22:14:29] Matthew Spaul Nova: https://www.aboutamazon.com/news/aws/amazon-nova-artificial-intelligence-bedrock-aws
+[03/12/2024, 22:15:10] Mihir EF: Ahh i meant to the figure
+[03/12/2024, 22:15:44] Mihir EF: Or is it from the huggingface guys
+[03/12/2024, 22:16:06] Matthew Spaul Nova: Ah I just got it from Twitter
+[03/12/2024, 22:16:43] Matthew Spaul Nova: But can be found here: https://aws.amazon.com/de/ai/generative-ai/nova/understanding/
+[03/12/2024, 22:17:31] Mihir EF: Omg
+[03/12/2024, 22:17:38] Mihir EF: Know the guy, will tell him
+[04/12/2024, 15:45:08] Jamie Martin EF: Hey All, 
+
+Thanks for attending yesterday’s event, and for hosting and all the great feedback.
+
+We’re currently in the process of sourcing alpha testers for our initial release. 
+
+If you’re interested to try it out and offer to provide us feedback please visit the Colare site to request access to the browser extension. We will be aiming to distribute as soon as possible (hopefully within 1-2 weeks).
+[04/12/2024, 15:45:35] Jamie Martin EF: Please sign-up requesting access on our site below, so we can keep track of who would like free alpha tester access: http://colare.ai
+[04/12/2024, 15:46:11] Maria: Contact us or Get demo?
+[04/12/2024, 15:46:27] Jamie Martin EF: Contact Us
+[04/12/2024, 15:46:28] Maria: oh they both go to “Contact the team”
+[04/12/2024, 15:46:45] Jamie Martin EF: Yeh, just click there, anyone who sends it to, we’ll keep track of to send the extension to.
+[04/12/2024, 17:25:08] Callum 🇿🇦: https://deepmind.google/discover/blog/genie-2-a-large-scale-foundation-world-model/
+Genie 2 🧞‍♀️
+[04/12/2024, 19:02:03] Maria: does anyone have a subscription for https://www.comsol.com/ ?
+[04/12/2024, 19:05:43] Maria: or https://www.ansys.com/en-gb?
+‎[04/12/2024, 19:11:10] Matthew Spaul Nova: ‎image omitted
+[04/12/2024, 19:11:51] Tom Farrand EF: OpenFOAM is an open source alternative
+[04/12/2024, 19:12:21] Tom Farrand EF: If you’re looking for CFD sim software
+[04/12/2024, 19:13:08] Callum 🇿🇦: Also look at Physicsx and BeyondMath for startups doing ML for CFD
+[04/12/2024, 23:20:50] ~ Franz: I talked to Michael, first author of genie 1; he basically thinks that world modelling will be solved in 5-10 years and adjusts his research accordingly
+[04/12/2024, 23:26:16] Matthew Spaul Nova: What would be considered "solved"?
+[04/12/2024, 23:41:18] ~ Jack: https://berkeley.us14.list-manage.com/track/click?u=0d89bb5c8066a9533e
+
+Berkeley is doing a hackathon until the 17th with a 200k prize pool focused around LLM agents
+[05/12/2024, 01:36:50] ~ Franz: sufficiently high quality to represent the world
+[05/12/2024, 01:36:53] ~ Franz: whatever that means
+‎[05/12/2024, 11:09:44] Jamie Martin EF: ‎image omitted
+[05/12/2024, 11:16:01] Matthew Spaul Nova: 740k employees make more revenue than 5k employees 🤔
+[05/12/2024, 11:19:12] Matthew Spaul Nova: (I am miffed at ACN because they took our slides and rebadged it as their own work)
+[05/12/2024, 14:53:09] Callum 🇿🇦: https://x.com/chimtx/status/1864323972747415723
+xreal drops info about their custom AR chip
+[05/12/2024, 15:02:25] Callum 🇿🇦: https://x.com/GoogleDeepMind/status/1864340994965098513
+sota weather prediction from DM 🫡🌧️
+[05/12/2024, 15:09:05] ~ Edan Toledo: Make it free! Make it free! Make it free? Make it cost? Let me pay? Please can I pay? I will pay! I will pay!
+[05/12/2024, 15:09:20] ~ Edan Toledo: I need weather prediction
+[05/12/2024, 15:09:30] ~ Edan Toledo: I can’t live in these uncertain times
+‎[05/12/2024, 15:10:34] Matthew Spaul Nova: ‎GIF omitted
+[05/12/2024, 15:10:58] Callum 🇿🇦: you live in London
+[05/12/2024, 15:11:10] Callum 🇿🇦: dark grey with a chance of light grey
+[05/12/2024, 15:11:36] Theo W: results are misleading, regular weather prediction is still better
+[05/12/2024, 15:11:46] Matthew Spaul Nova: If I remember correctly, the GDM approach was strong for temperature and wind predictions
+[05/12/2024, 15:11:56] Matthew Spaul Nova: But didn't beat existing methods for precipitation
+[05/12/2024, 15:12:20] Matthew Spaul Nova: Unless there's a new development here?
+[05/12/2024, 15:12:23] Theo W: but the existing methods they present are not exactly what weather prediction uses
+[05/12/2024, 15:13:14] ~ Edan Toledo: I’m saved
+[05/12/2024, 15:18:15] ~ Timo Ewalds: I used to work on that team. Do you have specific questions about graphcast or gencast?
+[05/12/2024, 15:19:22] ~ Timo Ewalds: Turns out precipitation is hard due to poor data quality, so I'm not sure gencast is actually worse, but ground truth for training and evaluation is bad.
+[05/12/2024, 15:20:41] ~ Timo Ewalds: Yes, gencast is new. Graphcast (released last year) was a deterministic model, while gencast is a generative model. That makes it slower but much better at representing the true distribution and uncertainty about the weather, which is very useful.
+[05/12/2024, 15:21:10] Matthew Spaul Nova: What would be ideal data for precipitation? Cloud density via radar map across full earth+atmosphere? ‎<This message was edited>
+[05/12/2024, 15:21:44] ~ Timo Ewalds: It'll probably be the default weather forecast on Google search at some point. It will also be reimplemented by the major weather agencies so should effectively be used everywhere in a few years
+[05/12/2024, 15:22:12] ~ Timo Ewalds: I'm not actually sure. I didn't work on that part.
+[05/12/2024, 15:23:02] ~ Timo Ewalds: But right now gencast only does 12h increments, so is much more useful for a 15 day forecast, and useless for an hourly forecast
+[05/12/2024, 15:24:14] Matthew Spaul Nova: When I was doing Meteo models back at uni a lot of the discussion in computing labs was about how the algos affected the future hardware investments they needed to make, which then affected the algos in a slow feedback loop
+[05/12/2024, 15:24:16] ~ Timo Ewalds: The reason for that is the training data is not observations but assimilated state from ecmwf which is only available historically at 12h increments. Once they release ground truth data at 1h increments then shorter term models will be possible
+[05/12/2024, 15:24:26] Matthew Spaul Nova: Does this break some of the hardware choices in Meteo labs?
+[05/12/2024, 15:25:22] ~ Edan Toledo: I cannot wait a few years in times like this. I will picket outside the deepmind office to force the research to applied team to integrate faster.
+[05/12/2024, 15:26:22] ~ Timo Ewalds: Oh probably. They have huge CPU clusters, but training these models needs GPUs. Thankfully those are easy to rent, and you only need a handful for worldwide inference.
+[05/12/2024, 15:26:41] ~ Timo Ewalds: Hah, if only. It's hard to get right!
+[05/12/2024, 15:27:21] ~ Timo Ewalds: By handful I mean a handful of GPUs, not a handful of clusters
+[05/12/2024, 15:29:14] Matthew Spaul Nova: Would one expect to apply this on the 12h increment and then use prior models to interpolate inside the increments?
+[05/12/2024, 15:29:37] ~ Timo Ewalds: Btw, you can see my name on the paper, and on the GitHub repo.
+[05/12/2024, 15:29:55] ~ Timo Ewalds: That's certainly a valid approach
+[05/12/2024, 15:32:48] Matthew Spaul Nova: Cool stuff - congrats on the release 👍
+[05/12/2024, 18:10:33] Jamie Martin EF: Leak: OpenAI is preparing a Pro Plan at $200/mo
+
+For this price ($200 / £200 / €229 per month), you'll get:
+
+→ Unlimited access to o1 (mini and preview) and GPT-4o
+→ Unlimited access to advanced voice
+→ Access to o1 pro mode (more compute, better answers)
+→ Everything in Plus
+[05/12/2024, 18:10:45] Jamie Martin EF: from a reliable source
+[05/12/2024, 18:11:23] Jamie Martin EF: here: https://web.archive.org/web/20241205160844/https://cdn.oaistatic.com/assets/gwtu8l0gqil6namv.js
+[05/12/2024, 18:12:03] Jamie Martin EF: > {id:"pricingPlanConstants.pro.proPlanSummary",de faultMessage:"Get the best of OpenAI with the highest level of access"},proCost:{id:"pricingPlanConstants.pro.costInDollars",defaultMessage:"200"},proCostInPounds:{id:"pricingPlanConstants.pro.costInPounds",defaultMessage:"200"},proCostInEuros:{id:"pricingPlanConstants.pro.costInEuros",defaultMessage:"229"},proAdvertisedFeatures0:{id:"pricingPlanConstants.pro.proAdvertisedFeatures0",defaultMessage:"Everything in Plus"},proAdvertisedFeatures1:{id:"pricingPlanConstants.pro.proAdvertisedFeatures1",defaultMessage:"Unlimited access to o1, o1-mini, and GPT-4o"},proAdvertisedFeatures2:{id:"pricingPlanConstants.pro.proAdvertisedFeatures2",defaultMessage:"Unlimited access to advanced voice"},proAdvertisedFeatures3:{id:"pricingPlanConstants.pro.proAdvertisedFeatures3",defaultMessage:"Access to o1 pro mode, which uses more compute for the best answers to the hardes
+‎[05/12/2024, 18:25:54] ~ Edan Toledo: ‎image omitted
+[05/12/2024, 20:38:10] Jon Evans EF: https://x.com/sama/status/1864736282276171810?s=46&t=NMQBkdnlNqfZai4AvuI71g
+‎[05/12/2024, 21:01:44] Matthew Spaul Nova: ‎image omitted
+[05/12/2024, 21:08:52] Karl Gustav EF: For 15 seconds I was scared when my phone rang. I thought there’s going to be a tsunami…
+[06/12/2024, 09:01:36] Jamie Martin EF: https://x.com/nrehiew_/status/1864763064374976928?s=46&t=rXPn6MNSQPs2TLaxBtyGog
+‎[06/12/2024, 14:55:28] Matthew Spaul Nova: ‎image omitted
+[06/12/2024, 14:56:27] Jamie Martin EF: I got three messages and responses to o1, then it told me I hit the limits and please spend $200 to keep using it.
+[06/12/2024, 14:57:41] Rafael EF: api access with openwebui might be a better alt
+[06/12/2024, 14:57:46] Matthew Spaul Nova: This is how they hit the revenue forecasts
+[06/12/2024, 17:50:40] Jamie Martin EF: https://x.com/PeterDiamandis/status/1864867717712416784
+[06/12/2024, 17:57:25] Jamie Martin EF: https://arxiv.org/abs/2411.16905
+[06/12/2024, 18:14:10] Jamie Martin EF: And..
+[06/12/2024, 18:14:12] Jamie Martin EF: https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct
+[06/12/2024, 18:21:07] Jamie Martin EF: “Ahmad Al-Dahle published a chart showing Llama 3.3 70B outperforming Google’s Gemini 1.5 Pro, OpenAI’s GPT-4o, and Amazon’s newly released Nova Pro on a number of industry benchmarks, including MMLU”
+[06/12/2024, 18:23:01] Jamie Martin EF: The key question I have now is, is the universe a closed system?
+[06/12/2024, 21:55:14] ~ Franz: i cant believe it
+[06/12/2024, 21:55:27] ~ Franz: that’s the thesis we developed during ef
+[06/12/2024, 21:55:45] ~ Franz: we literally wanted to write a mail to that guy last week
+‎[06/12/2024, 21:56:24] ~ Franz: ‎image omitted
+[06/12/2024, 21:56:30] ~ Franz: ‎This message was deleted.
+‎[06/12/2024, 21:57:04] ~ Franz: ‎image omitted
+[06/12/2024, 22:13:44] ~ Pascu: Open-endedness, as Tim Rocktäschel proposes, is where its at ‎<This message was edited>
+[06/12/2024, 22:15:58] ~ Pascu: https://arxiv.org/abs/2406.04268
+[06/12/2024, 22:24:33] ~ Franz: yeah but open endedness just described the problem, not the solution
+[06/12/2024, 22:25:59] ~ Pascu: I know hahaha, wish I knew the solution for certain
+‎[06/12/2024, 22:32:15] Jamie Martin EF: ‎image omitted
+[06/12/2024, 22:33:25] ~ Franz: just scale self-improvement
+[06/12/2024, 22:34:38] ~ Pascu: what would you use as a reward function?
+[06/12/2024, 22:34:58] Jamie Martin EF: Ground truth
+[06/12/2024, 22:36:55] ~ Pascu: There is ground truth for closed systems (ie games, maths, coding maybe), but for more open systems its much harder to find
+[06/12/2024, 22:37:41] ~ Pascu: And as Franz said, you cannot scale humans to be provide the reward function
+[06/12/2024, 22:37:55] ~ Pascu: What do you suggest @447540236302 ?
+[06/12/2024, 22:39:03] ~ Pascu: I'm quite new to RL (more used to NLP)
+[06/12/2024, 23:03:25] Jamie Martin EF: _Thought for 20 minutes_ 
+I guess for self-improvement for open problems you’d have to adapt them to be closed in some way, like we do for math and physics. We also sometimes do it for language (like programming or proof solving languages), and also to a lesser degree in invented languages like Esperanto. As long as you can get a signal for truth (which we often can’t for cultural meaning/language, as it’s sometimes too low ambiguous/uncertain) then you’ve got a good environment.
+
+I like the idea of setting to loose on the real world by giving them sensors to get signal and some limited actions to try things, or simulate it with programming languages or proof solvers. Feels like there’s still a tonne of progress achievable here.
+[06/12/2024, 23:06:16] Jamie Martin EF: So yes I agree with you. It’s hard
+[06/12/2024, 23:18:40] Lukasz Bartoszcze EF: I looked at this and thought fuck we just talked about this yesterday with Franz lol 🤣
+[06/12/2024, 23:20:31] Lukasz Bartoszcze EF: Btw here is the paper on how rep eng can be used for the task we discussed yesterday kinda https://aclanthology.org/2024.acl-long.572/
+[06/12/2024, 23:24:38] ~ Pascu: In terms of your first point, yeah I cannot really think of a good way of making language and expression closed. I guess that's where the AI must learn from very sparse rewards that humans generate when interacting with the AI, or get paid (annotators)
+[06/12/2024, 23:28:24] ~ Pascu: For the second point I think its gonna we super cool whenever we see truly autonomous robots interacting in the real world. But I would guess they would need to be pretrained on simulation environments (ie world models like Genie) as a proxy for the real world, just so they don't totally mess up
+[06/12/2024, 23:29:41] ~ Pascu: But from there to infinite self-improvement..... I have no idea how to get there hahaha
+‎[07/12/2024, 18:41:52] Jamie Martin EF: ‎image omitted
+[07/12/2024, 20:06:10] Matthew Spaul Nova: "AI is going to create jobs too"
+[07/12/2024, 22:44:10] ~ julio: https://x.com/tsarnick/status/1865506893193789555
+[08/12/2024, 19:08:43] Callum 🇿🇦: ‎Callum 🇿🇦 changed the group description
+[08/12/2024, 19:09:19] ~ Stuart: ‎Callum 🇿🇦 added ~ Stuart
+[09/12/2024, 18:09:14] Callum 🇿🇦: MKBHD on Sora, dropping in ~1hr
+https://x.com/MKBHD/status/1866152437838393797
+[09/12/2024, 18:10:12] Jamie Martin EF: Surprising he’s able to confirm it as someone with insider info. I’d thought they’d not be happy with him about it
+[09/12/2024, 18:11:14] Callum 🇿🇦: yeah, very weird that his embargo wasn’t after the OAI official comms 🤷‍♀️
+[09/12/2024, 20:02:57] Ben Clarke: I just went on the website and looks like it’s not available in the UK. Does anyone know how much a subscription is and how it works?
+[09/12/2024, 20:05:37] Jon Evans EF: Supposedly available to all pro/plus users https://x.com/sama/status/1866187525821538436 . Not clear if they are gating it in the uk because of regulation or just to stagger rollout
+[09/12/2024, 20:05:59] Jon Evans EF: “with an openai plus account, you get 50 generations per month.
+
+with a pro account, you get 500 fast generations (or fewer at high resolution) and unlimited in a slower generation mode.”
+[09/12/2024, 20:06:01] Jamie Martin EF: It’s gated for eu and uk.
+[09/12/2024, 20:06:08] Jamie Martin EF: Use a vpn and you can get through
+[09/12/2024, 20:06:37] Jon Evans EF: temp unavailable even with vpn. Must be getting hammered
+[09/12/2024, 20:11:22] Ben Clarke: Oh right, pro subscription making more sense now then I guess!
+‎[10/12/2024, 10:16:49] Jamie Martin EF: ‎video omitted
+[11/12/2024, 16:30:21] Jamie Martin EF: Gemini 2.0 is here
+[11/12/2024, 16:30:47] Jamie Martin EF: https://ai.google.dev/gemini-api/docs/models/gemini-v2
+[11/12/2024, 18:10:24] Maria: This is dangerousssss
+[12/12/2024, 18:07:34] Matthew Spaul Nova: https://semianalysis.com/2024/12/11/scaling-laws-o1-pro-architecture-reasoning-infrastructure-orion-and-claude-3-5-opus-failures/
+[12/12/2024, 20:07:50] ~ Franz: https://x.com/simonw/status/1866942603020910866
+[13/12/2024, 00:21:35] Karl Gustav EF: https://www.anthropic.com/research/clio
+[13/12/2024, 08:08:41] Jamie Martin EF: https://arxiv.org/abs/2412.08905
+‎[13/12/2024, 11:16:27] Jamie Martin EF: ‎image omitted
+[13/12/2024, 13:16:31] ~ julio: And it’s not only about the novelty, it’s just so much better to get in a car withtout the smell of food of whatever the driver was having
+[13/12/2024, 13:16:47] ~ julio: We humans love avoiding other humans 😅
+‎[13/12/2024, 14:34:38] Callum 🇿🇦: ‎image omitted
+[13/12/2024, 15:07:25] Matthew Spaul Nova: Getting this reference is a leading indicator someone spends too much time on Twitter
+[13/12/2024, 17:39:19] Jamie Martin EF: https://www.liquid.ai/blog/we-raised-250m-to-scale-capable-and-efficient-general-purpose-ai
+[13/12/2024, 19:41:39] ~ Jack: Meta is going a bit nuts today
+‎[13/12/2024, 19:41:42] ~ Jack: ‎image omitted
+[13/12/2024, 19:42:26] ~ Jack: https://arxiv.org/pdf/2412.08821
+‎[13/12/2024, 19:43:17] ~ Jack: ‎image omitted
+[13/12/2024, 19:43:45] Jamie Martin EF: Is that really more efficient though?
+[13/12/2024, 19:43:59] Jamie Martin EF: I thought the whole idea of BPE, is it’s more memory efficient.
+[13/12/2024, 19:44:14] ~ Jack: Apparently it scales better for the same compute
+[13/12/2024, 19:44:18] Jamie Martin EF: Or is it the case, that somehow that transformation has moved into the transformer with the same memory efficiency?
+‎[13/12/2024, 19:44:23] ~ Jack: ‎image omitted
+‎[13/12/2024, 19:45:41] ~ Jack: ‎image omitted
+[13/12/2024, 19:47:11] Jamie Martin EF: Thanks. Will give this a read later.
+[13/12/2024, 19:55:14] ~ Timo Ewalds: https://www.youtube.com/watch?v=Ewg2Mp_j-_g
+‎[13/12/2024, 20:34:34] Jamie Martin EF: ‎image omitted
+‎[14/12/2024, 10:45:03] Jamie Martin EF: ‎image omitted
+‎[14/12/2024, 10:46:31] Jamie Martin EF: ‎image omitted
+[14/12/2024, 10:46:46] Jamie Martin EF: But he does separate out synthetic data as a solution.
+[14/12/2024, 10:47:02] Jamie Martin EF: https://youtu.be/1yvBqasHLZs?si=vb5I_QnKidhoY5FJ
+[14/12/2024, 11:13:19] Matthew Spaul Nova: There is a meaningful difference between "all data" and "data for LLM pretraining"
+[14/12/2024, 11:14:26] Matthew Spaul Nova: In the graph that includes non-language data, data that is not accessible, and data that is poor quality
+[14/12/2024, 11:15:06] Jamie Martin EF: Yes, it’s very hard to find data sources for LLM ptretraining data only, but I expect that to be growing too ‎<This message was edited>
+[14/12/2024, 11:16:59] Jamie Martin EF: From:
+- user generated content (growing nonlinear)
+- ⁠ai generated content (exponential)
+- ⁠editorial content (a bit faster than linear)
+[14/12/2024, 11:17:36] Jamie Martin EF: It may be true it’s being protected and locked up in platforms more so though (discord, Reddit, YouTube, etc.), but it is definitely growing at a faster rate than ever
+[14/12/2024, 11:19:11] Matthew Spaul Nova: Platforms actively protecting their UGC is quite significant. Google isn't actually allowed to use the content from YouTube for training their models
+[14/12/2024, 11:19:23] Matthew Spaul Nova: Because it's in their own copyright rules
+[14/12/2024, 11:20:24] Matthew Spaul Nova: But this hasn't been tested in court (and internally it's expected to not hold)
+[14/12/2024, 11:20:25] Jamie Martin EF: More specifically, I think the solve is ai generated synthetic data from environments (similar to DeepMind from games, or lean for math proofs, or running programmes in a sandbox and generating outputs and logs for coding)
+[14/12/2024, 11:21:09] Jamie Martin EF: On copyright, I saw that sadly an ex OpenAI employee who was a strong  proponent of copyright took his life recently.
+[14/12/2024, 11:21:32] Jamie Martin EF: An post he wrote - https://suchir.net/fair_use.html
+[14/12/2024, 11:24:06] Jamie Martin EF: I guess the point is, it’s hard to argue that we’re hitting a data wall when it’s growing faster than ever. The problem is something else (eg laws or access)
+[14/12/2024, 11:25:00] Matthew Spaul Nova: The main argument against the data wall is that it's only applicable to pretraining
+[14/12/2024, 11:25:23] Matthew Spaul Nova: And there there are bunch of other data levers in post training to enable significant performance and functional growth
+[14/12/2024, 11:26:17] Matthew Spaul Nova: Discussed at length in this semi analysis post
+[14/12/2024, 11:27:42] Jamie Martin EF: Yeh I read this this one. And agree on post-training stuff too.
+[14/12/2024, 11:28:21] Jamie Martin EF: But in RL, data has always been possible to generate by interacting with environment, so unless humans are required (eg perhaps for language), then we shouldn’t really be hitting a data wall
+[14/12/2024, 11:30:17] Jamie Martin EF: Though there are a few cases where we clearly are, eg for smaller languages etc
+[14/12/2024, 11:30:25] Matthew Spaul Nova: Yeah there will be plenty of opportunity to actively generate data (not to plug but this is Scale's core business)
+[14/12/2024, 11:30:32] Jamie Martin EF: Icelandic translation being a good concrete example, and that’s not so small) ‎<This message was edited>
+[14/12/2024, 11:30:43] Jamie Martin EF: I know 😅
+[14/12/2024, 11:31:37] Matthew Spaul Nova: NGOs have engaged us on this problem for African languages here
+[14/12/2024, 11:32:24] Matthew Spaul Nova: As well as governments that want to protect their language/cultural heritage
+[14/12/2024, 11:32:55] Matthew Spaul Nova: Could be a good topic for a YAMLRG talk I can give in the future 👀
+[14/12/2024, 11:34:38] Jamie Martin EF: Yes please 🙏
+[14/12/2024, 12:10:33] ~ Franz: lol
+[14/12/2024, 12:10:47] ~ Franz: lol
+[14/12/2024, 12:11:05] ~ Franz: he also used the data-oil analogy
+[14/12/2024, 12:11:17] ~ Franz: which we used for our 2min pitch
+[14/12/2024, 12:11:19] ~ Franz: oh the irony
+[14/12/2024, 12:11:39] ~ Franz: i mean this is common knowledge
+[14/12/2024, 12:11:46] ~ Franz: but the exact same phrasing wth
+[15/12/2024, 14:30:41] Jamie Martin EF: Another good paper from meta - https://arxiv.org/pdf/2412.06769v1
+[16/12/2024, 12:38:04] Josh 🦒: https://www.reddit.com/r/singularity/comments/1hexvat/slaughterbots_is_here_palantir_is_airing_tv_ads/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+[16/12/2024, 12:38:25] Josh 🦒: Palantir suicide drone swarms
+‎[16/12/2024, 13:19:33] Joe Hewett: ‎image omitted
+[16/12/2024, 13:20:05] Joe Hewett: I was certain that it was calling a tool to do this but apparently LLMs can just do this now
+[16/12/2024, 13:21:43] Jamie Martin EF: GPT4o has been able to do this from release.
+[16/12/2024, 13:21:57] Jamie Martin EF: You can use this, to send it image frames to analyse videos.
+[16/12/2024, 13:22:01] Jamie Martin EF: It’s very powerful.
+[16/12/2024, 13:22:32] Joe Hewett: I thought that it was only able to decode common b64 strings, not arbitrary b64
+[16/12/2024, 13:37:01] Jamie Martin EF: From last year:
+
+https://gist.github.com/DennisTraub/990665122b8128908f6896573cad8572
+[16/12/2024, 13:37:46] Jamie Martin EF: It’s really good for image extraction analysis etc. and again, you can send in multiple base64 images to 4o, and it’ll understand it’s a video.
+[17/12/2024, 12:11:13] Maria: this is not ML but wtf anyway
+[17/12/2024, 12:11:16] Maria: https://www.reflectorbital.com/
+[17/12/2024, 12:12:30] Kareem Hussein: Lol wtf
+[17/12/2024, 12:12:36] Maria: they wanna put mirrors in space so people can “buy sunlight” even at night
+[17/12/2024, 12:13:07] Kareem Hussein: I legit wonder how this could work money-wise
+[17/12/2024, 12:13:18] Kareem Hussein: Nevermind the fact that clouds exist lol
+[17/12/2024, 12:14:05] Kareem Hussein: If it has a way of working out then I guess the future is here
+[17/12/2024, 12:20:54] Maria: apparently it’s the first sequoia space tech investment since spacex
+[17/12/2024, 12:22:50] Kareem Hussein: Ok this could be epic
+[17/12/2024, 12:24:24] Matthew Spaul Nova: https://knightcolumbia.org/blog/we-looked-at-78-election-deepfakes-political-misinformation-is-not-an-ai-problem
+‎[17/12/2024, 12:24:33] Josh 🦒: ‎image omitted
+[17/12/2024, 12:24:38] Josh 🦒: The guys done everything
+[17/12/2024, 12:25:55] Theo W: cracked af
+[17/12/2024, 12:26:40] Matthew Spaul Nova: https://www.linkedin.com/in/ben-nowack lol of course I have mutuals
+[17/12/2024, 12:50:27] ~ Timo Ewalds: This is very interesting!
+[17/12/2024, 17:34:41] Lukasz Bartoszcze EF: Hey 👋 I’m hiring founding engineers at Wisent 🦬 if you know anyone interested in building backend and representation engineering solutions I would love to talk to them
+[17/12/2024, 20:34:54] Rafael EF: https://github.com/MicrosoftDocs/WSL/pull/2021#issuecomment-2546627586
+> Thanks for the contribution here and appreciate your attention to detail. We have decided to keep as-is.. part of that decision is that more and more folks are using AI chat to access guidance and tables don't always translate well in that context.
+‎[18/12/2024, 00:18:17] ~ Jack: 2412.10270v1.pdf • ‎19 pages ‎document omitted
+‎[18/12/2024, 00:19:12] ~ Jack: ‎image omitted
+[18/12/2024, 00:37:55] James EF: anxious vs avoidant attachment styles 😂😂
+‎[18/12/2024, 11:10:19] Callum 🇿🇦: ‎image omitted
+‎[18/12/2024, 11:10:21] Callum 🇿🇦: ‎image omitted
+‎[18/12/2024, 11:11:35] Callum 🇿🇦: ‎image omitted
+[18/12/2024, 11:13:21] Matthew Spaul Nova: OpenAI is trying to kill off selfie sticks and ring lights: https://www.juice.co.uk/collections/juice-social
+[18/12/2024, 11:13:37] Matthew Spaul Nova: We should be thankful
+[18/12/2024, 11:31:30] Jamie Martin EF: juice is the codename
+128 (k) is the context length
+‎[18/12/2024, 11:32:40] Callum 🇿🇦: ‎video omitted
+[18/12/2024, 11:34:33] Maria: It’s stuck on a loop?
+[18/12/2024, 11:34:37] Maria: Code name for what?
+‎[18/12/2024, 11:47:35] Joe Hewett: ‎image omitted
+[18/12/2024, 11:47:39] Joe Hewett: self healing firewall
+[18/12/2024, 11:48:17] Joe Hewett: you might accidentally end up mass-blocking some user agent/country from accessing your site if it fucks up
+[18/12/2024, 11:49:05] Jamie Martin EF: It’s this same idea (generating based on logs). But you could use this “learned” solution also as data to pretrain.
+[18/12/2024, 11:49:23] Joe Hewett: a small price to pay for being a Gen AI Native Company ™️ 😎
+[18/12/2024, 11:54:34] Jamie Martin EF: Note: This is the thought trail, but not the answer.
+[18/12/2024, 18:09:30] Callum 🇿🇦: https://www.youtube.com/watch?v=S9L2WGf1KrM
+If I was to (hypothetically 🌝) buy one of the new Jetson Nanos, what do you think a cool use-case / project is? 🤶
+[18/12/2024, 18:09:54] Maria: 🌚🌝
+[18/12/2024, 18:12:09] Jon Evans EF: Did a double take on this when I saw it first on X. Thought Jensen was doing a cooking tutorial lol
+‎[18/12/2024, 18:12:46] Callum 🇿🇦: ‎image omitted
+[18/12/2024, 18:17:37] Maria: ‎POLL:
+Yamlrg wrapped 🕺 🔜 
+‎OPTION: Hell yes 🙌 (0 votes)
+‎OPTION: Oui oui oui (8 votes)
+‎[18/12/2024, 18:37:53] Karl Gustav EF: ‎image omitted
+‎[18/12/2024, 18:42:44] Maria: ‎sticker omitted
+[19/12/2024, 05:10:27] Rafael EF: https://github.com/Genesis-Embodied-AI/Genesis
+[19/12/2024, 05:10:43] ~ Jack: Actually losing my mind over this
+[19/12/2024, 09:01:55] Maria: Oh damn
+[19/12/2024, 12:51:25] ~ julio: https://x.com/AnthropicAI/status/1869427646368792599
+
+“we found that Claude often pretends to have different views during training, while actually maintaining its original preferences”
+[19/12/2024, 15:25:18] ~ Estia: ‎~ Estia requested to join
+[19/12/2024, 15:44:02] ~ Estia: ‎~ Estia joined using this group's invite link
