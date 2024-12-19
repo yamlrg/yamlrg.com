@@ -71,7 +71,7 @@ export default function WrappedPage() {
           <section className="bg-gradient-to-r from-purple-500 to-pink-500 p-6 rounded-lg text-white">
             <h2 className="text-2xl font-bold mb-4">Most Active Member</h2>
             <button 
-              onClick={() => setSelectedUser(wrapped1.top_stats.top_active_members[0][0])}
+              onClick={() => setSelectedUser(String(wrapped1.top_stats.top_active_members[0][0]))}
               className="hover:text-blue-200 transition-colors"
             >
               <p className="text-4xl font-bold">{wrapped1.top_stats.top_active_members[0][0]}</p>
@@ -81,7 +81,7 @@ export default function WrappedPage() {
               {wrapped1.top_stats.top_active_members.slice(1, 5).map(([name, count], index) => (
                 <div key={index} className="flex justify-between items-center">
                   <button 
-                    onClick={() => setSelectedUser(name)}
+                    onClick={() => setSelectedUser(String(name))}
                     className="hover:text-blue-200 transition-colors"
                   >
                     {name}
@@ -143,7 +143,7 @@ export default function WrappedPage() {
           <section className="bg-gradient-to-r from-indigo-500 to-purple-500 p-6 rounded-lg text-white">
             <h2 className="text-2xl font-bold mb-4">Top Resource Sharers</h2>
             <button 
-              onClick={() => setSelectedUser(wrapped2.most_shared_links[0].user)}
+              onClick={() => setSelectedUser(String(wrapped2.most_shared_links[0].user))}
               className="hover:text-blue-200 transition-colors"
             >
               <p className="text-4xl font-bold">{wrapped2.most_shared_links[0].user}</p>
@@ -153,7 +153,7 @@ export default function WrappedPage() {
               {wrapped2.most_shared_links.slice(1, 5).map((sharer, index) => (
                 <div key={index} className="flex justify-between items-center">
                   <button 
-                    onClick={() => setSelectedUser(sharer.user)}
+                    onClick={() => setSelectedUser(String(sharer.user))}
                     className="hover:text-blue-200 transition-colors"
                   >
                     {sharer.user}
@@ -173,7 +173,7 @@ export default function WrappedPage() {
                 .map(([name, data]) => (
                   <button
                     key={name}
-                    onClick={() => setSelectedUser(name)}
+                    onClick={() => setSelectedUser(String(name))}
                     className="text-left hover:bg-white/10 p-2 rounded transition-colors"
                   >
                     {name} ({data.message_count} messages)
