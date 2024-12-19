@@ -3,8 +3,27 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import UserDetailsModal from './components/UserDetailsModal'
-import wrapped1 from './data/wrapped1.json'
+import wrapped1Json from './data/wrapped1.json';
 import wrapped2 from './data/wrapped2.json'
+
+type UserStats = {
+  message_count: number;
+  emoji_count: number;
+  active_hours: Record<string, number>;
+}
+
+type Wrapped1Type = {
+  total_messages: number;
+  total_participants: number;
+  user_stats: Record<string, UserStats>;
+  top_stats: {
+    top_active_members: Array<Array<string | number>>;
+    top_active_hours: Array<Array<number>>;
+    top_busy_days: Array<Array<string>>;
+  };
+}
+
+const wrapped1 = wrapped1Json as Wrapped1Type;
 
 export default function WrappedPage() {
   const [password, setPassword] = useState('')
@@ -185,7 +204,8 @@ export default function WrappedPage() {
         </div>
 
         {/* User Details Modal */}
-        {selectedUser && wrapped1.user_stats[selectedUser] && (
+        {selectedUser && 
+          Object.prototype.hasOwnProperty.call(wrapped1.user_stats, selectedUser) && (
           <UserDetailsModal
             user={{
               name: selectedUser,
