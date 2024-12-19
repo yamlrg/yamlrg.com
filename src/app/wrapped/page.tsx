@@ -26,6 +26,12 @@ export default function WrappedPage() {
   if (!isAuthenticated) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center p-4">
+        <button 
+          onClick={() => router.push('/')}
+          className="absolute top-4 left-4 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+        >
+          ← Return Home
+        </button>
         <h1 className="text-2xl mb-8">YAMLRG Wrapped 2024 🎁</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-sm">
           <input
@@ -50,7 +56,15 @@ export default function WrappedPage() {
   return (
     <main className="min-h-screen p-4">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-center">YAMLRG Year in Review 2024 ✨</h1>
+        <div className="mb-8">
+          <button 
+            onClick={() => router.push('/')}
+            className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+          >
+            ← Return Home
+          </button>
+        </div>
+        <h1 className="text-3xl font-bold text-center mb-8">YAMLRG Year in Review 2024 ✨</h1>
         
         <div className="space-y-8">
           {/* Most Active Member Section */}

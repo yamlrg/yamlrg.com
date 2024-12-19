@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: 'yamlrg?',
   description: 'Yet Another Machine Learning Reading Group',
+  icons: {
+    icon: '/yamlrg.png',
+  },
 }
 
 export default function RootLayout({
