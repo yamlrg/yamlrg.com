@@ -1,5 +1,6 @@
 import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { auth } from "./firebaseConfig";
+import { createUserProfile } from "./firestoreOperations";
 
 // Google Sign-In
 export const signInWithGoogle = async (router: any) => {
@@ -7,6 +8,7 @@ export const signInWithGoogle = async (router: any) => {
   try {
     const result = await signInWithPopup(auth, provider);
     console.log("Google User:", result.user);
+    await createUserProfile(result.user); // Create/update user profile
     router.push("/profile"); // Redirect to the profile page
   } catch (error) {
     console.error("Google Sign-In Error:", error);
