@@ -1,3 +1,5 @@
+# yamlrg
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
@@ -34,3 +36,22 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+## Where is this running?
+
+https://yamlrg.com/
+
+It's hosted on Heroku, on maria's github (forked the yamlrg repo), on the `react-app` branch. 
+
+The domain was bought on GoDaddy and you can log in with the yamlrg gmail. 
+Details about the account are in bitwarden.
+
+
+## Ideas 
+
+- [ ] add a "members" page that shows the members of the group
+  - [ ] get people to fill in their profile and details like "looking for a job, a cofounder or a project"
+- [ ] add a "reading list" page that shows the reading list of the group
+- [ ] add jobs of people from companies that are hiring
+- [ ] gravity???? randomly match people in a 1-v-1 call so they meet each other
