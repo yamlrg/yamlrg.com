@@ -3,12 +3,21 @@
 import { auth } from "../firebase/firebaseConfig";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { onAuthStateChanged } from "firebase/auth";
-import { getUserProfile, updateShowInMembers, updateUserProfile, UserStatus } from "../firebase/firestoreOperations";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { getUserProfile, updateShowInMembers, updateUserProfile } from "../firebase/firestoreOperations";
+import { UserStatus } from "../types";
+import Image from "next/image";
+import toast, { Toaster } from 'react-hot-toast';
+
+interface Profile {
+  showInMembers: boolean;
+  linkedinUrl: string;
+  status: UserStatus;
+}
 
 export default function ProfilePage() {
-  const [user, setUser] = useState<any>(null);
-  const [profile, setProfile] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [linkedinUrl, setLinkedinUrl] = useState("");
   const router = useRouter();
 
@@ -17,7 +26,7 @@ export default function ProfilePage() {
       if (currentUser) {
         setUser(currentUser);
         const userProfile = await getUserProfile(currentUser.uid);
-        setProfile(userProfile);
+        setProfile(userProfile as Profile);
         setLinkedinUrl(userProfile?.linkedinUrl || "");
       } else {
         router.push("/login");
@@ -47,9 +56,18 @@ export default function ProfilePage() {
   };
 
   const handleLinkedinUpdate = async () => {
-    if (user) {
-      await updateUserProfile(user.uid, { linkedinUrl });
-      setProfile({ ...profile, linkedinUrl });
+    if (user && profile) {
+      try {
+        await updateUserProfile(user.uid, { linkedinUrl });
+        setProfile({
+          ...profile,
+          linkedinUrl
+        });
+        toast.success('LinkedIn URL saved successfully!');
+      } catch (error) {
+        toast.error('Failed to save LinkedIn URL. Please try again.');
+        console.error('Error updating LinkedIn URL:', error);
+      }
     }
   };
 
@@ -68,13 +86,16 @@ export default function ProfilePage() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-4">
+      <Toaster position="top-center" />
       <div className="max-w-md w-full space-y-6">
         <div className="flex items-center gap-4 mb-6">
           {user.photoURL && (
-            <img
+            <Image
               src={user.photoURL}
-              alt={user.displayName}
-              className="w-20 h-20 rounded-full"
+              alt={user.displayName ?? ''}
+              width={80}
+              height={80}
+              className="rounded-full"
             />
           )}
           <div>

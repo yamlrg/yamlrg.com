@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { auth } from "../app/firebase/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { User } from '../app/types';
 
 export default function ProtectedPage({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   useEffect(() => {

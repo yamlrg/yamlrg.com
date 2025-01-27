@@ -55,3 +55,11 @@ Details about the account are in bitwarden.
 - [ ] add a "reading list" page that shows the reading list of the group
 - [ ] add jobs of people from companies that are hiring
 - [ ] gravity???? randomly match people in a 1-v-1 call so they meet each other
+
+# To make sure it will run in Heroku: 
+
+#### First build your application
+npm run build
+
+#### Then start it in production mode
+npm start

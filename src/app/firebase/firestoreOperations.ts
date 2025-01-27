@@ -1,26 +1,16 @@
 import { db } from "./firebaseConfig";
-import { doc, setDoc, getDoc, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
-
-// Types for better type safety
-export type UserStatus = {
-  lookingForCofounder: boolean;
-  needsProjectHelp: boolean;
-  offeringProjectHelp: boolean;
-  isHiring: boolean;
-  seekingJob: boolean;
-  openToNetworking: boolean;
-};
+import { collection, doc, getDoc, setDoc, getDocs, query, where, DocumentData } from "firebase/firestore";
+import { User, UserProfile, UserStatus } from "../types";
 
 // Create or update user profile
-export const createUserProfile = async (user: any, showInMembers: boolean = true) => {
-  try {
-    await setDoc(doc(db, "users", user.uid), {
-      uid: user.uid,
-      displayName: user.displayName,
-      email: user.email,
-      photoURL: user.photoURL,
+export const createUserProfile = async (user: User) => {
+  const userRef = doc(db, "users", user.uid);
+  const userSnap = await getDoc(userRef);
+
+  if (!userSnap.exists()) {
+    // Default profile for new users
+    const defaultProfile: UserProfile = {
       showInMembers: true,
-      joinedAt: new Date().toISOString(),
       linkedinUrl: "",
       status: {
         lookingForCofounder: false,
@@ -28,70 +18,55 @@ export const createUserProfile = async (user: any, showInMembers: boolean = true
         offeringProjectHelp: false,
         isHiring: false,
         seekingJob: false,
-        openToNetworking: false,
+        openToNetworking: true,
       }
-    });
-  } catch (error) {
-    console.error("Error creating user profile:", error);
-  }
-};
+    };
 
-// Update user's showInMembers preference
-export const updateShowInMembers = async (uid: string, showInMembers: boolean) => {
-  try {
-    await updateDoc(doc(db, "users", uid), {
-      showInMembers
+    await setDoc(userRef, {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      ...defaultProfile
     });
-  } catch (error) {
-    console.error("Error updating showInMembers:", error);
   }
 };
 
 // Get user profile
-export const getUserProfile = async (uid: string) => {
-  try {
-    const docRef = doc(db, "users", uid);
-    const docSnap = await getDoc(docRef);
-    return docSnap.exists() ? docSnap.data() : null;
-  } catch (error) {
-    console.error("Error getting user profile:", error);
-    return null;
-  }
+export const getUserProfile = async (userId: string): Promise<UserProfile> => {
+  const userRef = doc(db, "users", userId);
+  const userSnap = await getDoc(userRef);
+  return userSnap.data() as UserProfile;
 };
 
-// Update user's profile
-export const updateUserProfile = async (uid: string, updates: Partial<{
-  linkedinUrl: string;
-  status: Partial<UserStatus>;
-}>) => {
-  try {
-    await updateDoc(doc(db, "users", uid), updates);
-  } catch (error) {
-    console.error("Error updating profile:", error);
-  }
+// Update show in members
+export const updateShowInMembers = async (userId: string, showInMembers: boolean) => {
+  const userRef = doc(db, "users", userId);
+  await setDoc(userRef, { showInMembers }, { merge: true });
 };
 
-// Get all visible members with optional filters
-export const getVisibleMembers = async (filters?: Partial<UserStatus>) => {
-  try {
-    let q = query(
-      collection(db, "users"),
-      where("showInMembers", "==", true)
-    );
+// Update user profile
+export const updateUserProfile = async (userId: string, updates: Partial<UserProfile>) => {
+  const userRef = doc(db, "users", userId);
+  await setDoc(userRef, updates, { merge: true });
+};
 
-    // Add filters if they exist
-    if (filters) {
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value) {
-          q = query(q, where(`status.${key}`, "==", true));
-        }
+// Get visible members
+export const getVisibleMembers = async (filters: Partial<UserStatus>): Promise<DocumentData[]> => {
+  const usersRef = collection(db, "users");
+  const q = query(usersRef, where("showInMembers", "==", true));
+  const querySnapshot = await getDocs(q);
+  
+  const members = querySnapshot.docs.map(doc => doc.data());
+  
+  // Apply filters if any are set
+  if (Object.keys(filters).length > 0) {
+    return members.filter(member => {
+      return Object.entries(filters).every(([key, value]) => {
+        return value ? member.status?.[key] === true : true;
       });
-    }
-
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => doc.data());
-  } catch (error) {
-    console.error("Error getting visible members:", error);
-    return [];
+    });
   }
+  
+  return members;
 }; 

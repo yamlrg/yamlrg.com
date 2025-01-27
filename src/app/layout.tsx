@@ -4,9 +4,10 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
 import { auth } from "./firebase/firebaseConfig";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { logOut } from "./firebase/authFunctions";
 import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,7 +19,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -42,9 +43,9 @@ export default function RootLayout({
         <header className="py-4 px-6">
           <div className="container mx-auto flex justify-between items-center">
             {user && showYamlrgText && (
-              <a href="/" className="cursor-pointer">
+              <Link href="/" className="cursor-pointer">
                 YAMLRG
-              </a>
+              </Link>
             )}
             {(!user || !showYamlrgText) && <div />} {/* Empty div for spacing when no logo */}
             <nav>

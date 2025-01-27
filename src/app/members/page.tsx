@@ -1,11 +1,13 @@
 'use client';
 
 import ProtectedPage from "@/components/ProtectedPage";
-import { useEffect, useState } from "react";
-import { getVisibleMembers, UserStatus } from "../firebase/firestoreOperations";
+import { useEffect, useCallback, useState } from "react";
+import { getVisibleMembers } from "../firebase/firestoreOperations";
+import { ExtendedUser, UserStatus } from '../types';
+import Image from 'next/image';
 
 export default function MembersPage() {
-  const [members, setMembers] = useState<any[]>([]);
+  const [members, setMembers] = useState<ExtendedUser[]>([]);
   const [filters, setFilters] = useState<Partial<UserStatus>>({});
 
   const statusOptions = [
@@ -17,14 +19,14 @@ export default function MembersPage() {
     { key: 'openToNetworking', label: 'Open to Networking' },
   ] as const;
 
-  useEffect(() => {
-    fetchMembers();
+  const fetchMembers = useCallback(async () => {
+    const visibleMembers = await getVisibleMembers(filters);
+    setMembers(visibleMembers as ExtendedUser[]);
   }, [filters]);
 
-  const fetchMembers = async () => {
-    const visibleMembers = await getVisibleMembers(filters);
-    setMembers(visibleMembers);
-  };
+  useEffect(() => {
+    fetchMembers();
+  }, [fetchMembers]);
 
   const toggleFilter = (key: keyof UserStatus) => {
     setFilters(prev => ({
@@ -67,10 +69,12 @@ export default function MembersPage() {
             >
               <div className="flex items-center gap-2 mb-3">
                 {member.photoURL && (
-                  <img
+                  <Image
                     src={member.photoURL}
-                    alt={member.displayName}
-                    className="w-10 h-10 rounded-full"
+                    alt={member.displayName || ''}
+                    width={40}
+                    height={40}
+                    className="rounded-full"
                   />
                 )}
                 <div>
@@ -91,7 +95,7 @@ export default function MembersPage() {
               )}
 
               <div className="flex flex-wrap gap-1">
-                {(Object.entries(member.status) as [keyof UserStatus, boolean][]).map(([key, value]) => 
+                {Object.entries(member.status).map(([key, value]) => 
                   value ? (
                     <span
                       key={key}

@@ -2,8 +2,12 @@ import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { auth } from "./firebaseConfig";
 import { createUserProfile } from "./firestoreOperations";
 
+interface NavigationRouter {
+  push: (href: string, options?: { scroll?: boolean }) => void;
+}
+
 // Google Sign-In
-export const signInWithGoogle = async (router: any) => {
+export const signInWithGoogle = async (router: NavigationRouter) => {
   const provider = new GoogleAuthProvider();
   try {
     const result = await signInWithPopup(auth, provider);
