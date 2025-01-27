@@ -1,4 +1,4 @@
-import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { auth } from "./firebaseConfig";
 
 // Google Sign-In

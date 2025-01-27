@@ -3,18 +3,22 @@
 import { auth } from "../firebase/firebaseConfig";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function ProfilePage() {
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
-    const currentUser = auth.currentUser;
-    if (currentUser) {
-      setUser(currentUser);
-    } else {
-      router.push("/login"); // Redirect to login if no user is logged in
-    }
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+      } else {
+        router.push("/login");
+      }
+    });
+
+    return () => unsubscribe();
   }, [router]);
 
   if (!user) {

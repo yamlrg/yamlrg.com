@@ -1,81 +1,71 @@
+'use client';
+
 import "./globals.css";
-import { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { useEffect, useState } from "react";
+import { auth } from "./firebase/firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
+import { logOut } from "./firebase/authFunctions";
+import { useRouter, usePathname } from "next/navigation";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
 
-export const metadata: Metadata = {
-  title: "yamlrg?",
-  description: "Yet Another Machine Learning Reading Group",
-  openGraph: {
-    title: "yamlrg?",
-    description: "Yet Another Machine Learning Reading Group",
-    images: [
-      {
-        url: "/yamlrg.webp",
-        width: 1200,
-        height: 630,
-        alt: "YAMLRG Logo",
-      },
-    ],
-  },
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/yamlrg.png",
-    apple: "/yamlrg.png",
-    other: [
-      {
-        rel: "apple-touch-icon",
-        url: "/yamlrg.png",
-      },
-    ],
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "yamlrg?",
-  },
-};
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [user, setUser] = useState<any>(null);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await logOut();
+    router.push('/');
+  };
+
+  const showYamlrgText = pathname !== '/';
+
   return (
     <html lang="en" className={inter.variable}>
       <body>
-        <header className="bg-gray-800 text-white py-4">
-          <div className="container mx-auto px-4 flex justify-between items-center">
-            <h1 className="text-xl font-bold">YAMLRG</h1>
-            <nav className="flex space-x-4">
-              <a
-                href="/"
-                className="hover:underline text-gray-200 hover:text-white"
-              >
-                Home
+        <header className="py-4 px-6">
+          <div className="container mx-auto flex justify-between items-center">
+            {user && showYamlrgText && (
+              <a href="/" className="cursor-pointer">
+                YAMLRG
               </a>
-              <a
-                href="/login"
-                className="hover:underline text-gray-200 hover:text-white"
-              >
-                Login
-              </a>
-              <a
-                href="/members"
-                className="hover:underline text-gray-200 hover:text-white"
-              >
-                Members
-              </a>
-              <a
-                href="/profile"
-                className="hover:underline text-gray-200 hover:text-white"
-              >
-                Profile
-              </a>
+            )}
+            {(!user || !showYamlrgText) && <div />} {/* Empty div for spacing when no logo */}
+            <nav>
+              {!user && (
+                <a href="/login" className="cursor-pointer">
+                  Login
+                </a>
+              )}
+              {user && (
+                <div className="space-x-4">
+                  <a href="/members" className="cursor-pointer">
+                    Members
+                  </a>
+                  <a href="/profile" className="cursor-pointer">
+                    Profile
+                  </a>
+                  <button onClick={handleLogout} className="cursor-pointer">
+                    Logout
+                  </button>
+                </div>
+              )}
             </nav>
           </div>
         </header>
