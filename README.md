@@ -50,8 +50,6 @@ Details about the account are in bitwarden.
 
 ## Ideas 
 
-- [ ] add a "members" page that shows the members of the group
-  - [ ] get people to fill in their profile and details like "looking for a job, a cofounder or a project"
 - [ ] add a "reading list" page that shows the reading list of the group
 - [ ] add jobs of people from companies that are hiring
 - [ ] gravity???? randomly match people in a 1-v-1 call so they meet each other
@@ -59,7 +57,7 @@ Details about the account are in bitwarden.
 # To make sure it will run in Heroku: 
 
 #### First build your application
-npm run build
+`npm run build`
 
 #### Then start it in production mode
-npm start
+`npm start`
