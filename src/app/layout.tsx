@@ -8,7 +8,7 @@ import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { logOut } from "./firebase/authFunctions";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { ADMIN_EMAILS } from "./admin/page";
+import { ADMIN_EMAILS } from "./config/admin";
 
 const inter = Inter({
   subsets: ["latin"],

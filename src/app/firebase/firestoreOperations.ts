@@ -1,7 +1,7 @@
 import { db, auth } from "./firebaseConfig";
 import { collection, doc, getDoc, setDoc, getDocs, query, where, DocumentData } from "firebase/firestore";
 import { User, UserProfile, UserStatus } from "../types";
-import { ADMIN_EMAILS } from "../admin/page";
+import { ADMIN_EMAILS } from "../config/admin";
 
 // Create or update user profile
 export const createUserProfile = async (user: User) => {

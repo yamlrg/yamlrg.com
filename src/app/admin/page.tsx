@@ -8,8 +8,7 @@ import { auth } from '../firebase/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 import Image from 'next/image';
 import toast, { Toaster } from 'react-hot-toast';
-
-export const ADMIN_EMAILS = ['mluqueanguita@gmail.com', 'ctilbury8@gmail.com'];
+import { ADMIN_EMAILS } from '../config/admin';
 
 export default function AdminPage() {
   const [users, setUsers] = useState<ExtendedUser[]>([]);
