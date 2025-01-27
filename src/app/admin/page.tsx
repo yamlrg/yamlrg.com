@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getAllUsers, approveUser, removeApproval } from '../firebase/firestoreOperations';
+import { getAllUsers, approveUser, removeApproval, updateShowInMembers } from '../firebase/firestoreOperations';
 import { ExtendedUser } from '../types';
 import { useRouter } from 'next/navigation';
 import { auth } from '../firebase/firebaseConfig';
@@ -59,6 +59,17 @@ export default function AdminPage() {
     }
   };
 
+  const handleVisibility = async (userId: string, currentVisibility: boolean) => {
+    try {
+      await updateShowInMembers(userId, !currentVisibility);
+      toast.success(currentVisibility ? 'Member hidden from directory' : 'Member visible in directory');
+      await fetchUsers();
+    } catch (error) {
+      console.error('Error updating visibility:', error);
+      toast.error('Failed to update visibility');
+    }
+  };
+
   if (!isAdmin) {
     return <div>Loading...</div>;
   }
@@ -70,7 +81,7 @@ export default function AdminPage() {
       
       <div className="grid gap-4">
         {users.map((user) => (
-          <div key={user.uid} className="border p-4 rounded-lg flex items-center justify-between">
+          <div key={user.uid} className="border p-4 rounded-lg flex items-center justify-between bg-white shadow-sm">
             <div className="flex items-center gap-4">
               {user.photoURL && (
                 <Image
@@ -92,19 +103,35 @@ export default function AdminPage() {
                     Approved on: {new Date(user.approvedAt).toLocaleDateString()}
                   </p>
                 )}
+                <p className="text-xs text-gray-500">
+                  Visibility: {user.showInMembers ? 'Visible in directory' : 'Hidden from directory'}
+                </p>
               </div>
             </div>
             
-            <button
-              onClick={() => handleApproval(user.uid, user.isApproved)}
-              className={`px-4 py-2 rounded ${
-                user.isApproved
-                  ? 'bg-red-500 hover:bg-red-600'
-                  : 'bg-green-500 hover:bg-green-600'
-              } text-white`}
-            >
-              {user.isApproved ? 'Remove Approval' : 'Approve'}
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleVisibility(user.uid, user.showInMembers)}
+                className={`px-4 py-2 rounded ${
+                  user.showInMembers
+                    ? 'bg-yellow-500 hover:bg-yellow-600'
+                    : 'bg-blue-500 hover:bg-blue-600'
+                } text-white`}
+              >
+                {user.showInMembers ? 'Hide' : 'Show'}
+              </button>
+              
+              <button
+                onClick={() => handleApproval(user.uid, user.isApproved)}
+                className={`px-4 py-2 rounded ${
+                  user.isApproved
+                    ? 'bg-red-500 hover:bg-red-600'
+                    : 'bg-green-500 hover:bg-green-600'
+                } text-white`}
+              >
+                {user.isApproved ? 'Remove Approval' : 'Approve'}
+              </button>
+            </div>
           </div>
         ))}
       </div>

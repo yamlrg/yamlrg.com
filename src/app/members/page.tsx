@@ -7,6 +7,7 @@ import { ExtendedUser, UserStatus, UserProfile } from '../types';
 import Image from 'next/image';
 import { auth } from "../firebase/firebaseConfig";
 import Link from "next/link";
+import { ADMIN_EMAILS } from '../config/admin';
 
 export default function MembersPage() {
   const [members, setMembers] = useState<ExtendedUser[]>([]);
@@ -41,6 +42,9 @@ export default function MembersPage() {
     fetchMembers();
   }, [fetchMembers]);
 
+  // Check if current user is admin
+  const isAdmin = auth.currentUser?.email && ADMIN_EMAILS.includes(auth.currentUser.email);
+
   const toggleFilter = (key: keyof UserStatus) => {
     setFilters(prev => ({
       ...prev,
@@ -51,7 +55,7 @@ export default function MembersPage() {
   return (
     <ProtectedPage>
       <div className="max-w-6xl mx-auto px-4">
-        {!userProfile?.isApproved && (
+        {!userProfile?.isApproved && !isAdmin && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
             <p className="text-blue-800">
               You currently have limited access to our member directory. To see all members, 

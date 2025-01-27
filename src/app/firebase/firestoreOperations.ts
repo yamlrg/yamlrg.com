@@ -80,22 +80,26 @@ export const removeApproval = async (userId: string) => {
   }, { merge: true });
 };
 
-// Update getVisibleMembers to handle approval status
+// Get visible members
 export const getVisibleMembers = async (filters: Partial<UserStatus>): Promise<DocumentData[]> => {
   const usersRef = collection(db, "users");
   const currentUser = auth.currentUser;
-  const userDoc = currentUser ? await getDoc(doc(db, "users", currentUser.uid)) : null;
-  const isApproved = userDoc?.data()?.isApproved || false;
-
+  const isAdmin = currentUser?.email && ADMIN_EMAILS.includes(currentUser.email);
+  
   // Base query for visible members
   const q = query(usersRef, where("showInMembers", "==", true));
   const querySnapshot = await getDocs(q);
   
   let members = querySnapshot.docs.map(doc => doc.data());
   
-  // If user is not approved, only show unapproved members
-  if (!isApproved) {
-    members = members.filter(member => !member.isApproved);
+  // If user is not admin and not approved, only show unapproved members
+  if (!isAdmin) {
+    const userDoc = currentUser ? await getDoc(doc(db, "users", currentUser.uid)) : null;
+    const isApproved = userDoc?.data()?.isApproved || false;
+    
+    if (!isApproved) {
+      members = members.filter(member => !member.isApproved);
+    }
   }
   
   // Apply status filters if any are set

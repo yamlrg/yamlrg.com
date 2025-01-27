@@ -33,4 +33,5 @@ export interface ExtendedUser extends FirebaseUser {
   isAdmin: boolean;
   approvedAt?: string;
   approvedBy?: string;
+  showInMembers: boolean;
 } 
