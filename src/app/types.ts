@@ -1,11 +1,5 @@
 import { User as FirebaseUser } from 'firebase/auth';
 
-export interface UserProfile {
-  showInMembers: boolean;
-  linkedinUrl: string;
-  status: UserStatus;
-}
-
 export interface UserStatus {
   lookingForCofounder: boolean;
   needsProjectHelp: boolean;
@@ -15,6 +9,16 @@ export interface UserStatus {
   openToNetworking: boolean;
 }
 
+export interface UserProfile {
+  showInMembers: boolean;
+  linkedinUrl: string;
+  status: UserStatus;
+  isApproved: boolean;
+  isAdmin: boolean;
+  approvedAt?: string;
+  approvedBy?: string;
+}
+
 // Extend Firebase User with our additional properties
 export interface User extends FirebaseUser {
   linkedinUrl?: string;
@@ -22,7 +26,11 @@ export interface User extends FirebaseUser {
 }
 
 // For when we need the full user data
-export interface ExtendedUser extends User {
+export interface ExtendedUser extends FirebaseUser {
   linkedinUrl: string;
   status: UserStatus;
+  isApproved: boolean;
+  isAdmin: boolean;
+  approvedAt?: string;
+  approvedBy?: string;
 } 

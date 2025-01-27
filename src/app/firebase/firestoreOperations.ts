@@ -1,6 +1,7 @@
-import { db } from "./firebaseConfig";
+import { db, auth } from "./firebaseConfig";
 import { collection, doc, getDoc, setDoc, getDocs, query, where, DocumentData } from "firebase/firestore";
 import { User, UserProfile, UserStatus } from "../types";
+import { ADMIN_EMAILS } from "../admin/page";
 
 // Create or update user profile
 export const createUserProfile = async (user: User) => {
@@ -8,10 +9,11 @@ export const createUserProfile = async (user: User) => {
   const userSnap = await getDoc(userRef);
 
   if (!userSnap.exists()) {
-    // Default profile for new users
     const defaultProfile: UserProfile = {
       showInMembers: true,
       linkedinUrl: "",
+      isApproved: false,
+      isAdmin: ADMIN_EMAILS.includes(user.email || ''),
       status: {
         lookingForCofounder: false,
         needsProjectHelp: false,
@@ -51,17 +53,54 @@ export const updateUserProfile = async (userId: string, updates: Partial<UserPro
   await setDoc(userRef, updates, { merge: true });
 };
 
-// Get visible members
+// Get all users (for admin)
+export const getAllUsers = async (): Promise<DocumentData[]> => {
+  const usersRef = collection(db, "users");
+  const querySnapshot = await getDocs(usersRef);
+  return querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+};
+
+// Approve user
+export const approveUser = async (userId: string) => {
+  const userRef = doc(db, "users", userId);
+  await setDoc(userRef, {
+    isApproved: true,
+    approvedAt: new Date().toISOString(),
+    approvedBy: auth.currentUser?.email
+  }, { merge: true });
+};
+
+// Remove approval
+export const removeApproval = async (userId: string) => {
+  const userRef = doc(db, "users", userId);
+  await setDoc(userRef, {
+    isApproved: false,
+    approvedAt: null,
+    approvedBy: null
+  }, { merge: true });
+};
+
+// Update getVisibleMembers to handle approval status
 export const getVisibleMembers = async (filters: Partial<UserStatus>): Promise<DocumentData[]> => {
   const usersRef = collection(db, "users");
+  const currentUser = auth.currentUser;
+  const userDoc = currentUser ? await getDoc(doc(db, "users", currentUser.uid)) : null;
+  const isApproved = userDoc?.data()?.isApproved || false;
+
+  // Base query for visible members
   const q = query(usersRef, where("showInMembers", "==", true));
   const querySnapshot = await getDocs(q);
   
-  const members = querySnapshot.docs.map(doc => doc.data());
+  let members = querySnapshot.docs.map(doc => doc.data());
   
-  // Apply filters if any are set
+  // If user is not approved, only show unapproved members
+  if (!isApproved) {
+    members = members.filter(member => !member.isApproved);
+  }
+  
+  // Apply status filters if any are set
   if (Object.keys(filters).length > 0) {
-    return members.filter(member => {
+    members = members.filter(member => {
       return Object.entries(filters).every(([key, value]) => {
         return value ? member.status?.[key] === true : true;
       });

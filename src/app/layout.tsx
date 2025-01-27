@@ -8,6 +8,7 @@ import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { logOut } from "./firebase/authFunctions";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import { ADMIN_EMAILS } from "./admin/page";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,12 +21,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      if (currentUser?.email) {
+        setIsAdmin(ADMIN_EMAILS.includes(currentUser.email));
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -50,18 +55,23 @@ export default function RootLayout({
             {(!user || !showYamlrgText) && <div />} {/* Empty div for spacing when no logo */}
             <nav>
               {!user && (
-                <a href="/login" className="cursor-pointer">
+                <Link href="/login" className="cursor-pointer">
                   Login
-                </a>
+                </Link>
               )}
               {user && (
                 <div className="space-x-4">
-                  <a href="/members" className="cursor-pointer">
+                  <Link href="/members" className="cursor-pointer">
                     Members
-                  </a>
-                  <a href="/profile" className="cursor-pointer">
+                  </Link>
+                  <Link href="/profile" className="cursor-pointer">
                     Profile
-                  </a>
+                  </Link>
+                  {isAdmin && (
+                    <Link href="/admin" className="cursor-pointer text-blue-600 font-semibold">
+                      Admin
+                    </Link>
+                  )}
                   <button onClick={handleLogout} className="cursor-pointer">
                     Logout
                   </button>
