@@ -1,0 +1,742 @@
+{
+  "total_messages": 1191,
+  "total_participants": 53,
+  "user_stats": {
+    "YAMLRG": {
+      "message_count": 12,
+      "emoji_count": 1,
+      "active_hours": {
+        "19": 5,
+        "21": 3,
+        "20": 1,
+        "8": 2,
+        "13": 1
+      }
+    },
+    "Callum 🇿🇦": {
+      "message_count": 88,
+      "emoji_count": 32,
+      "active_hours": {
+        "19": 10,
+        "11": 4,
+        "16": 5,
+        "15": 8,
+        "14": 10,
+        "7": 3,
+        "8": 6,
+        "20": 11,
+        "6": 1,
+        "12": 6,
+        "18": 12,
+        "17": 4,
+        "13": 3,
+        "21": 5
+      }
+    },
+    "Maria": {
+      "message_count": 280,
+      "emoji_count": 65,
+      "active_hours": {
+        "19": 35,
+        "22": 15,
+        "16": 27,
+        "14": 14,
+        "15": 10,
+        "20": 17,
+        "8": 4,
+        "17": 6,
+        "11": 16,
+        "7": 2,
+        "23": 8,
+        "10": 18,
+        "21": 27,
+        "12": 29,
+        "13": 21,
+        "18": 17,
+        "9": 10,
+        "0": 4
+      }
+    },
+    "Oisín Nolan": {
+      "message_count": 38,
+      "emoji_count": 2,
+      "active_hours": {
+        "19": 3,
+        "23": 3,
+        "12": 3,
+        "20": 8,
+        "18": 2,
+        "7": 4,
+        "10": 2,
+        "11": 7,
+        "13": 1,
+        "22": 1,
+        "14": 1,
+        "21": 3
+      }
+    },
+    "Andrés 🤓": {
+      "message_count": 5,
+      "emoji_count": 6,
+      "active_hours": {
+        "21": 1,
+        "20": 1,
+        "18": 1,
+        "16": 1,
+        "19": 1
+      }
+    },
+    "Neimhin": {
+      "message_count": 21,
+      "emoji_count": 0,
+      "active_hours": {
+        "21": 1,
+        "15": 2,
+        "23": 1,
+        "17": 2,
+        "20": 1,
+        "19": 4,
+        "11": 7,
+        "16": 1,
+        "22": 2
+      }
+    },
+    "Arjan Dhesi": {
+      "message_count": 2,
+      "emoji_count": 0,
+      "active_hours": {
+        "21": 1,
+        "0": 1
+      }
+    },
+    "Milo Carroll 💪🏽": {
+      "message_count": 17,
+      "emoji_count": 2,
+      "active_hours": {
+        "21": 4,
+        "15": 1,
+        "17": 4,
+        "20": 3,
+        "11": 1,
+        "12": 2,
+        "14": 1,
+        "19": 1
+      }
+    },
+    "David Mlčoch 🦁": {
+      "message_count": 48,
+      "emoji_count": 15,
+      "active_hours": {
+        "21": 7,
+        "23": 1,
+        "12": 7,
+        "20": 5,
+        "7": 1,
+        "0": 1,
+        "22": 3,
+        "13": 6,
+        "16": 1,
+        "1": 3,
+        "17": 7,
+        "10": 2,
+        "11": 1,
+        "15": 1,
+        "18": 1,
+        "14": 1
+      }
+    },
+    "Tom Walker": {
+      "message_count": 43,
+      "emoji_count": 0,
+      "active_hours": {
+        "21": 2,
+        "18": 10,
+        "20": 3,
+        "19": 6,
+        "23": 3,
+        "14": 3,
+        "15": 1,
+        "17": 9,
+        "0": 1,
+        "11": 3,
+        "3": 2
+      }
+    },
+    "Josh 🦒": {
+      "message_count": 61,
+      "emoji_count": 3,
+      "active_hours": {
+        "21": 5,
+        "16": 6,
+        "18": 3,
+        "14": 5,
+        "19": 7,
+        "20": 6,
+        "10": 6,
+        "22": 3,
+        "12": 10,
+        "11": 3,
+        "15": 2,
+        "13": 2,
+        "0": 2,
+        "17": 1
+      }
+    },
+    "Nikolaos Zavitsanos": {
+      "message_count": 2,
+      "emoji_count": 0,
+      "active_hours": {
+        "1": 1,
+        "11": 1
+      }
+    },
+    "Tiaguito 🦨": {
+      "message_count": 11,
+      "emoji_count": 1,
+      "active_hours": {
+        "20": 1,
+        "21": 3,
+        "11": 3,
+        "14": 1,
+        "22": 1,
+        "19": 2
+      }
+    },
+    "Ben Clarke": {
+      "message_count": 45,
+      "emoji_count": 3,
+      "active_hours": {
+        "0": 1,
+        "11": 1,
+        "13": 5,
+        "19": 3,
+        "20": 5,
+        "23": 1,
+        "21": 13,
+        "22": 6,
+        "10": 1,
+        "17": 1,
+        "15": 2,
+        "16": 1,
+        "18": 5
+      }
+    },
+    "Jamie Martin": {
+      "message_count": 126,
+      "emoji_count": 11,
+      "active_hours": {
+        "12": 7,
+        "22": 7,
+        "8": 2,
+        "10": 8,
+        "21": 7,
+        "16": 7,
+        "23": 4,
+        "20": 3,
+        "9": 14,
+        "19": 6,
+        "13": 6,
+        "18": 15,
+        "11": 20,
+        "15": 10,
+        "14": 7,
+        "17": 3
+      }
+    },
+    "Daan": {
+      "message_count": 10,
+      "emoji_count": 7,
+      "active_hours": {
+        "12": 3,
+        "16": 1,
+        "17": 1,
+        "22": 2,
+        "21": 1,
+        "20": 2
+      }
+    },
+    "Rory": {
+      "message_count": 7,
+      "emoji_count": 3,
+      "active_hours": {
+        "15": 1,
+        "23": 1,
+        "0": 3,
+        "13": 1,
+        "14": 1
+      }
+    },
+    "Tom Farrand": {
+      "message_count": 7,
+      "emoji_count": 0,
+      "active_hours": {
+        "12": 1,
+        "14": 1,
+        "19": 3,
+        "9": 1,
+        "10": 1
+      }
+    },
+    "Matthew Spaul": {
+      "message_count": 113,
+      "emoji_count": 22,
+      "active_hours": {
+        "18": 12,
+        "16": 6,
+        "10": 4,
+        "14": 4,
+        "15": 11,
+        "20": 6,
+        "22": 9,
+        "21": 8,
+        "23": 2,
+        "0": 3,
+        "9": 4,
+        "8": 5,
+        "7": 1,
+        "19": 5,
+        "12": 7,
+        "13": 8,
+        "11": 17,
+        "1": 1
+      }
+    },
+    "Pablo": {
+      "message_count": 2,
+      "emoji_count": 0,
+      "active_hours": {
+        "20": 1,
+        "23": 1
+      }
+    },
+    "Karl Gustav": {
+      "message_count": 7,
+      "emoji_count": 0,
+      "active_hours": {
+        "13": 1,
+        "16": 1,
+        "23": 1,
+        "21": 2,
+        "20": 1,
+        "0": 1
+      }
+    },
+    "Gigi ⚡️": {
+      "message_count": 19,
+      "emoji_count": 4,
+      "active_hours": {
+        "16": 1,
+        "17": 1,
+        "10": 1,
+        "19": 1,
+        "20": 4,
+        "11": 6,
+        "15": 5
+      }
+    },
+    "Sara Valls": {
+      "message_count": 3,
+      "emoji_count": 2,
+      "active_hours": {
+        "17": 2,
+        "19": 1
+      }
+    },
+    "Carolina": {
+      "message_count": 5,
+      "emoji_count": 5,
+      "active_hours": {
+        "18": 2,
+        "0": 1,
+        "20": 1,
+        "15": 1
+      }
+    },
+    "Rafael": {
+      "message_count": 13,
+      "emoji_count": 0,
+      "active_hours": {
+        "14": 2,
+        "13": 1,
+        "17": 3,
+        "21": 1,
+        "18": 1,
+        "22": 1,
+        "15": 1,
+        "12": 1,
+        "20": 1,
+        "5": 1
+      }
+    },
+    "Jack": {
+      "message_count": 22,
+      "emoji_count": 0,
+      "active_hours": {
+        "21": 2,
+        "16": 6,
+        "17": 3,
+        "18": 4,
+        "8": 2,
+        "23": 1,
+        "19": 3,
+        "5": 1
+      }
+    },
+    "Akash Bajwa": {
+      "message_count": 2,
+      "emoji_count": 0,
+      "active_hours": {
+        "15": 2
+      }
+    },
+    "Joe Hewett": {
+      "message_count": 13,
+      "emoji_count": 2,
+      "active_hours": {
+        "21": 2,
+        "0": 1,
+        "16": 2,
+        "15": 1,
+        "11": 4,
+        "13": 3
+      }
+    },
+    "Lukasz Bartoszcze": {
+      "message_count": 14,
+      "emoji_count": 6,
+      "active_hours": {
+        "14": 1,
+        "19": 1,
+        "21": 2,
+        "18": 2,
+        "15": 3,
+        "20": 2,
+        "23": 2,
+        "17": 1
+      }
+    },
+    "Pascu": {
+      "message_count": 16,
+      "emoji_count": 2,
+      "active_hours": {
+        "11": 1,
+        "20": 2,
+        "16": 2,
+        "22": 8,
+        "23": 3
+      }
+    },
+    "Michael": {
+      "message_count": 2,
+      "emoji_count": 0,
+      "active_hours": {
+        "1": 1,
+        "7": 1
+      }
+    },
+    "Charlie": {
+      "message_count": 3,
+      "emoji_count": 0,
+      "active_hours": {
+        "8": 1,
+        "23": 1,
+        "12": 1
+      }
+    },
+    "Theo W": {
+      "message_count": 14,
+      "emoji_count": 3,
+      "active_hours": {
+        "0": 2,
+        "16": 2,
+        "17": 2,
+        "13": 1,
+        "12": 2,
+        "15": 3,
+        "20": 1,
+        "18": 1
+      }
+    },
+    "Tidor": {
+      "message_count": 1,
+      "emoji_count": 0,
+      "active_hours": {
+        "1": 1
+      }
+    },
+    "Paul Chelarescu": {
+      "message_count": 1,
+      "emoji_count": 0,
+      "active_hours": {
+        "11": 1
+      }
+    },
+    "Jon Evans": {
+      "message_count": 27,
+      "emoji_count": 0,
+      "active_hours": {
+        "13": 4,
+        "18": 2,
+        "16": 1,
+        "20": 7,
+        "17": 1,
+        "23": 2,
+        "0": 1,
+        "11": 5,
+        "15": 2,
+        "14": 2
+      }
+    },
+    "Peter Todorov": {
+      "message_count": 2,
+      "emoji_count": 1,
+      "active_hours": {
+        "13": 1,
+        "14": 1
+      }
+    },
+    "Ilja C": {
+      "message_count": 2,
+      "emoji_count": 0,
+      "active_hours": {
+        "13": 2
+      }
+    },
+    "julio": {
+      "message_count": 12,
+      "emoji_count": 2,
+      "active_hours": {
+        "13": 4,
+        "14": 1,
+        "10": 1,
+        "18": 1,
+        "8": 1,
+        "15": 1,
+        "22": 2,
+        "12": 1
+      }
+    },
+    "🐧Nielsou🐧": {
+      "message_count": 8,
+      "emoji_count": 4,
+      "active_hours": {
+        "18": 2,
+        "19": 1,
+        "22": 5
+      }
+    },
+    "Kareem Hussein": {
+      "message_count": 6,
+      "emoji_count": 0,
+      "active_hours": {
+        "19": 1,
+        "12": 5
+      }
+    },
+    "Rob": {
+      "message_count": 2,
+      "emoji_count": 0,
+      "active_hours": {
+        "13": 1,
+        "15": 1
+      }
+    },
+    "Veljko": {
+      "message_count": 1,
+      "emoji_count": 0,
+      "active_hours": {
+        "10": 1
+      }
+    },
+    "Edan Toledo": {
+      "message_count": 6,
+      "emoji_count": 0,
+      "active_hours": {
+        "21": 1,
+        "15": 5
+      }
+    },
+    "Franz": {
+      "message_count": 18,
+      "emoji_count": 0,
+      "active_hours": {
+        "11": 1,
+        "23": 1,
+        "1": 2,
+        "21": 4,
+        "22": 2,
+        "20": 1,
+        "12": 7
+      }
+    },
+    "David Kubánek": {
+      "message_count": 1,
+      "emoji_count": 0,
+      "active_hours": {
+        "14": 1
+      }
+    },
+    "Mihir": {
+      "message_count": 6,
+      "emoji_count": 0,
+      "active_hours": {
+        "16": 1,
+        "22": 5
+      }
+    },
+    "Timo Ewalds": {
+      "message_count": 16,
+      "emoji_count": 0,
+      "active_hours": {
+        "11": 1,
+        "13": 1,
+        "15": 12,
+        "19": 1,
+        "12": 1
+      }
+    },
+    "Ali Eslami": {
+      "message_count": 3,
+      "emoji_count": 0,
+      "active_hours": {
+        "11": 2,
+        "14": 1
+      }
+    },
+    "James": {
+      "message_count": 4,
+      "emoji_count": 2,
+      "active_hours": {
+        "19": 1,
+        "13": 2,
+        "0": 1
+      }
+    },
+    "Stuart": {
+      "message_count": 1,
+      "emoji_count": 0,
+      "active_hours": {
+        "19": 1
+      }
+    },
+    "Estia": {
+      "message_count": 2,
+      "emoji_count": 0,
+      "active_hours": {
+        "15": 2
+      }
+    }
+  },
+  "top_stats": {
+    "top_active_members": [
+      [
+        "Maria",
+        280
+      ],
+      [
+        "Jamie Martin",
+        126
+      ],
+      [
+        "Matthew Spaul",
+        113
+      ],
+      [
+        "Callum 🇿🇦",
+        88
+      ],
+      [
+        "Josh 🦒",
+        61
+      ]
+    ],
+    "top_busy_days": [
+      [
+        "2024-11-28",
+        49
+      ],
+      [
+        "2023-02-20",
+        48
+      ],
+      [
+        "2024-12-05",
+        41
+      ],
+      [
+        "2024-11-27",
+        35
+      ],
+      [
+        "2024-12-14",
+        34
+      ]
+    ],
+    "top_words": [
+      [
+        "data",
+        38
+      ],
+      [
+        "invite",
+        35
+      ],
+      [
+        "good",
+        35
+      ],
+      [
+        "they",
+        35
+      ],
+      [
+        "could",
+        34
+      ]
+    ],
+    "top_emoji_users": [
+      [
+        "Maria",
+        65
+      ],
+      [
+        "Callum 🇿🇦",
+        32
+      ],
+      [
+        "Matthew Spaul",
+        22
+      ],
+      [
+        "David Mlčoch 🦁",
+        15
+      ],
+      [
+        "Jamie Martin",
+        11
+      ]
+    ],
+    "top_active_hours": [
+      [
+        11,
+        106
+      ],
+      [
+        21,
+        105
+      ],
+      [
+        19,
+        102
+      ],
+      [
+        20,
+        94
+      ],
+      [
+        12,
+        93
+      ]
+    ]
+  }
+}
