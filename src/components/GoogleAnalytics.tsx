@@ -17,7 +17,11 @@ export default function GoogleAnalytics({ GA_MEASUREMENT_ID }: { GA_MEASUREMENT_
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}' ${process.env.NODE_ENV === 'development' ? ', { debug_mode: true }' : ''});
+            gtag('config', '${GA_MEASUREMENT_ID}', {
+              page_path: window.location.pathname,
+              debug_mode: ${process.env.NODE_ENV === 'development'},
+              send_page_view: true
+            });
           `,
         }}
       />

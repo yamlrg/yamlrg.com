@@ -1,17 +1,24 @@
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Track custom events in Google Analytics
 export const trackEvent = (eventName: string, eventParams?: Record<string, unknown>) => {
   try {
     console.log('Trying to track event:', eventName, eventParams);
     if (typeof window !== 'undefined' && window.gtag) {
+      // Add event category and non-interaction flag
+      const enhancedParams = {
+        ...eventParams,
+        event_category: 'user_interaction',
+        non_interaction: false,
+      };
+
       console.log('📊 Analytics Event:', {
         name: eventName,
-        params: eventParams,
+        params: enhancedParams,
         timestamp: new Date().toISOString(),
       });
       
-      window.gtag('event', eventName, eventParams);
+      window.gtag('event', eventName, enhancedParams);
+    } else {
+      console.warn('Google Analytics not initialized');
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -19,4 +26,3 @@ export const trackEvent = (eventName: string, eventParams?: Record<string, unkno
     }
   }
 };
-/* eslint-enable @typescript-eslint/no-explicit-any */

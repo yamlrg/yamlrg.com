@@ -11,6 +11,7 @@ import Link from "next/link";
 import { ADMIN_EMAILS } from "./config/admin";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import Image from "next/image";
+import { trackEvent } from "@/utils/analytics";
 
 console.log('Current NODE_ENV:', process.env.NODE_ENV);
 
@@ -43,6 +44,15 @@ export default function RootLayout({
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    // Test event
+    trackEvent('page_view', {
+      page_title: document.title,
+      page_location: window.location.href,
+      page_path: window.location.pathname
+    });
+  }, []);
+
   const handleLogout = async () => {
     await logOut();
     router.push('/');
@@ -61,12 +71,12 @@ export default function RootLayout({
           <header className="py-2 px-4 sm:px-6 lg:px-8 border-b">
             <div className="container mx-auto flex justify-between items-center">
               <div className="flex items-center">
-                {user && showYamlrgText && (
+                {showYamlrgText && (
                   <Link href="/" className="cursor-pointer">
                     YAMLRG
                   </Link>
                 )}
-                {(!user || !showYamlrgText) && <div />}
+                {!showYamlrgText && <div />}
               </div>
 
               <button
@@ -90,39 +100,30 @@ export default function RootLayout({
               </button>
               
               <nav className="hidden md:flex items-center gap-4">
-                {!user && (
-                  <Link 
-                    href="/login" 
-                    className={`hover:text-gray-900 ${pathname === '/login' ? 'font-semibold' : ''}`}
-                  >
-                    Login
-                  </Link>
-                )}
-                {user && (
-                  <div className="flex items-center">
-                    <Link 
-                      href="/members" 
-                      className={`hover:text-gray-900 ${pathname === '/members' ? 'font-semibold' : ''}`}
-                    >
-                      Members
-                    </Link>
+                <Link 
+                  href={user ? "/members" : "/login"}
+                  className={`hover:text-gray-900 ${pathname === '/members' ? 'font-semibold' : ''}`}
+                >
+                  Members
+                </Link>
+                <span className="mx-3 text-gray-400">|</span>
+                <Link 
+                  href={user ? "/reading-list" : "/login"}
+                  className={`hover:text-gray-900 ${pathname === '/reading-list' ? 'font-semibold' : ''}`}
+                >
+                  Reading List
+                </Link>
+                <span className="mx-3 text-gray-400">|</span>
+                <Link
+                  href={user ? "/jobs" : "/login"}
+                  className={`hover:text-gray-900 ${pathname === '/jobs' ? 'font-semibold' : ''}`}
+                >
+                  Jobs
+                </Link>
+                
+                {user ? (
+                  <>
                     <span className="mx-3 text-gray-400">|</span>
-                    <Link 
-                      href="/reading-list" 
-                      className={`hover:text-gray-900 ${pathname === '/reading-list' ? 'font-semibold' : ''}`}
-                    >
-                      Reading List
-                    </Link>
-                    <span className="mx-3 text-gray-400">|</span>
-                    <Link
-                      href="/jobs"
-                      className={`hover:text-gray-900 ${pathname === '/jobs' ? 'font-semibold' : ''}`}
-                    >
-                      Jobs
-                    </Link>
-                    
-                    <span className="mx-3 text-gray-400">|</span>
-                    
                     <div className="relative ml-4">
                       <button
                         onClick={() => setShowDropdown(!showDropdown)}
@@ -170,7 +171,17 @@ export default function RootLayout({
                         </div>
                       )}
                     </div>
-                  </div>
+                  </>
+                ) : (
+                  <>
+                    <span className="mx-3 text-gray-400">|</span>
+                    <Link 
+                      href="/login" 
+                      className={`hover:text-gray-900 ${pathname === '/login' ? 'font-semibold' : ''}`}
+                    >
+                      Login
+                    </Link>
+                  </>
                 )}
               </nav>
             </div>
@@ -178,37 +189,29 @@ export default function RootLayout({
             {isMobileMenuOpen && (
               <div className="md:hidden">
                 <div className="px-2 pt-2 pb-3 space-y-1">
-                  {!user ? (
-                    <Link
-                      href="/login"
-                      className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      Login
-                    </Link>
-                  ) : (
+                  <Link
+                    href={user ? "/members" : "/login"}
+                    className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Members
+                  </Link>
+                  <Link
+                    href={user ? "/reading-list" : "/login"}
+                    className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Reading List
+                  </Link>
+                  <Link
+                    href={user ? "/jobs" : "/login"}
+                    className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Jobs
+                  </Link>
+                  {user ? (
                     <>
-                      <Link
-                        href="/members"
-                        className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        Members
-                      </Link>
-                      <Link
-                        href="/reading-list"
-                        className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        Reading List
-                      </Link>
-                      <Link
-                        href="/jobs"
-                        className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        Jobs
-                      </Link>
                       <Link
                         href="/profile"
                         className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
@@ -235,6 +238,14 @@ export default function RootLayout({
                         Logout
                       </button>
                     </>
+                  ) : (
+                    <Link
+                      href="/login"
+                      className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Login
+                    </Link>
                   )}
                 </div>
               </div>
