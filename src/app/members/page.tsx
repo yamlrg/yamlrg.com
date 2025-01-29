@@ -17,14 +17,10 @@ interface GrowthDataPoint {
 
 const getTimestamp = (member: ExtendedUser): number => {
   if (member.joinedAt) {
-    const timestamp = new Date(member.joinedAt).getTime();
-    console.log(`JoinedAt timestamp for ${member.displayName}:`, new Date(member.joinedAt).toLocaleString());
-    return timestamp;
+    return new Date(member.joinedAt).getTime();
   }
   if (member.approvedAt) {
-    const timestamp = new Date(member.approvedAt).getTime();
-    console.log(`ApprovedAt timestamp for ${member.displayName}:`, new Date(member.approvedAt).toLocaleString());
-    return timestamp;
+    return new Date(member.approvedAt).getTime();
   }
   return 0;
 };
@@ -68,9 +64,7 @@ export default function MembersPage() {
   const fetchMembers = useCallback(async () => {
     if (!authChecked) return;
     try {
-      console.log("Fetching members");
       const visibleMembers = await getVisibleMembers();
-      console.log("Fetched members:", visibleMembers);
       setMembers(visibleMembers as ExtendedUser[]);
     } catch (error) {
       console.error("Error fetching members:", error);

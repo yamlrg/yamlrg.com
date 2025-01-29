@@ -9,6 +9,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import Image from 'next/image';
 import toast, { Toaster } from 'react-hot-toast';
 import { ADMIN_EMAILS } from '../config/admin';
+import { trackEvent } from "@/utils/analytics";
 
 type SortOption = 'name' | 'approval' | 'date';
 
@@ -84,10 +85,10 @@ export default function AdminPage() {
     try {
       if (currentApprovalStatus) {
         await removeApproval(userId);
-        toast.success('Member approval removed');
+        trackEvent('member_approval_removed', { user_id: userId });
       } else {
         await approveUser(userId);
-        toast.success('Member approved');
+        trackEvent('member_approved', { user_id: userId });
       }
       await fetchUsers();
     } catch (error) {
@@ -99,6 +100,10 @@ export default function AdminPage() {
   const handleVisibility = async (userId: string, currentVisibility: boolean) => {
     try {
       await updateShowInMembers(userId, !currentVisibility);
+      trackEvent('member_visibility_updated', {
+        user_id: userId,
+        visible: !currentVisibility
+      });
       toast.success(currentVisibility ? 'Member hidden from directory' : 'Member visible in directory');
       await fetchUsers();
     } catch (error) {
@@ -114,14 +119,16 @@ export default function AdminPage() {
   return (
     <main className="container mx-auto px-4 py-8">
       <Toaster position="top-center" />
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <div className="flex items-center gap-4">
-          <label className="text-sm text-gray-600">Sort by:</label>
+      
+      {/* Header Section - Stack on mobile */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold">Admin Dashboard</h1>
+        <div className="w-full sm:w-auto">
+          <label className="block text-sm text-gray-600 mb-1 sm:mb-0 sm:inline sm:mr-2">Sort by:</label>
           <select 
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as SortOption)}
-            className="border rounded px-3 py-1"
+            className="w-full sm:w-auto border rounded px-3 py-1"
           >
             <option value="approval">Approval Status</option>
             <option value="name">Name</option>
@@ -130,11 +137,14 @@ export default function AdminPage() {
         </div>
       </div>
       
-      <div className="grid gap-4">
+      <div className="space-y-4">
         {/* Admin Users */}
         {adminUsers.map((user) => (
-          <div key={user.uid} className="border border-blue-500 bg-blue-50 p-4 rounded-lg flex items-center justify-between shadow-sm">
-            <div className="flex items-center gap-4">
+          <div 
+            key={user.uid} 
+            className="border border-blue-500 bg-blue-50 p-4 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm"
+          >
+            <div className="flex items-center gap-4 w-full sm:w-auto">
               {user.photoURL && (
                 <Image
                   src={user.photoURL}
@@ -144,29 +154,24 @@ export default function AdminPage() {
                   className="rounded-full"
                 />
               )}
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="font-semibold">{user.displayName}</h2>
-                </div>
-                <p className="text-sm text-gray-600">{user.email}</p>
+              <div className="min-w-0 flex-1">
+                <h2 className="font-semibold truncate">{user.displayName}</h2>
+                <p className="text-sm text-gray-600 truncate">{user.email}</p>
                 <p className="text-sm text-gray-600">
                   Status: {user.isApproved ? 'Approved' : 'Not Approved'}
                 </p>
                 {user.approvedAt && (
                   <p className="text-xs text-gray-500">
-                    Approved on: {new Date(user.approvedAt).toLocaleDateString()}
+                    Approved: {new Date(user.approvedAt).toLocaleDateString()}
                   </p>
                 )}
-                <p className="text-xs text-gray-500">
-                  Visibility: {user.showInMembers ? 'Visible in directory' : 'Hidden from directory'}
-                </p>
               </div>
             </div>
             
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
               <button
                 onClick={() => handleVisibility(user.uid, user.showInMembers)}
-                className={`px-4 py-2 rounded ${
+                className={`w-full sm:w-auto px-4 py-2 rounded text-sm ${
                   user.showInMembers
                     ? 'bg-yellow-500 hover:bg-yellow-600'
                     : 'bg-blue-500 hover:bg-blue-600'
@@ -176,7 +181,7 @@ export default function AdminPage() {
               </button>
               <button
                 onClick={() => handleApproval(user.uid, user.isApproved)}
-                className={`px-4 py-2 rounded ${
+                className={`w-full sm:w-auto px-4 py-2 rounded text-sm ${
                   user.isApproved
                     ? 'bg-red-500 hover:bg-red-600'
                     : 'bg-green-500 hover:bg-green-600'
@@ -195,10 +200,13 @@ export default function AdminPage() {
 
         {/* Non-Admin Users */}
         {nonAdminUsers.map((user) => (
-          <div key={user.uid} className={`border p-4 rounded-lg flex items-center justify-between bg-white shadow-sm ${
-            !user.isApproved ? 'border-yellow-500 bg-yellow-50' : ''
-          }`}>
-            <div className="flex items-center gap-4">
+          <div
+            key={user.uid}
+            className={`border p-4 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white shadow-sm ${
+              !user.isApproved ? 'border-yellow-500 bg-yellow-50' : ''
+            }`}
+          >
+            <div className="flex items-center gap-4 w-full sm:w-auto">
               {user.photoURL && (
                 <Image
                   src={user.photoURL}
@@ -208,27 +216,24 @@ export default function AdminPage() {
                   className="rounded-full"
                 />
               )}
-              <div>
-                <h2 className="font-semibold">{user.displayName}</h2>
-                <p className="text-sm text-gray-600">{user.email}</p>
+              <div className="min-w-0 flex-1">
+                <h2 className="font-semibold truncate">{user.displayName}</h2>
+                <p className="text-sm text-gray-600 truncate">{user.email}</p>
                 <p className="text-sm text-gray-600">
                   Status: {user.isApproved ? 'Approved' : 'Not Approved'}
                 </p>
                 {user.approvedAt && (
                   <p className="text-xs text-gray-500">
-                    Approved on: {new Date(user.approvedAt).toLocaleDateString()}
+                    Approved: {new Date(user.approvedAt).toLocaleDateString()}
                   </p>
                 )}
-                <p className="text-xs text-gray-500">
-                  Visibility: {user.showInMembers ? 'Visible in directory' : 'Hidden from directory'}
-                </p>
               </div>
             </div>
             
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
               <button
                 onClick={() => handleVisibility(user.uid, user.showInMembers)}
-                className={`px-4 py-2 rounded ${
+                className={`w-full sm:w-auto px-4 py-2 rounded text-sm ${
                   user.showInMembers
                     ? 'bg-yellow-500 hover:bg-yellow-600'
                     : 'bg-blue-500 hover:bg-blue-600'
@@ -236,10 +241,9 @@ export default function AdminPage() {
               >
                 {user.showInMembers ? 'Hide' : 'Show'}
               </button>
-              
               <button
                 onClick={() => handleApproval(user.uid, user.isApproved)}
-                className={`px-4 py-2 rounded ${
+                className={`w-full sm:w-auto px-4 py-2 rounded text-sm ${
                   user.isApproved
                     ? 'bg-red-500 hover:bg-red-600'
                     : 'bg-green-500 hover:bg-green-600'

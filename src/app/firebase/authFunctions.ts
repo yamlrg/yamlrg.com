@@ -4,6 +4,7 @@ import { createUserProfile } from "./firestoreOperations";
 import toast from 'react-hot-toast';
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { trackEvent } from "@/utils/analytics";
 
 // Google Sign-In
 export const signInWithGoogle = async (router: AppRouterInstance) => {
@@ -46,6 +47,11 @@ export const signInWithGoogle = async (router: AppRouterInstance) => {
     
     toast.success('Successfully signed in!');
     router.push("/"); // Redirect to home page after successful sign in
+
+    trackEvent('login', {
+      method: 'google',
+      new_user: !userDoc.exists()
+    });
   } catch (error: unknown) {
     console.error("Detailed Google Sign-In Error:", {
       code: (error as AuthError).code,
@@ -64,6 +70,11 @@ export const signInWithGoogle = async (router: AppRouterInstance) => {
     }
 
     toast.error(errorMessage);
+
+    trackEvent('login_error', {
+      error_code: (error as AuthError).code,
+      error_message: (error as Error).message
+    });
   }
 };
 
@@ -74,6 +85,8 @@ export const logOut = async () => {
     await signOut(auth);
     console.log("User signed out successfully");
     toast.success('Successfully signed out!');
+
+    trackEvent('logout');
   } catch (error) {
     console.error("Sign-Out Error:", error);
     toast.error('Failed to sign out. Please try again.');

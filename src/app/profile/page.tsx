@@ -9,6 +9,7 @@ import { UserStatus, JobListing } from "../types";
 import Image from "next/image";
 import toast, { Toaster } from 'react-hot-toast';
 import { doc, updateDoc } from "firebase/firestore";
+import { trackEvent } from "@/utils/analytics";
 
 interface Profile {
   showInMembers: boolean;
@@ -48,6 +49,9 @@ export default function ProfilePage() {
     if (user && profile) {
       const newShowInMembers = !profile.showInMembers;
       await updateShowInMembers(user.uid, newShowInMembers);
+      trackEvent('profile_visibility_update', {
+        visible: newShowInMembers
+      });
       setProfile({ ...profile, showInMembers: newShowInMembers });
     }
   };
@@ -59,6 +63,10 @@ export default function ProfilePage() {
         [statusKey]: !profile.status[statusKey]
       };
       await updateUserProfile(user.uid, { status: newStatus });
+      trackEvent('profile_status_update', {
+        status_type: statusKey,
+        new_value: newStatus[statusKey]
+      });
       setProfile({ ...profile, status: newStatus });
     }
   };
@@ -92,6 +100,10 @@ export default function ProfilePage() {
     try {
       await updateUserProfile(user.uid, { 
         jobListings: updatedListings 
+      });
+      trackEvent('job_listing_added', {
+        company: newJob.company,
+        title: newJob.title
       });
       setProfile({
         ...profile,

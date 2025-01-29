@@ -12,6 +12,8 @@ import { ADMIN_EMAILS } from "./config/admin";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import Image from "next/image";
 
+console.log('Current NODE_ENV:', process.env.NODE_ENV);
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -29,6 +31,7 @@ export default function RootLayout({
   const [showDropdown, setShowDropdown] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -57,14 +60,35 @@ export default function RootLayout({
         <div className="h-full flex flex-col">
           <header className="py-2 px-4 sm:px-6 lg:px-8 border-b">
             <div className="container mx-auto flex justify-between items-center">
-              {user && showYamlrgText && (
-                <Link href="/" className="cursor-pointer">
-                  YAMLRG
-                </Link>
-              )}
-              {(!user || !showYamlrgText) && <div />}
+              <div className="flex items-center">
+                {user && showYamlrgText && (
+                  <Link href="/" className="cursor-pointer">
+                    YAMLRG
+                  </Link>
+                )}
+                {(!user || !showYamlrgText) && <div />}
+              </div>
+
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900"
+              >
+                <span className="sr-only">Open menu</span>
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+                  />
+                </svg>
+              </button>
               
-              {/* Desktop Navigation */}
               <nav className="hidden md:flex items-center gap-4">
                 {!user && (
                   <Link 
@@ -97,10 +121,8 @@ export default function RootLayout({
                       Jobs
                     </Link>
                     
-                    {/* Add divider before profile image */}
                     <span className="mx-3 text-gray-400">|</span>
                     
-                    {/* User Dropdown */}
                     <div className="relative ml-4">
                       <button
                         onClick={() => setShowDropdown(!showDropdown)}
@@ -152,6 +174,71 @@ export default function RootLayout({
                 )}
               </nav>
             </div>
+
+            {isMobileMenuOpen && (
+              <div className="md:hidden">
+                <div className="px-2 pt-2 pb-3 space-y-1">
+                  {!user ? (
+                    <Link
+                      href="/login"
+                      className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Login
+                    </Link>
+                  ) : (
+                    <>
+                      <Link
+                        href="/members"
+                        className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Members
+                      </Link>
+                      <Link
+                        href="/reading-list"
+                        className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Reading List
+                      </Link>
+                      <Link
+                        href="/jobs"
+                        className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Jobs
+                      </Link>
+                      <Link
+                        href="/profile"
+                        className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Profile
+                      </Link>
+                      {isAdmin && (
+                        <Link
+                          href="/admin"
+                          className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          Admin
+                        </Link>
+                      )}
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="block w-full text-left px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                      >
+                        Logout
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
           </header>
           <main className="flex-1 overflow-auto">
             {children}

@@ -200,14 +200,14 @@ export default function JobsPage() {
   };
 
   return (
-    <main className="min-h-screen p-8">
+    <main className="min-h-screen p-4 sm:p-8">
       <Toaster position="top-center" />
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Jobs at YAMLRG Companies</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold">Jobs at YAMLRG Companies</h1>
         {(isAdmin || isApproved) && (
           <button
             onClick={() => setShowNewJobForm(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           >
             Post a Job
           </button>
@@ -216,25 +216,23 @@ export default function JobsPage() {
 
       {!isApproved && !isAdmin && (
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8">
-          <div className="flex">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
               </svg>
             </div>
-            <div className="ml-3">
-              <p className="text-sm text-yellow-700">
-                You need to be an approved member to post jobs. Please contact an admin for approval.
-              </p>
-            </div>
+            <p className="text-sm text-yellow-700">
+              You need to be an approved member to post jobs. Please contact an admin for approval.
+            </p>
           </div>
         </div>
       )}
 
       {/* New Job Form Modal */}
       {showNewJobForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <h2 className="text-xl font-semibold mb-4">Post a New Job</h2>
             <div className="space-y-4">
               <input
@@ -258,17 +256,17 @@ export default function JobsPage() {
                 onChange={(e) => setNewJob({ ...newJob, link: e.target.value })}
                 className="w-full p-2 border rounded"
               />
-              <div className="flex justify-end gap-2">
+              <div className="flex flex-col sm:flex-row justify-end gap-2 pt-4">
                 <button
                   onClick={() => setShowNewJobForm(false)}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  className="w-full sm:w-auto px-4 py-2 text-gray-600 hover:text-gray-800"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleAddJob}
                   disabled={!newJob.title || !newJob.company || !newJob.link}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+                  className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
                 >
                   Post Job
                 </button>
@@ -280,57 +278,61 @@ export default function JobsPage() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {jobs.map(({ job, poster }, index) => (
-          <div key={`${poster.uid}-${index}`} className="border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex justify-between items-start mb-2">
-              <h2 className="text-xl font-semibold">{job.title}</h2>
-              {(isAdmin || auth.currentUser?.uid === poster.uid) && (
-                <button
-                  onClick={() => handleDeleteJob(poster.uid, job)}
-                  className="text-red-600 hover:text-red-800 text-sm"
-                  title="Delete job listing"
+          <div key={`${poster.uid}-${index}`} className="border rounded-lg p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex flex-col gap-4">
+              <div className="space-y-2">
+                <div className="flex justify-between items-start gap-2">
+                  <h2 className="text-xl font-semibold break-words">{job.title}</h2>
+                  {(isAdmin || auth.currentUser?.uid === poster.uid) && (
+                    <button
+                      onClick={() => handleDeleteJob(poster.uid, job)}
+                      className="text-red-600 hover:text-red-800 text-sm flex-shrink-0"
+                      title="Delete job listing"
+                    >
+                      ❌
+                    </button>
+                  )}
+                </div>
+                <p className="text-gray-600">{job.company}</p>
+              </div>
+              
+              <div className="flex items-center gap-3">
+                {poster.photoURL && (
+                  <Image
+                    src={poster.photoURL}
+                    alt={poster.displayName ?? ''}
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+                )}
+                <span className="text-sm text-gray-500">
+                  Posted by {poster.displayName}
+                </span>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                <Link 
+                  href={job.link}
+                  target="_blank"
+                  className="text-blue-600 hover:text-blue-800"
                 >
-                  ❌
-                </button>
-              )}
-            </div>
-            <p className="text-gray-600 mb-4">{job.company}</p>
-            
-            <div className="flex items-center gap-3 mb-4">
-              {poster.photoURL && (
-                <Image
-                  src={poster.photoURL}
-                  alt={poster.displayName ?? ''}
-                  width={32}
-                  height={32}
-                  className="rounded-full"
-                />
-              )}
-              <span className="text-sm text-gray-500">
-                Posted by {poster.displayName}
-              </span>
-            </div>
-            
-            <div className="flex justify-between items-center">
-              <Link 
-                href={job.link}
-                target="_blank"
-                className="text-blue-600 hover:text-blue-800"
-              >
-                View Job →
-              </Link>
-              <span className="text-sm text-gray-500">
-                {formatDistanceToNow(new Date(job.postedAt))} ago
-              </span>
+                  View Job →
+                </Link>
+                <span className="text-sm text-gray-500">
+                  {formatDistanceToNow(new Date(job.postedAt))} ago
+                </span>
+              </div>
             </div>
           </div>
         ))}
+
+        {jobs.length === 0 && (
+          <p className="text-center text-gray-500 col-span-full py-8">
+            No jobs posted yet. Check back soon!
+          </p>
+        )}
       </div>
-      
-      {jobs.length === 0 && (
-        <p className="text-center text-gray-500 mt-8">
-          No jobs posted yet. Check back soon!
-        </p>
-      )}
     </main>
   );
 } 
