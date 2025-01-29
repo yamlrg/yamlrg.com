@@ -9,11 +9,14 @@ import { logOut } from "./firebase/authFunctions";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { ADMIN_EMAILS } from "./config/admin";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
+
+const GA_MEASUREMENT_ID = 'G-F99YRJFQ3K';
 
 export default function RootLayout({
   children,
@@ -44,6 +47,9 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={`${inter.variable} h-full`}>
+      <head>
+        <GoogleAnalytics GA_MEASUREMENT_ID={GA_MEASUREMENT_ID} />
+      </head>
       <body className="h-full">
         <div className="h-full flex flex-col">
           <header className="py-2 px-4 sm:px-6 lg:px-8 border-b">
