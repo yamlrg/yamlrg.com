@@ -43,44 +43,62 @@ export default function RootLayout({
   const showYamlrgText = pathname !== '/';
 
   return (
-    <html lang="en" className={inter.variable}>
-      <body>
-        <header className="py-4 px-6">
-          <div className="container mx-auto flex justify-between items-center">
-            {user && showYamlrgText && (
-              <Link href="/" className="cursor-pointer">
-                YAMLRG
-              </Link>
-            )}
-            {(!user || !showYamlrgText) && <div />} {/* Empty div for spacing when no logo */}
-            <nav>
-              {!user && (
-                <Link href="/login" className="cursor-pointer">
-                  Login
+    <html lang="en" className={`${inter.variable} h-full`}>
+      <body className="h-full">
+        <div className="h-full flex flex-col">
+          <header className="py-2 px-4 sm:px-6 lg:px-8 border-b">
+            <div className="container mx-auto flex justify-between items-center">
+              {user && showYamlrgText && (
+                <Link href="/" className="cursor-pointer">
+                  YAMLRG
                 </Link>
               )}
-              {user && (
-                <div className="space-x-4">
-                  <Link href="/members" className="cursor-pointer">
-                    Members
+              {(!user || !showYamlrgText) && <div />}
+              
+              {/* Desktop Navigation */}
+              <nav className="hidden md:flex items-center gap-4">
+                {!user && (
+                  <Link href="/login" className="cursor-pointer">
+                    Login
                   </Link>
-                  <Link href="/profile" className="cursor-pointer">
-                    Profile
-                  </Link>
-                  {isAdmin && (
-                    <Link href="/admin" className="cursor-pointer text-blue-600 font-semibold">
-                      Admin
+                )}
+                {user && (
+                  <div className="flex items-center">
+                    <Link href="/members" className="cursor-pointer">
+                      Members
                     </Link>
-                  )}
-                  <button onClick={handleLogout} className="cursor-pointer">
-                    Logout
-                  </button>
-                </div>
-              )}
-            </nav>
-          </div>
-        </header>
-        <main className="container mx-auto px-4 py-6">{children}</main>
+                    <span className="mx-3 text-gray-400">|</span>
+                    <Link href="/reading-list" className="cursor-pointer">
+                      Reading List
+                    </Link>
+                    <span className="mx-3 text-gray-400">|</span>
+                    <Link href="/profile" className="cursor-pointer">
+                      Profile
+                    </Link>
+                    {isAdmin && (
+                      <>
+                        <span className="mx-3 text-gray-400">|</span>
+                        <Link href="/admin" className="cursor-pointer text-blue-600 font-semibold">
+                          Admin
+                        </Link>
+                      </>
+                    )}
+                    <span className="mx-3 text-gray-400">|</span>
+                    <button
+                      onClick={handleLogout}
+                      className="cursor-pointer"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </nav>
+            </div>
+          </header>
+          <main className="flex-1 overflow-auto">
+            {children}
+          </main>
+        </div>
       </body>
     </html>
   );

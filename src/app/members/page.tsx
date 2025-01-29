@@ -13,6 +13,7 @@ export default function MembersPage() {
   const [members, setMembers] = useState<ExtendedUser[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [filters, setFilters] = useState<Partial<UserStatus>>({});
+  const [searchQuery, setSearchQuery] = useState('');
 
   const statusOptions = [
     { key: 'lookingForCofounder', label: 'Looking for Co-founders' },
@@ -52,9 +53,25 @@ export default function MembersPage() {
     }));
   };
 
+  // Filter members based on search query
+  const filteredMembers = members.filter(member => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      member.displayName?.toLowerCase().includes(searchLower) ||
+      member.email?.toLowerCase().includes(searchLower)
+    );
+  });
+
   return (
     <ProtectedPage>
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8 text-center">
+          <h1 className="text-2xl font-bold mb-4">Members</h1>
+          <Link href="/wrapped" className="inline-block text-blue-600 hover:text-blue-800">
+            Check out our 2024 Wrapped 🎁
+          </Link>
+        </div>
+        
         {!userProfile?.isApproved && !isAdmin && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
             <p className="text-blue-800">
@@ -80,8 +97,25 @@ export default function MembersPage() {
         )}
 
         <main className="min-h-screen p-4">
-          <h1 className="text-3xl font-bold text-center mb-8">YAMLRG Members ✨</h1>
-          
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-3xl font-bold">YAMLRG Members ✨</h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              {filteredMembers.length} member{filteredMembers.length !== 1 ? 's' : ''}
+            </p>
+          </div>
+
+          {/* Search bar */}
+          <div className="mb-8">
+            <input
+              type="text"
+              placeholder="Search members..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 
+                       bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+            />
+          </div>
+
           {/* Filters */}
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-4">Filter Members</h2>
@@ -104,7 +138,7 @@ export default function MembersPage() {
 
           {/* Members Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {members.map((member) => (
+            {filteredMembers.map((member) => (
               <div
                 key={member.uid}
                 className="p-4 border rounded-lg shadow-sm"

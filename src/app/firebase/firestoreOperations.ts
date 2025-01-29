@@ -1,5 +1,5 @@
 import { db, auth } from "./firebaseConfig";
-import { collection, doc, getDoc, setDoc, getDocs, query, where, DocumentData } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc, getDocs, query, where, DocumentData, orderBy, addDoc } from "firebase/firestore";
 import { User, UserProfile, UserStatus } from "../types";
 import { ADMIN_EMAILS } from "../config/admin";
 
@@ -112,4 +112,32 @@ export const getVisibleMembers = async (filters: Partial<UserStatus>): Promise<D
   }
   
   return members;
+};
+
+export const getReadingList = async () => {
+  const readingListRef = collection(db, "readingList");
+  const q = query(readingListRef, orderBy("addedAt", "desc"));
+  const querySnapshot = await getDocs(q);
+  
+  return querySnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
+};
+
+export const addToReadingList = async (item: {
+  title: string;
+  url: string;
+  author?: string;
+}) => {
+  const readingListRef = collection(db, "readingList");
+  const currentUser = auth.currentUser;
+  
+  if (!currentUser) throw new Error("User not authenticated");
+  
+  await addDoc(readingListRef, {
+    ...item,
+    addedBy: currentUser.displayName || currentUser.email,
+    addedAt: new Date().toISOString(),
+  });
 }; 

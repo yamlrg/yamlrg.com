@@ -82,14 +82,6 @@ export default function WrappedPage() {
     <ProtectedPage>
       <main className="min-h-screen p-4">
         <div className="max-w-2xl mx-auto">
-          <div className="mb-8">
-            <button 
-              onClick={() => router.push('/')}
-              className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-            >
-              ← Return Home
-            </button>
-          </div>
           <h1 className="text-3xl font-bold text-center mb-8">YAMLRG Year in Review 2024 ✨</h1>
           
           <div className="space-y-8">
