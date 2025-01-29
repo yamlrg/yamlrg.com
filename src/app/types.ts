@@ -34,4 +34,5 @@ export interface ExtendedUser extends FirebaseUser {
   approvedAt?: string;
   approvedBy?: string;
   showInMembers: boolean;
+  joinedAt?: string;
 } 

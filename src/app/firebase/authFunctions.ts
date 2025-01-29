@@ -1,26 +1,51 @@
 import { GoogleAuthProvider, signInWithPopup, signOut, AuthError } from "firebase/auth";
-import { auth } from "./firebaseConfig";
+import { auth, db } from "./firebaseConfig";
 import { createUserProfile } from "./firestoreOperations";
 import toast from 'react-hot-toast';
-
-interface NavigationRouter {
-  push: (href: string, options?: { scroll?: boolean }) => void;
-}
+import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 // Google Sign-In
-export const signInWithGoogle = async (router: NavigationRouter) => {
+export const signInWithGoogle = async (router: AppRouterInstance) => {
   const provider = new GoogleAuthProvider();
   try {
     console.log("Starting Google Sign-In process...");
     const result = await signInWithPopup(auth, provider);
-    console.log("Google Sign-In successful:", result.user.email);
+    const user = result.user;
+
+    // Check if user document already exists
+    const userDoc = await getDoc(doc(db, "users", user.uid));
     
+    if (!userDoc.exists()) {
+      // Create new user document with initial data
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        joinedAt: serverTimestamp(), // Add join timestamp
+        showInMembers: true,
+        isApproved: false,
+        isAdmin: false,
+        linkedinUrl: '',
+        status: {
+          lookingForCofounder: false,
+          needsProjectHelp: false,
+          offeringProjectHelp: false,
+          isHiring: false,
+          seekingJob: false,
+          openToNetworking: false,
+        }
+      });
+      toast.success('Welcome to YAMLRG!');
+    }
+
     console.log("Creating/updating user profile...");
-    await createUserProfile(result.user);
+    await createUserProfile(user);
     console.log("User profile created/updated successfully");
     
     toast.success('Successfully signed in!');
-    router.push("/profile");
+    router.push("/"); // Redirect to home page after successful sign in
   } catch (error: unknown) {
     console.error("Detailed Google Sign-In Error:", {
       code: (error as AuthError).code,

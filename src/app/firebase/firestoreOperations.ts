@@ -1,6 +1,6 @@
 import { db, auth } from "./firebaseConfig";
 import { collection, doc, getDoc, setDoc, getDocs, query, where, DocumentData, orderBy, addDoc } from "firebase/firestore";
-import { User, UserProfile, UserStatus } from "../types";
+import { User, UserProfile } from "../types";
 import { ADMIN_EMAILS } from "../config/admin";
 
 // Create or update user profile
@@ -81,37 +81,40 @@ export const removeApproval = async (userId: string) => {
 };
 
 // Get visible members
-export const getVisibleMembers = async (filters: Partial<UserStatus>): Promise<DocumentData[]> => {
-  const usersRef = collection(db, "users");
-  const currentUser = auth.currentUser;
-  const isAdmin = currentUser?.email && ADMIN_EMAILS.includes(currentUser.email);
-  
-  // Base query for visible members
-  const q = query(usersRef, where("showInMembers", "==", true));
-  const querySnapshot = await getDocs(q);
-  
-  let members = querySnapshot.docs.map(doc => doc.data());
-  
-  // If user is not admin and not approved, only show unapproved members
-  if (!isAdmin) {
-    const userDoc = currentUser ? await getDoc(doc(db, "users", currentUser.uid)) : null;
-    const isApproved = userDoc?.data()?.isApproved || false;
-    
-    if (!isApproved) {
-      members = members.filter(member => !member.isApproved);
+export const getVisibleMembers = async () => {
+  try {
+    console.log("Starting getVisibleMembers");
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      console.log("No current user");
+      return [];
     }
+
+    const userProfile = await getUserProfile(currentUser.uid);
+    const isAdmin = ADMIN_EMAILS.includes(currentUser.email || '');
+    console.log("User status:", { isAdmin, isApproved: userProfile?.isApproved });
+
+    const usersRef = collection(db, "users");
+    let q;
+
+    // If not admin and not approved, only show admins
+    if (!isAdmin && !userProfile?.isApproved) {
+      console.log("Filtering for admin-only view");
+      q = query(usersRef, where("email", "in", ADMIN_EMAILS));
+    } else {
+      // Show all visible members
+      console.log("Showing all visible members");
+      q = query(usersRef, where("showInMembers", "==", true));
+    }
+
+    const querySnapshot = await getDocs(q);
+    const members = querySnapshot.docs.map(doc => doc.data());
+    console.log("Found members:", members.length);
+    return members;
+  } catch (error) {
+    console.error("Error in getVisibleMembers:", error);
+    return [];
   }
-  
-  // Apply status filters if any are set
-  if (Object.keys(filters).length > 0) {
-    members = members.filter(member => {
-      return Object.entries(filters).every(([key, value]) => {
-        return value ? member.status?.[key] === true : true;
-      });
-    });
-  }
-  
-  return members;
 };
 
 export const getReadingList = async () => {
