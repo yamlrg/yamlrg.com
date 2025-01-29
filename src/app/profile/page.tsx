@@ -1,24 +1,32 @@
 'use client';
 
-import { auth } from "../firebase/firebaseConfig";
+import { auth, db } from "../firebase/firebaseConfig";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { getUserProfile, updateShowInMembers, updateUserProfile } from "../firebase/firestoreOperations";
-import { UserStatus } from "../types";
+import { UserStatus, JobListing } from "../types";
 import Image from "next/image";
 import toast, { Toaster } from 'react-hot-toast';
+import { doc, updateDoc } from "firebase/firestore";
 
 interface Profile {
   showInMembers: boolean;
   linkedinUrl: string;
   status: UserStatus;
+  isApproved: boolean;
+  jobListings?: JobListing[];
 }
 
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [linkedinUrl, setLinkedinUrl] = useState("");
+  const [newJob, setNewJob] = useState({
+    title: '',
+    company: '',
+    link: ''
+  });
   const router = useRouter();
 
   useEffect(() => {
@@ -68,6 +76,82 @@ export default function ProfilePage() {
         toast.error('Failed to save LinkedIn URL. Please try again.');
         console.error('Error updating LinkedIn URL:', error);
       }
+    }
+  };
+
+  const handleAddJob = async () => {
+    if (!user || !profile) return;
+    
+    const jobListing: JobListing = {
+      ...newJob,
+      postedAt: new Date().toISOString()
+    };
+
+    const updatedListings = [...(profile.jobListings || []), jobListing];
+    
+    try {
+      await updateUserProfile(user.uid, { 
+        jobListings: updatedListings 
+      });
+      setProfile({
+        ...profile,
+        jobListings: updatedListings
+      });
+      setNewJob({ title: '', company: '', link: '' });
+      toast.success('Job listing added successfully!');
+    } catch (error) {
+      toast.error('Failed to add job listing');
+      console.error('Error adding job:', error);
+    }
+  };
+
+  const handleRemoveJob = async (index: number) => {
+    if (!user || !profile?.jobListings) {
+      console.log('No user or job listings found:', { user, profile });
+      return;
+    }
+
+    try {
+      console.log('Starting job removal:', {
+        userId: user.uid,
+        jobIndex: index,
+        currentListings: profile.jobListings
+      });
+
+      // Create new array without the deleted job
+      const updatedListings = [...profile.jobListings];
+      updatedListings.splice(index, 1);
+      
+      console.log('Prepared updated listings:', {
+        before: profile.jobListings,
+        after: updatedListings
+      });
+
+      // Update in Firebase
+      const userRef = doc(db, 'users', user.uid);
+      console.log('Attempting Firestore update for user:', user.uid);
+      
+      await updateDoc(userRef, {
+        jobListings: updatedListings || []
+      });
+      
+      console.log('Firestore update successful');
+
+      // Update local state
+      setProfile(prev => ({
+        ...prev!,
+        jobListings: updatedListings
+      }));
+      
+      toast.success('Job listing removed successfully!');
+    } catch (error) {
+      console.error('Detailed error in handleRemoveJob:', {
+        error,
+        userId: user?.uid,
+        index,
+        currentListings: profile?.jobListings
+      });
+      toast.error('Failed to remove job listing');
     }
   };
 
@@ -154,6 +238,70 @@ export default function ProfilePage() {
               </div>
             ))}
           </div>
+
+          {profile.isApproved && (
+            <div className="mt-8">
+              <h2 className="text-xl font-semibold mb-4">Job Listings</h2>
+              
+              <div className="space-y-4 mb-6">
+                {profile.jobListings?.map((job, index) => (
+                  <div key={index} className="border rounded p-4">
+                    <div className="flex justify-between">
+                      <div>
+                        <h3 className="font-medium">{job.title}</h3>
+                        <p className="text-gray-600">{job.company}</p>
+                      </div>
+                      <button
+                        onClick={() => handleRemoveJob(index)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        ❌
+                      </button>
+                    </div>
+                    <a 
+                      href={job.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 text-sm"
+                    >
+                      View posting →
+                    </a>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Job Title"
+                  value={newJob.title}
+                  onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
+                  className="w-full p-2 border rounded"
+                />
+                <input
+                  type="text"
+                  placeholder="Company"
+                  value={newJob.company}
+                  onChange={(e) => setNewJob({ ...newJob, company: e.target.value })}
+                  className="w-full p-2 border rounded"
+                />
+                <input
+                  type="url"
+                  placeholder="Link to Job Posting"
+                  value={newJob.link}
+                  onChange={(e) => setNewJob({ ...newJob, link: e.target.value })}
+                  className="w-full p-2 border rounded"
+                />
+                <button
+                  onClick={handleAddJob}
+                  disabled={!newJob.title || !newJob.company || !newJob.link}
+                  className="w-full bg-blue-600 text-white p-2 rounded disabled:opacity-50"
+                >
+                  Add Job Listing
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </main>

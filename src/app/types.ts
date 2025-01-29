@@ -9,6 +9,13 @@ export interface UserStatus {
   openToNetworking: boolean;
 }
 
+export interface JobListing {
+  title: string;
+  company: string;
+  link: string;
+  postedAt: string;
+}
+
 export interface UserProfile {
   showInMembers: boolean;
   linkedinUrl: string;
@@ -17,6 +24,7 @@ export interface UserProfile {
   isAdmin: boolean;
   approvedAt?: string;
   approvedBy?: string;
+  jobListings?: JobListing[];
 }
 
 // Extend Firebase User with our additional properties
@@ -34,4 +42,6 @@ export interface ExtendedUser extends FirebaseUser {
   approvedAt?: string;
   approvedBy?: string;
   showInMembers: boolean;
+  joinedAt?: string;
+  jobListings?: JobListing[];
 } 
