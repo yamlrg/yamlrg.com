@@ -83,7 +83,6 @@ export default function MembersPage() {
 
   useEffect(() => {
     const processGrowthData = (members: ExtendedUser[]) => {
-      console.log("Processing growth data for members:", members.length);
       
       // Sort members by join date (fallback to approvedAt)
       const sortedMembers = [...members].sort((a, b) => {
@@ -101,12 +100,6 @@ export default function MembersPage() {
             day: 'numeric',
             month: 'short',
             year: '2-digit'
-          });
-          
-          console.log(`Processing member ${member.displayName}:`, {
-            timestamp: new Date(timestamp).toLocaleString(),
-            formattedDate: date,
-            currentCount: count
           });
           
           // Only add point if it's a new date or the last member

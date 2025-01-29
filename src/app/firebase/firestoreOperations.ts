@@ -83,7 +83,6 @@ export const removeApproval = async (userId: string) => {
 // Get visible members
 export const getVisibleMembers = async () => {
   try {
-    console.log("Starting getVisibleMembers");
     const currentUser = auth.currentUser;
     if (!currentUser) {
       console.log("No current user");
@@ -91,8 +90,7 @@ export const getVisibleMembers = async () => {
     }
 
     const userProfile = await getUserProfile(currentUser.uid);
-    const isAdmin = ADMIN_EMAILS.includes(currentUser.email || '');
-    console.log("User status:", { isAdmin, isApproved: userProfile?.isApproved });
+    const isAdmin = ADMIN_EMAILS.includes(currentUser.email ?? '');
 
     const usersRef = collection(db, "users");
     let q;

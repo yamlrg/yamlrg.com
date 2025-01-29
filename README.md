@@ -50,12 +50,12 @@ Details about the account are in bitwarden.
 
 ## Ideas 
 
-- [ ] add google analytics / posthog 
+- [X] add google analytics / posthog 
 - [ ] send email to people when they are approved
 - [X] show number of members in the members page
 - [X] search for members
 - [X] add a "reading list" page that shows the reading list of the group
-- [ ] add jobs of people from companies that are hiring
+- [X] add jobs of people from companies that are hiring
 - [ ] gravity???? randomly match people in a 1-v-1 call so they meet each other
 
 # To make sure it will run in Heroku: 
