@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { getAllUsers, approveUser, removeApproval, updateShowInMembers, getJoinRequests, updateJoinRequestStatus, updateUserProfile } from '../firebase/firestoreOperations';
-import { setDoc, doc, collection } from 'firebase/firestore';
 import { ExtendedUser, JoinRequest } from '../types';
 import { useRouter } from 'next/navigation';
-import { auth, db } from '../firebase/firebaseConfig';
+import { auth } from '../firebase/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 import Image from 'next/image';
 import toast, { Toaster } from 'react-hot-toast';
@@ -71,7 +70,7 @@ export default function AdminPage() {
   const sortUsers = (users: ExtendedUser[]) => {
     // First separate admins and non-admins
     const adminUsers = users.filter(user => ADMIN_EMAILS.includes(user.email ?? ''));
-    let nonAdminUsers = users.filter(user => !ADMIN_EMAILS.includes(user.email ?? ''));
+    const nonAdminUsers = users.filter(user => !ADMIN_EMAILS.includes(user.email ?? ''));
 
     // Sort admins by name
     adminUsers.sort((a, b) => (a.displayName ?? '').localeCompare(b.displayName ?? ''));
@@ -111,9 +110,6 @@ export default function AdminPage() {
   const allRequests = requests.sort((a, b) => 
     new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
-
-  // Separate admin users from regular users
-  const regularUsers = users.filter(user => !ADMIN_EMAILS.includes(user.email ?? ''));
 
   const handleApproval = async (userId: string, currentApprovalStatus: boolean) => {
     try {
@@ -260,6 +256,21 @@ export default function AdminPage() {
             )}
           </button>
         </div>
+
+        {/* Add sorting control */}
+        {activeTab === 'users' && (
+          <div className="flex gap-2">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              className="px-3 py-2 border rounded-lg text-sm"
+            >
+              <option value="approval">Sort by Approval Status</option>
+              <option value="name">Sort by Name</option>
+              <option value="date">Sort by Join Date</option>
+            </select>
+          </div>
+        )}
       </div>
 
       {activeTab === 'users' && (
@@ -291,7 +302,7 @@ export default function AdminPage() {
 
           {/* Regular Users */}
           <div key="regular-users-section" className="space-y-4">
-            {regularUsers.map((user) => (
+            {nonAdminUsers.map((user) => (
               <div 
                 key={user.uid} 
                 className="bg-white border rounded-lg p-4 hover:border-emerald-200 transition-colors cursor-pointer"
@@ -339,6 +350,21 @@ export default function AdminPage() {
                     </div>
                   </div>
 
+                  {/* Approval Button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent opening user details
+                      handleApproval(user.uid, user.isApproved);
+                    }}
+                    className={`px-4 py-2 rounded-lg text-sm ${
+                      user.isApproved 
+                        ? 'bg-red-100 text-red-700 hover:bg-red-200' 
+                        : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                    }`}
+                  >
+                    {user.isApproved ? 'Remove Approval' : 'Approve'}
+                  </button>
+
                   {/* Quick Actions */}
                   <div className="flex items-center gap-2">
                     <div className="relative group">
@@ -382,6 +408,7 @@ export default function AdminPage() {
                                 if (!response.ok) throw new Error('Failed to send email');
                                 toast.success('Welcome email resent successfully');
                               } catch (error) {
+                                console.error('Error resending welcome email:', error);
                                 toast.error('Failed to resend email');
                               }
                             }

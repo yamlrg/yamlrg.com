@@ -12,6 +12,11 @@ const nextConfig = {
       'lh3.googleusercontent.com',  // For Google profile pictures
     ],
   },
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    // ignoreDuringBuilds: true,
+  },
 };
 
 module.exports = nextConfig; 

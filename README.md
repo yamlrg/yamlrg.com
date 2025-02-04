@@ -151,3 +151,16 @@ The application uses Google Analytics to track:
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+## Security
+
+### Firebase Security Rules
+- Users can only read and update their own non-sensitive data
+- Only admins can modify approval status and admin privileges
+- Join requests can be created by anyone but only read/modified by admins
+- Reading list items require authentication to read and create
+
+### Protected Operations
+- User approval status can only be modified through admin endpoints
+- Profile updates exclude sensitive fields (isApproved, isAdmin, etc.)
+- All admin operations require email verification against whitelist

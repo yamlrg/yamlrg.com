@@ -55,6 +55,12 @@ export interface ExtendedUser {
     seekingJob: boolean;
     openToNetworking: boolean;
   };
+  jobListings?: Array<{
+    title: string;
+    company: string;
+    link: string;
+    postedAt: string;
+  }>;
 }
 
 export interface JoinRequest {

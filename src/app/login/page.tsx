@@ -17,7 +17,7 @@ export default function LoginPage() {
         Sign in with Google
       </button>
       <p className="text-sm text-gray-600 mt-4">
-        Don't have an account?{' '}
+        Don&apos;t have an account?{' '}
         <Link href="/join" className="text-emerald-700 hover:text-emerald-800">
           Request to join YAMLRG
         </Link>

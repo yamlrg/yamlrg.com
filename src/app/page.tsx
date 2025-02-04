@@ -19,7 +19,7 @@ export default function Page() {
           <p className="text-gray-600 mt-3">
             or{' '}
             <a href="/login" className="text-emerald-700 hover:underline">
-              login if you're already a member 😎
+              login if you&apos;re already a member 😎
             </a>
           </p>
         </div>

@@ -62,12 +62,30 @@ export const updateUserProfile = async (userId: string, updates: Partial<UserPro
   }
   
   try {
+    // Remove any sensitive fields from updates
+    const safeUpdates = { ...updates };
+    delete safeUpdates.isApproved;
+    delete safeUpdates.approvedAt;
+    delete safeUpdates.approvedBy;
+    delete safeUpdates.isAdmin;
+    
     const userRef = doc(db, "users", userId);
-    await setDoc(userRef, updates, { merge: true });
+    await setDoc(userRef, safeUpdates, { merge: true });
   } catch (error) {
     console.error('Error in updateUserProfile:', { userId, updates, error });
     throw error;
   }
+};
+
+// Create a separate function for admin operations
+export const adminUpdateUser = async (userId: string, updates: Partial<UserProfile>) => {
+  const currentUser = auth.currentUser;
+  if (!currentUser?.email || !ADMIN_EMAILS.includes(currentUser.email)) {
+    throw new Error('Unauthorized: Admin access required');
+  }
+
+  const userRef = doc(db, "users", userId);
+  await setDoc(userRef, updates, { merge: true });
 };
 
 // Get all users (for admin)

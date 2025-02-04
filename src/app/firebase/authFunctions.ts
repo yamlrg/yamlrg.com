@@ -1,6 +1,5 @@
 import { GoogleAuthProvider, signInWithPopup, signOut, AuthError } from "firebase/auth";
 import { auth, db } from "./firebaseConfig";
-import { createUserProfile } from "./firestoreOperations";
 import toast from 'react-hot-toast';
 import { doc, setDoc, getDoc, collection, query, where, getDocs, serverTimestamp } from "firebase/firestore";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -118,5 +117,23 @@ export const logOut = async () => {
   } catch (error) {
     console.error("Sign-Out Error:", error);
     toast.error('Failed to sign out. Please try again.');
+  }
+};
+
+export const setAdminClaim = async (email: string) => {
+  try {
+    const response = await fetch('/api/admin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+    return data.success;
+  } catch (error) {
+    console.error('Error setting admin claim:', error);
+    return false;
   }
 };

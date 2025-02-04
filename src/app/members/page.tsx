@@ -242,7 +242,7 @@ export default function MembersPage() {
                 )}
 
                 <div className="flex flex-wrap gap-1">
-                  {Object.entries(member.status).map(([key, value]) => 
+                  {member.status && Object.entries(member.status).map(([key, value]) => 
                     value ? (
                       <span
                         key={key}

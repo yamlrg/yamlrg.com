@@ -11,6 +11,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { doc, updateDoc } from "firebase/firestore";
 import { trackEvent } from "@/utils/analytics";
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
+import { FirebaseError } from 'firebase/app';
 
 interface Profile {
   showInMembers: boolean;
@@ -101,8 +102,13 @@ export default function ProfilePage() {
         });
         setHasChanges(false);
         toast.success('Profile updated successfully!');
-      } catch (error) {
-        toast.error('Failed to update profile. Please try again.');
+      } catch (error: unknown) {
+        console.error('Error updating profile:', error);
+        if (error instanceof FirebaseError) {
+          toast.error(error.message);
+        } else {
+          toast.error('Failed to update profile');
+        }
       }
     }
   };
@@ -132,9 +138,13 @@ export default function ProfilePage() {
       setNewJob({ title: '', company: '', link: '' });
       setShowNewJobForm(false);
       toast.success('Job listing added successfully!');
-    } catch (error) {
-      toast.error('Failed to add job listing');
+    } catch (error: unknown) {
       console.error('Error adding job:', error);
+      if (error instanceof FirebaseError) {
+        toast.error(error.message);
+      } else {
+        toast.error('Failed to add job listing');
+      }
     }
   };
 
@@ -177,14 +187,18 @@ export default function ProfilePage() {
       }));
       
       toast.success('Job listing removed successfully!');
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Detailed error in handleRemoveJob:', {
         error,
         userId: user?.uid,
         index,
         currentListings: profile?.jobListings
       });
-      toast.error('Failed to remove job listing');
+      if (error instanceof FirebaseError) {
+        toast.error(error.message);
+      } else {
+        toast.error('Failed to remove job listing');
+      }
     }
   };
 
@@ -195,9 +209,13 @@ export default function ProfilePage() {
       await deleteUserAccount(user.uid);
       router.push('/');
       toast.success('Account deleted successfully');
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error deleting account:', error);
-      toast.error('Failed to delete account. Please try again.');
+      if (error instanceof FirebaseError) {
+        toast.error(error.message);
+      } else {
+        toast.error('Failed to delete account. Please try again.');
+      }
     }
   };
 
@@ -220,8 +238,13 @@ export default function ProfilePage() {
         setProfileCompleted(true);
         setHasChanges(false);
         toast.success('Profile completed and saved successfully!');
-      } catch (error) {
-        toast.error('Failed to update profile status');
+      } catch (error: unknown) {
+        console.error('Error updating profile:', error);
+        if (error instanceof FirebaseError) {
+          toast.error(error.message);
+        } else {
+          toast.error('Failed to update profile status');
+        }
       }
     }
   };

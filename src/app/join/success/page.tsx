@@ -4,13 +4,13 @@ export default function JoinSuccessPage() {
       <h1 className="text-3xl font-bold mb-4">Request Submitted! 🎉</h1>
       <div className="text-center max-w-md space-y-4">
         <p>
-          Thank you for your interest in YAMLRG. We'll review your request and get back to you via email soon.
+          Thank you for your interest in YAMLRG. We will review your request and get back to you via email soon.
         </p>
         <p className="text-sm text-gray-600">
-          Please make sure to check your spam folder if you don't hear from us within a few days.
+          Please make sure to check your spam folder if you do not hear from us within a few days.
         </p>
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-          <p className="text-blue-800">
+        <div className="mt-6 p-4 bg-emerald-50 rounded-lg">
+          <p className="text-emerald-800">
             Want fast approval?{' '}
             <a 
               href="https://wa.me/447599973293"
