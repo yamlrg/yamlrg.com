@@ -73,4 +73,31 @@ export interface JoinRequest {
   createdAt: string;
   approvedAt?: string;
   approvedBy?: string;
+}
+
+export interface Workshop {
+  id?: string;
+  title: string;
+  presenterName: string;
+  presenterLinkedIn?: string;
+  date: string;
+  description: string;
+  youtubeUrl?: string;
+  resources?: string[];
+  type: 'paper' | 'startup' | 'other';
+}
+
+export interface PresentationRequest {
+  id?: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
+  title: string;
+  description: string;
+  type: 'paper' | 'startup' | 'other' | 'request';
+  proposedDate?: string;
+  status: 'pending' | 'done';
+  createdAt: string;
+  completedAt?: string;
+  completedBy?: string;
 } 

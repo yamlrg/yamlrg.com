@@ -1,6 +1,6 @@
 import { db, auth } from "./firebaseConfig";
 import { collection, doc, getDoc, setDoc, getDocs, query, where, DocumentData, orderBy, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import { User, UserProfile, JoinRequest } from "../types";
+import { User, UserProfile, JoinRequest, Workshop, PresentationRequest } from "../types";
 import { ADMIN_EMAILS } from "../config/admin";
 import { deleteUser } from "firebase/auth";
 import { trackEvent } from "@/utils/analytics";
@@ -290,5 +290,99 @@ export const handleFirstLogin = async (user: User) => {
       seekingJob: false,
       openToNetworking: false,
     }
+  });
+};
+
+// Get all workshops
+export const getWorkshops = async () => {
+  const workshopsRef = collection(db, "workshops");
+  const q = query(workshopsRef, orderBy("date", "desc"));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  })) as Workshop[];
+};
+
+// Add workshop (admin only)
+export const addWorkshop = async (workshop: Omit<Workshop, 'id'>) => {
+  const currentUser = auth.currentUser;
+  if (!currentUser?.email || !ADMIN_EMAILS.includes(currentUser.email)) {
+    throw new Error('Unauthorized: Admin access required');
+  }
+
+  const workshopsRef = collection(db, "workshops");
+  await addDoc(workshopsRef, workshop);
+};
+
+// Update workshop (admin only)
+export const updateWorkshop = async (workshopId: string, updates: Partial<Workshop>) => {
+  const currentUser = auth.currentUser;
+  if (!currentUser?.email || !ADMIN_EMAILS.includes(currentUser.email)) {
+    throw new Error('Unauthorized: Admin access required');
+  }
+
+  const workshopRef = doc(db, "workshops", workshopId);
+  await updateDoc(workshopRef, updates);
+};
+
+// Delete workshop (admin only)
+export const deleteWorkshop = async (workshopId: string) => {
+  const currentUser = auth.currentUser;
+  if (!currentUser?.email || !ADMIN_EMAILS.includes(currentUser.email)) {
+    throw new Error('Unauthorized: Admin access required');
+  }
+
+  const workshopRef = doc(db, "workshops", workshopId);
+  await deleteDoc(workshopRef);
+};
+
+// Add presentation request
+export const addPresentationRequest = async (request: Omit<PresentationRequest, 'id' | 'status' | 'createdAt'>) => {
+  const requestsRef = collection(db, "presentationRequests");
+  await addDoc(requestsRef, {
+    ...request,
+    status: 'pending',
+    createdAt: new Date().toISOString()
+  });
+};
+
+// Get presentation requests (admin only)
+export const getPresentationRequests = async () => {
+  const currentUser = auth.currentUser;
+  if (!currentUser?.email || !ADMIN_EMAILS.includes(currentUser.email)) {
+    throw new Error('Unauthorized: Admin access required');
+  }
+
+  const requestsRef = collection(db, "presentationRequests");
+  const q = query(requestsRef, orderBy("createdAt", "desc"));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  })) as PresentationRequest[];
+};
+
+// Update presentation request status (admin only)
+export const updatePresentationRequestStatus = async (
+  requestId: string,
+  status: 'pending' | 'done',
+  completedBy: string
+) => {
+  const currentUser = auth.currentUser;
+  if (!currentUser?.email || !ADMIN_EMAILS.includes(currentUser.email)) {
+    throw new Error('Unauthorized: Admin access required');
+  }
+
+  const requestRef = doc(db, "presentationRequests", requestId);
+  await updateDoc(requestRef, {
+    status,
+    ...(status === 'done' ? {
+      completedAt: new Date().toISOString(),
+      completedBy
+    } : {
+      completedAt: null,
+      completedBy: null
+    })
   });
 }; 

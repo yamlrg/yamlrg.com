@@ -123,6 +123,10 @@ export default function RootLayout({
                       Reading List
                     </Link>
                     <span className="mx-3 text-gray-400">|</span>
+                    <Link href="/workshops" className={`hover:text-gray-900 ${pathname === '/workshops' ? 'font-semibold' : ''}`}>
+                      Workshops
+                    </Link>
+                    <span className="mx-3 text-gray-400">|</span>
                     <Link href="/jobs" className={`hover:text-gray-900 ${pathname === '/jobs' ? 'font-semibold' : ''}`}>
                       Jobs
                     </Link>
@@ -201,6 +205,13 @@ export default function RootLayout({
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Reading List
+                      </Link>
+                      <Link
+                        href="/workshops"
+                        className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Workshops
                       </Link>
                       <Link
                         href="/jobs"

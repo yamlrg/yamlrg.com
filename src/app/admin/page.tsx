@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getAllUsers, approveUser, removeApproval, updateShowInMembers, getJoinRequests, updateJoinRequestStatus, updateUserProfile } from '../firebase/firestoreOperations';
-import { ExtendedUser, JoinRequest } from '../types';
+import { getAllUsers, approveUser, removeApproval, updateShowInMembers, getJoinRequests, updateJoinRequestStatus, updateUserProfile, getPresentationRequests, updatePresentationRequestStatus, getWorkshops, deleteWorkshop } from '../firebase/firestoreOperations';
+import { ExtendedUser, JoinRequest, Workshop, PresentationRequest } from '../types';
 import { useRouter } from 'next/navigation';
 import { auth } from '../firebase/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -10,6 +10,7 @@ import Image from 'next/image';
 import toast, { Toaster } from 'react-hot-toast';
 import { ADMIN_EMAILS } from '../config/admin';
 import { trackEvent } from "@/utils/analytics";
+import Link from 'next/link';
 
 type SortOption = 'name' | 'approval' | 'date';
 
@@ -18,7 +19,7 @@ export default function AdminPage() {
   const [requests, setRequests] = useState<JoinRequest[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>('approval');
-  const [activeTab, setActiveTab] = useState<'users' | 'requests'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'requests' | 'workshops'>('users');
   const [showRecentApproved, setShowRecentApproved] = useState(false);
   const [selectedUser, setSelectedUser] = useState<ExtendedUser | null>(null);
   const [confirmationDialog, setConfirmationDialog] = useState<{
@@ -27,6 +28,9 @@ export default function AdminPage() {
     message: string;
     action: () => void;
   } | null>(null);
+  const [presentationRequests, setPresentationRequests] = useState<PresentationRequest[]>([]);
+  const [workshops, setWorkshops] = useState<Workshop[]>([]);
+  const [showAllCompleted, setShowAllCompleted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -46,12 +50,16 @@ export default function AdminPage() {
   useEffect(() => {
     const fetchData = async () => {
       if (isAdmin) {
-        const [allUsers, allRequests] = await Promise.all([
+        const [allUsers, allRequests, allPresentationRequests, allWorkshops] = await Promise.all([
           getAllUsers(),
-          getJoinRequests()
+          getJoinRequests(),
+          getPresentationRequests(),
+          getWorkshops()
         ]);
         setUsers(allUsers as ExtendedUser[]);
         setRequests(allRequests);
+        setPresentationRequests(allPresentationRequests);
+        setWorkshops(allWorkshops);
       }
     };
     fetchData();
@@ -220,6 +228,34 @@ export default function AdminPage() {
     }
   };
 
+  const handlePresentationRequest = async (requestId: string, isDone: boolean) => {
+    try {
+      await updatePresentationRequestStatus(requestId, isDone ? 'done' : 'pending', auth.currentUser?.email || '');
+      // Refresh presentation requests
+      const updatedRequests = await getPresentationRequests();
+      setPresentationRequests(updatedRequests);
+      toast.success(`Request marked as ${isDone ? 'done' : 'pending'}`);
+    } catch (error) {
+      console.error('Error handling presentation request:', error);
+      toast.error('Failed to update request');
+    }
+  };
+
+  const handleDeleteWorkshop = async (workshopId: string) => {
+    if (!confirm('Are you sure you want to delete this workshop?')) return;
+
+    try {
+      await deleteWorkshop(workshopId);
+      // Refresh workshops
+      const updatedWorkshops = await getWorkshops();
+      setWorkshops(updatedWorkshops);
+      toast.success('Workshop deleted');
+    } catch (error) {
+      console.error('Error deleting workshop:', error);
+      toast.error('Failed to delete workshop');
+    }
+  };
+
   if (!isAdmin) {
     return <div>Loading...</div>;
   }
@@ -233,27 +269,30 @@ export default function AdminPage() {
         <h1 className="text-2xl font-bold">Admin Dashboard</h1>
         
         {/* Tabs */}
-        <div className="flex gap-2">
+        <div className="flex gap-4 mb-8">
           <button
             onClick={() => setActiveTab('users')}
-            className={`px-4 py-2 rounded-lg flex-1 sm:flex-none ${
-              activeTab === 'users' ? 'bg-emerald-700 text-white' : 'bg-gray-100'
+            className={`px-4 py-2 rounded ${
+              activeTab === 'users' ? 'bg-emerald-500 text-white' : 'bg-gray-100'
             }`}
           >
             Users
           </button>
           <button
             onClick={() => setActiveTab('requests')}
-            className={`px-4 py-2 rounded-lg flex-1 sm:flex-none relative ${
-              activeTab === 'requests' ? 'bg-emerald-700 text-white' : 'bg-gray-100'
+            className={`px-4 py-2 rounded ${
+              activeTab === 'requests' ? 'bg-emerald-500 text-white' : 'bg-gray-100'
             }`}
           >
             Join Requests
-            {pendingRequests.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center">
-                {pendingRequests.length}
-              </span>
-            )}
+          </button>
+          <button
+            onClick={() => setActiveTab('workshops')}
+            className={`px-4 py-2 rounded ${
+              activeTab === 'workshops' ? 'bg-emerald-500 text-white' : 'bg-gray-100'
+            }`}
+          >
+            Workshops
           </button>
         </div>
 
@@ -276,153 +315,120 @@ export default function AdminPage() {
       {activeTab === 'users' && (
         <div className="space-y-6">
           {/* Admins Section */}
-          <div key="admins-section" className="bg-emerald-50 p-4 rounded-lg">
-            <h2 className="font-medium mb-3">Admins</h2>
-            <div className="flex flex-wrap gap-3">
-              {adminUsers.map((user) => (
-                <div key={user.uid} className="flex items-center gap-2 bg-white px-3 py-1 rounded-full">
-                  {user.photoURL ? (
-                    <Image
-                      src={user.photoURL}
-                      alt={user.displayName ?? ''}
-                      width={24}
-                      height={24}
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <span className="w-6 h-6 rounded-full bg-emerald-200 flex items-center justify-center text-xs">
-                      {user.displayName?.[0] ?? user.email?.[0] ?? '?'}
-                    </span>
-                  )}
-                  <span className="text-sm">{user.displayName}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Regular Users */}
-          <div key="regular-users-section" className="space-y-4">
-            {nonAdminUsers.map((user) => (
+          <div className="space-y-4">
+            <h2 className="text-lg font-medium">Admins</h2>
+            {adminUsers.map((user) => (
               <div 
-                key={user.uid} 
-                className="bg-white border rounded-lg p-4 hover:border-emerald-200 transition-colors cursor-pointer"
-                onClick={() => setSelectedUser(user)}
+                key={user.uid}
+                className="border rounded-lg p-4"
               >
-                <div className="flex items-start justify-between gap-4">
-                  {/* User Info */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div className="flex items-center gap-3 flex-1">
                     {user.photoURL ? (
                       <Image
                         src={user.photoURL}
-                        alt={user.displayName ?? ''}
+                        alt={user.displayName || ''}
                         width={40}
                         height={40}
                         className="rounded-full"
                       />
                     ) : (
-                      <span className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                        {user.displayName?.[0] ?? user.email?.[0] ?? '?'}
-                      </span>
+                      <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                        {user.displayName?.[0] || user.email?.[0] || '?'}
+                      </div>
                     )}
                     <div>
                       <h3 className="font-medium">{user.displayName}</h3>
                       <p className="text-sm text-gray-600">{user.email}</p>
-                      <div className="flex gap-2 mt-1">
-                        {user.profileCompleted ? (
-                          <span className="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded-full">
-                            Profile Complete
-                          </span>
-                        ) : (
-                          <span className="text-xs px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full">
-                            Profile Incomplete
-                          </span>
-                        )}
-                        {user.showInMembers ? (
-                          <span className="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full">
-                            Visible
-                          </span>
-                        ) : (
-                          <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full">
-                            Hidden
-                          </span>
-                        )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Regular Users */}
+          <div className="space-y-4">
+            <h2 className="text-lg font-medium">Members</h2>
+            {nonAdminUsers.map((user) => (
+              <div 
+                key={user.uid}
+                className="border rounded-lg p-4"
+              >
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex items-center gap-3 flex-1">
+                    {user.photoURL ? (
+                      <Image
+                        src={user.photoURL}
+                        alt={user.displayName || ''}
+                        width={40}
+                        height={40}
+                        className="rounded-full"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                        {user.displayName?.[0] || user.email?.[0] || '?'}
                       </div>
+                    )}
+                    <div className="flex-1">
+                      <h3 className="font-medium">{user.displayName}</h3>
+                      <p className="text-sm text-gray-600">{user.email}</p>
+                      {user.linkedinUrl && (
+                        <a
+                          href={user.linkedinUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-emerald-700 hover:underline text-sm"
+                        >
+                          LinkedIn Profile
+                        </a>
+                      )}
                     </div>
                   </div>
 
-                  {/* Approval Button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent opening user details
-                      handleApproval(user.uid, user.isApproved);
-                    }}
-                    className={`px-4 py-2 rounded-lg text-sm ${
-                      user.isApproved 
-                        ? 'bg-red-100 text-red-700 hover:bg-red-200' 
-                        : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                    }`}
-                  >
-                    {user.isApproved ? 'Remove Approval' : 'Approve'}
-                  </button>
-
-                  {/* Quick Actions */}
-                  <div className="flex items-center gap-2">
-                    <div className="relative group">
+                  <div className="flex flex-wrap gap-2 items-center justify-end">
+                    <button
+                      onClick={() => handleProfileCompletion(user.uid, user.profileCompleted)}
+                      className={`px-3 py-1 rounded text-sm ${
+                        user.profileCompleted
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : 'bg-yellow-100 text-yellow-800'
+                      }`}
+                    >
+                      {user.profileCompleted ? 'Profile Complete' : 'Profile Incomplete'}
+                    </button>
+                    <button
+                      onClick={() => handleVisibility(user.uid, user.showInMembers)}
+                      className={`px-3 py-1 rounded text-sm ${
+                        user.showInMembers
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}
+                    >
+                      {user.showInMembers ? 'Visible' : 'Hidden'}
+                    </button>
+                    {user.isApproved ? (
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent card click
-                          setConfirmationDialog({
-                            isOpen: true,
-                            title: user.showInMembers ? 'Hide User' : 'Show User',
-                            message: user.showInMembers 
-                              ? 'Are you sure you want to hide this user from the members directory?' 
-                              : 'Are you sure you want to show this user in the members directory?',
-                            action: () => handleVisibility(user.uid, user.showInMembers)
-                          });
-                        }}
-                        className="p-2 rounded-full hover:bg-gray-100"
+                        onClick={() => handleApproval(user.uid, user.isApproved)}
+                        className="px-3 py-1 bg-red-100 text-red-800 rounded text-sm"
                       >
-                        {user.showInMembers ? '👁️' : '👁️‍🗨️'}
+                        Remove Approval
                       </button>
-                      {/* Tooltip */}
-                      <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs rounded py-1 px-2 -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                        {user.showInMembers ? "Hide from directory" : "Show in directory"}
-                      </div>
-                    </div>
-
-                    <div className="relative group">
+                    ) : (
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent card click
-                          setConfirmationDialog({
-                            isOpen: true,
-                            title: 'Resend Welcome Email',
-                            message: 'Are you sure you want to resend the welcome email with WhatsApp link?',
-                            action: async () => {
-                              try {
-                                const response = await fetch('/api/send-approval-email', {
-                                  method: 'POST',
-                                  headers: { 'Content-Type': 'application/json' },
-                                  body: JSON.stringify({ email: user.email })
-                                });
-                                if (!response.ok) throw new Error('Failed to send email');
-                                toast.success('Welcome email resent successfully');
-                              } catch (error) {
-                                console.error('Error resending welcome email:', error);
-                                toast.error('Failed to resend email');
-                              }
-                            }
-                          });
-                        }}
-                        className="p-2 rounded-full hover:bg-gray-100"
+                        onClick={() => handleApproval(user.uid, true)}
+                        className="px-3 py-1 bg-emerald-100 text-emerald-800 rounded text-sm"
                       >
-                        💌
+                        Approve
                       </button>
-                      {/* Tooltip */}
-                      <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs rounded py-1 px-2 -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                        Resend welcome email
-                      </div>
-                    </div>
+                    )}
+                    <button
+                      onClick={() => setSelectedUser(user)}
+                      className="p-1 text-gray-600 hover:text-gray-800"
+                      title="View Details"
+                    >
+                      👁️
+                    </button>
                   </div>
                 </div>
               </div>
@@ -582,6 +588,276 @@ export default function AdminPage() {
               ))
             )
           )}
+        </div>
+      )}
+
+      {activeTab === 'workshops' && (
+        <div>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-semibold">Workshop Management</h2>
+            <Link
+              href="/admin/workshops/new"
+              className="bg-emerald-500 text-white px-4 py-2 rounded hover:bg-emerald-600"
+            >
+              Add Workshop
+            </Link>
+          </div>
+          
+          {/* Presentation Requests Section */}
+          <div className="mb-8">
+            <h3 className="text-lg font-medium mb-4">Presentation Requests</h3>
+            
+            {/* Active Requests */}
+            <div className="space-y-4 mb-6">
+              {presentationRequests
+                .filter(req => req.status === 'pending')
+                .map(request => (
+                  <div key={request.id} className="border rounded-lg p-4 bg-yellow-50">
+                    <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h4 className="font-medium">{request.title}</h4>
+                            <span className="text-xs px-2 py-1 rounded-full bg-gray-100 inline-block mt-1">
+                              {request.type}
+                            </span>
+                          </div>
+                          <button
+                            onClick={() => handlePresentationRequest(request.id!, true)}
+                            className="text-2xl hover:scale-110 transition-transform relative group"
+                          >
+                            ⭕
+                            <span className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none">
+                              Mark as done
+                            </span>
+                          </button>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">by {request.userName}</p>
+                        {request.type !== 'request' && (
+                          <>
+                            <p className="mt-2">{request.description}</p>
+                            {request.proposedDate && (
+                              <p className="text-sm text-gray-600 mt-1">
+                                Preferred date: {new Date(request.proposedDate).toLocaleDateString()}
+                              </p>
+                            )}
+                          </>
+                        )}
+                        {request.type === 'request' && request.description && (
+                          <a 
+                            href={request.description}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline text-sm block mt-1"
+                          >
+                            View Reference Link
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              {presentationRequests.filter(req => req.status === 'pending').length === 0 && (
+                <p className="text-gray-600 italic">No pending requests</p>
+              )}
+            </div>
+
+            {/* Completed Requests */}
+            {presentationRequests.some(req => req.status === 'done') && (
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <h4 className="text-md font-medium">Completed Requests</h4>
+                  <button
+                    onClick={() => setShowAllCompleted(!showAllCompleted)}
+                    className="text-sm text-emerald-700 hover:text-emerald-800"
+                  >
+                    {showAllCompleted ? 'Show Less' : 'Show All'}
+                  </button>
+                </div>
+                <div className="space-y-4">
+                  {presentationRequests
+                    .filter(req => req.status === 'done')
+                    .slice(0, showAllCompleted ? undefined : 3)
+                    .map(request => (
+                      <div key={request.id} className="border rounded-lg p-4 bg-gray-50">
+                        <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-start justify-between">
+                              <div>
+                                <h4 className="font-medium">{request.title}</h4>
+                                <span className="text-xs px-2 py-1 rounded-full bg-gray-100 inline-block mt-1">
+                                  {request.type}
+                                </span>
+                              </div>
+                              <button
+                                onClick={() => handlePresentationRequest(request.id!, false)}
+                                className="text-2xl hover:scale-110 transition-transform relative group"
+                              >
+                                ✅
+                                <span className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none">
+                                  Mark as pending
+                                </span>
+                              </button>
+                            </div>
+                            <p className="text-sm text-gray-600 mt-1">
+                              Completed {request.completedAt && new Date(request.completedAt).toLocaleDateString()} 
+                              by {request.completedBy}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Workshops List */}
+          <div>
+            <h3 className="text-lg font-medium mb-4">Workshops</h3>
+            
+            {/* Upcoming Workshops */}
+            <div className="mb-8">
+              <h4 className="text-md font-medium mb-4">Upcoming</h4>
+              <div className="space-y-4">
+                {workshops
+                  .filter(workshop => {
+                    const workshopDate = new Date(workshop.date);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0); // Reset time to start of day
+                    return workshopDate >= today;
+                  })
+                  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+                  .map(workshop => (
+                    <div key={workshop.id} className="border rounded-lg p-4">
+                      <div className="flex justify-between">
+                        <div>
+                          <h4 className="font-medium">{workshop.title}</h4>
+                          <p className="text-sm text-gray-600">
+                            by{' '}
+                            <a
+                              href={workshop.presenterLinkedIn}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:underline"
+                            >
+                              {workshop.presenterName}
+                            </a>
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            {new Date(workshop.date).toLocaleDateString()}
+                          </p>
+                          <p className="mt-2">{workshop.description}</p>
+                          {workshop.youtubeUrl && (
+                            <a
+                              href={workshop.youtubeUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:underline text-sm block mt-1"
+                            >
+                              Watch Recording
+                            </a>
+                          )}
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <Link
+                            href={`/admin/workshops/edit/${workshop.id}`}
+                            className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-center"
+                          >
+                            Edit
+                          </Link>
+                          <button
+                            onClick={() => handleDeleteWorkshop(workshop.id!)}
+                            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                {!workshops.some(w => {
+                  const workshopDate = new Date(w.date);
+                  const today = new Date();
+                  today.setHours(0, 0, 0, 0);
+                  return workshopDate >= today;
+                }) && (
+                  <p className="text-gray-600 italic">No upcoming workshops</p>
+                )}
+              </div>
+            </div>
+
+            {/* Past Workshops */}
+            <div>
+              <h4 className="text-md font-medium mb-4">Past</h4>
+              <div className="space-y-4">
+                {workshops
+                  .filter(workshop => {
+                    const workshopDate = new Date(workshop.date);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    return workshopDate < today;
+                  })
+                  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Most recent first
+                  .map(workshop => (
+                    <div key={workshop.id} className="border rounded-lg p-4 bg-gray-50">
+                      <div className="flex justify-between">
+                        <div>
+                          <h4 className="font-medium">{workshop.title}</h4>
+                          <p className="text-sm text-gray-600">
+                            by{' '}
+                            <a
+                              href={workshop.presenterLinkedIn}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:underline"
+                            >
+                              {workshop.presenterName}
+                            </a>
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            {new Date(workshop.date).toLocaleDateString()}
+                          </p>
+                          <p className="mt-2">{workshop.description}</p>
+                          {workshop.youtubeUrl && (
+                            <a
+                              href={workshop.youtubeUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:underline text-sm block mt-1"
+                            >
+                              Watch Recording
+                            </a>
+                          )}
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <Link
+                            href={`/admin/workshops/edit/${workshop.id}`}
+                            className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-center"
+                          >
+                            Edit
+                          </Link>
+                          <button
+                            onClick={() => handleDeleteWorkshop(workshop.id!)}
+                            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                {!workshops.some(w => {
+                  const workshopDate = new Date(w.date);
+                  const today = new Date();
+                  today.setHours(0, 0, 0, 0);
+                  return workshopDate < today;
+                }) && (
+                  <p className="text-gray-600 italic">No past workshops</p>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
