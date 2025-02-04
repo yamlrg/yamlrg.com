@@ -8,6 +8,9 @@ const nextConfig = {
         pathname: '/a/**',
       },
     ],
+    domains: [
+      'lh3.googleusercontent.com',  // For Google profile pictures
+    ],
   },
 };
 

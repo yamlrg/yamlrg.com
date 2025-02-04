@@ -4,64 +4,150 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+First, set up your environment variables in `.env.local`:
 
 ```bash
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+```
+
+Then, install dependencies and run the development server:
+
+```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- 🔐 Authentication with Google
+- 👥 Member directory with profile management
+- 📚 Reading list for sharing resources
+- 💼 Job board for member companies
+- 📊 Analytics tracking
+- 🎁 Year in review (Wrapped)
+- 👑 Admin dashboard for managing members
 
-## Learn More
+## Deployment
 
-To learn more about Next.js, take a look at the following resources:
+The site is hosted at [yamlrg.com](https://yamlrg.com/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Current Setup
+- Hosted on Heroku
+- Connected to María's GitHub fork of the yamlrg repo
+- Deployed from the `react-app` branch
+- Domain purchased on GoDaddy (login with yamlrg Gmail)
+- Account details stored in Bitwarden
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Production Build
 
-## Deploy on Vercel
+```bash
+# Build the application
+npm run build
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Start in production mode
+npm start
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Future Ideas
 
+- [x] Send email to people when they are approved
+- [ ] Gravity: randomly match people in 1-on-1 calls to meet each other
+- [x] Add Google Analytics / PostHog
+- [x] Show number of members in the members page
+- [x] Search for members
+- [x] Add a "reading list" page
+- [x] Add jobs from companies that are hiring
 
-## Where is this running?
+## Authentication Flow
 
-https://yamlrg.com/
+### 1. Join Request
+- User fills out join form at `/join`
+- Creates document in `joinRequests` collection
+- Status starts as 'pending'
 
-It's hosted on Heroku, on maria's github (forked the yamlrg repo), on the `react-app` branch. 
+### 2. Admin Approval
+- Admin reviews request in admin dashboard
+- Upon approval:
+  - Updates join request status
+  - Sends approval email with WhatsApp group link
 
-The domain was bought on GoDaddy and you can log in with the yamlrg gmail. 
-Details about the account are in bitwarden.
+### 3. First Login
+- User authenticates with Google
+- System checks for approved join request
+- Creates user document if approved
+- Redirects to profile completion
 
+### 4. Profile Management
+- User completes profile at `/profile`
+- Can toggle visibility in member directory
+- Can manage job listings and status flags
 
-## Ideas 
+## Document Structure
 
-- [X] add google analytics / posthog 
-- [ ] send email to people when they are approved
-- [X] show number of members in the members page
-- [X] search for members
-- [X] add a "reading list" page that shows the reading list of the group
-- [X] add jobs of people from companies that are hiring
-- [ ] gravity???? randomly match people in a 1-v-1 call so they meet each other
+**Join Requests:**
+```typescript
+{
+  id?: string;
+  email: string;
+  name: string;
+  interests: string;
+  linkedinUrl: string;
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
+  approvedAt?: string;
+  approvedBy?: string;
+}
+```
 
-# To make sure it will run in Heroku: 
+**Users:**
+```typescript
+{
+  uid: string;
+  email: string;
+  displayName: string;
+  photoURL: string;
+  isApproved: boolean;
+  showInMembers: boolean;
+  profileCompleted: boolean;
+  linkedinUrl?: string;
+  approvedAt?: string;
+  joinedAt?: string;
+  status: {
+    lookingForCofounder: boolean;
+    needsProjectHelp: boolean;
+    offeringProjectHelp: boolean;
+    isHiring: boolean;
+    seekingJob: boolean;
+    openToNetworking: boolean;
+  };
+  jobListings?: Array<{
+    title: string;
+    company: string;
+    link: string;
+    postedAt: string;
+  }>;
+}
+```
 
-#### First build your application
-`npm run build`
+## Analytics
 
-#### Then start it in production mode
-`npm start`
+The application uses Google Analytics to track:
+- Page views
+- User interactions
+- Member growth
+- Feature usage
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
