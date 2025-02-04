@@ -4,6 +4,7 @@ import ProtectedPage from "@/components/ProtectedPage";
 import { useEffect, useState } from "react";
 import { getReadingList, addToReadingList } from "../firebase/firestoreOperations";
 import Link from "next/link";
+import { trackEvent } from "@/utils/analytics";
 
 type ReadingItem = {
   id: string;
@@ -36,6 +37,10 @@ export default function ReadingListPage() {
     e.preventDefault();
     try {
       await addToReadingList(newItem);
+      trackEvent('reading_list_item_added', {
+        title: newItem.title,
+        has_author: !!newItem.author
+      });
       setNewItem({ title: '', url: '', author: '' });
       setShowAddForm(false);
       await fetchReadingList();
@@ -47,18 +52,18 @@ export default function ReadingListPage() {
   return (
     <ProtectedPage>
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Reading List 📚</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold">Reading List 📚</h1>
           <button
             onClick={() => setShowAddForm(!showAddForm)}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            className="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           >
             {showAddForm ? 'Cancel' : 'Add Resource'}
           </button>
         </div>
 
         {showAddForm && (
-          <form onSubmit={handleSubmit} className="mb-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+          <form onSubmit={handleSubmit} className="mb-8 bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow">
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Title *</label>
@@ -102,25 +107,31 @@ export default function ReadingListPage() {
 
         <div className="space-y-4">
           {readingList.map((item) => (
-            <div key={item.id} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-              <div className="flex justify-between items-start gap-4">
-                <div>
-                  <h2 className="text-xl font-semibold mb-1">
+            <div key={item.id} className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+                <div className="space-y-1 min-w-0 flex-1">
+                  <h2 className="text-lg sm:text-xl font-semibold break-words">
                     <Link href={item.url} target="_blank" className="hover:text-blue-500">
                       {item.title}
                     </Link>
                   </h2>
                   {item.author && (
-                    <p className="text-gray-600 dark:text-gray-400">by {item.author}</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">by {item.author}</p>
                   )}
                 </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                  Added by {item.addedBy} <br />
-                  {new Date(item.addedAt).toLocaleDateString()}
+                <div className="text-sm text-gray-500 dark:text-gray-400 shrink-0">
+                  <p>Added by {item.addedBy}</p>
+                  <p>{new Date(item.addedAt).toLocaleDateString()}</p>
                 </div>
               </div>
             </div>
           ))}
+
+          {readingList.length === 0 && (
+            <p className="text-center text-gray-500 dark:text-gray-400 py-8">
+              No resources added yet. Be the first to share something!
+            </p>
+          )}
         </div>
       </div>
     </ProtectedPage>

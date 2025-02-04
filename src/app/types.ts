@@ -22,8 +22,10 @@ export interface UserProfile {
   status: UserStatus;
   isApproved: boolean;
   isAdmin: boolean;
+  profileCompleted: boolean;
   approvedAt?: string;
   approvedBy?: string;
+  joinedAt?: string;
   jobListings?: JobListing[];
 }
 
@@ -34,14 +36,41 @@ export interface User extends FirebaseUser {
 }
 
 // For when we need the full user data
-export interface ExtendedUser extends FirebaseUser {
-  linkedinUrl: string;
-  status: UserStatus;
+export interface ExtendedUser {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
   isApproved: boolean;
-  isAdmin: boolean;
+  showInMembers: boolean;
+  profileCompleted: boolean;
+  linkedinUrl?: string;
+  approvedAt?: string;
+  joinedAt?: string;
+  status?: {
+    lookingForCofounder: boolean;
+    needsProjectHelp: boolean;
+    offeringProjectHelp: boolean;
+    isHiring: boolean;
+    seekingJob: boolean;
+    openToNetworking: boolean;
+  };
+  jobListings?: Array<{
+    title: string;
+    company: string;
+    link: string;
+    postedAt: string;
+  }>;
+}
+
+export interface JoinRequest {
+  id?: string;
+  email: string;
+  name: string;
+  interests: string;
+  linkedinUrl: string;
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
   approvedAt?: string;
   approvedBy?: string;
-  showInMembers: boolean;
-  joinedAt?: string;
-  jobListings?: JobListing[];
 } 

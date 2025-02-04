@@ -11,6 +11,11 @@ import Link from "next/link";
 import { ADMIN_EMAILS } from "./config/admin";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import Image from "next/image";
+import { trackEvent } from "@/utils/analytics";
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "./firebase/firebaseConfig";
+
+console.log('Current NODE_ENV:', process.env.NODE_ENV);
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,18 +31,39 @@ export default function RootLayout({
 }) {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isApproved, setIsApproved] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser?.email) {
-        setIsAdmin(ADMIN_EMAILS.includes(currentUser.email));
+        // Check if admin
+        const isAdminUser = ADMIN_EMAILS.includes(currentUser.email);
+        setIsAdmin(isAdminUser);
+        
+        if (!isAdminUser) {
+          // Check if user has an approved account
+          const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+          setIsApproved(userDoc.exists() && userDoc.data()?.isApproved);
+        } else {
+          setIsApproved(true);
+        }
       }
     });
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    // Test event
+    trackEvent('page_view', {
+      page_title: document.title,
+      page_location: window.location.href,
+      page_path: window.location.pathname
+    });
   }, []);
 
   const handleLogout = async () => {
@@ -57,50 +83,50 @@ export default function RootLayout({
         <div className="h-full flex flex-col">
           <header className="py-2 px-4 sm:px-6 lg:px-8 border-b">
             <div className="container mx-auto flex justify-between items-center">
-              {user && showYamlrgText && (
-                <Link href="/" className="cursor-pointer">
-                  YAMLRG
-                </Link>
-              )}
-              {(!user || !showYamlrgText) && <div />}
-              
-              {/* Desktop Navigation */}
-              <nav className="hidden md:flex items-center gap-4">
-                {!user && (
-                  <Link 
-                    href="/login" 
-                    className={`hover:text-gray-900 ${pathname === '/login' ? 'font-semibold' : ''}`}
-                  >
-                    Login
+              <div className="flex items-center">
+                {showYamlrgText && (
+                  <Link href="/" className="cursor-pointer">
+                    YAMLRG
                   </Link>
                 )}
-                {user && (
-                  <div className="flex items-center">
-                    <Link 
-                      href="/members" 
-                      className={`hover:text-gray-900 ${pathname === '/members' ? 'font-semibold' : ''}`}
-                    >
+                {!showYamlrgText && <div />}
+              </div>
+
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900"
+              >
+                <span className="sr-only">Open menu</span>
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+                  />
+                </svg>
+              </button>
+              
+              <nav className="hidden md:flex items-center gap-4">
+                {user && (isApproved || isAdmin) ? (
+                  <>
+                    <Link href="/members" className={`hover:text-gray-900 ${pathname === '/members' ? 'font-semibold' : ''}`}>
                       Members
                     </Link>
                     <span className="mx-3 text-gray-400">|</span>
-                    <Link 
-                      href="/reading-list" 
-                      className={`hover:text-gray-900 ${pathname === '/reading-list' ? 'font-semibold' : ''}`}
-                    >
+                    <Link href="/reading-list" className={`hover:text-gray-900 ${pathname === '/reading-list' ? 'font-semibold' : ''}`}>
                       Reading List
                     </Link>
                     <span className="mx-3 text-gray-400">|</span>
-                    <Link
-                      href="/jobs"
-                      className={`hover:text-gray-900 ${pathname === '/jobs' ? 'font-semibold' : ''}`}
-                    >
+                    <Link href="/jobs" className={`hover:text-gray-900 ${pathname === '/jobs' ? 'font-semibold' : ''}`}>
                       Jobs
                     </Link>
-                    
-                    {/* Add divider before profile image */}
                     <span className="mx-3 text-gray-400">|</span>
-                    
-                    {/* User Dropdown */}
                     <div className="relative ml-4">
                       <button
                         onClick={() => setShowDropdown(!showDropdown)}
@@ -148,10 +174,79 @@ export default function RootLayout({
                         </div>
                       )}
                     </div>
-                  </div>
+                  </>
+                ) : (
+                  <Link href="/login" className={`hover:text-gray-900 ${pathname === '/login' ? 'font-semibold' : ''}`}>
+                    Login
+                  </Link>
                 )}
               </nav>
             </div>
+
+            {isMobileMenuOpen && (
+              <div className="md:hidden">
+                <div className="px-2 pt-2 pb-3 space-y-1">
+                  {user && (isApproved || isAdmin) ? (
+                    <>
+                      <Link
+                        href="/members"
+                        className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Members
+                      </Link>
+                      <Link
+                        href="/reading-list"
+                        className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Reading List
+                      </Link>
+                      <Link
+                        href="/jobs"
+                        className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Jobs
+                      </Link>
+                      <Link
+                        href="/profile"
+                        className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Profile
+                      </Link>
+                      {isAdmin && (
+                        <Link
+                          href="/admin"
+                          className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          Admin
+                        </Link>
+                      )}
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="block w-full text-left px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                      >
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <Link
+                      href="/login"
+                      className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Login
+                    </Link>
+                  )}
+                </div>
+              </div>
+            )}
           </header>
           <main className="flex-1 overflow-auto">
             {children}

@@ -4,9 +4,14 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "yamlrg?",
   description: "Yet Another Machine Learning Reading Group",
+  metadataBase: new URL('https://yamlrg.com'),
   openGraph: {
     title: "yamlrg?",
     description: "Yet Another Machine Learning Reading Group",
+    url: 'https://yamlrg.com',
+    siteName: 'YAMLRG',
+    locale: 'en_US',
+    type: 'website',
     images: [
       {
         url: "/yamlrg.webp",
@@ -15,6 +20,12 @@ export const metadata: Metadata = {
         alt: "YAMLRG Logo",
       },
     ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'yamlrg?',
+    description: 'Yet Another Machine Learning Reading Group',
+    images: ['/yamlrg.webp'],
   },
   icons: {
     icon: "/favicon.ico",
