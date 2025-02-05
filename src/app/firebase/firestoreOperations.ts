@@ -44,10 +44,53 @@ export const createUserProfile = async (user: User) => {
 };
 
 // Get user profile
-export const getUserProfile = async (userId: string): Promise<UserProfile> => {
-  const userRef = doc(db, "users", userId);
-  const userSnap = await getDoc(userRef);
-  return userSnap.data() as UserProfile;
+export const getUserProfile = async (userId: string) => {
+  try {
+    if (!userId) {
+      console.log('No user ID provided');
+      return null;
+    }
+
+    const userRef = doc(db, "users", userId);
+    
+    try {
+      const userSnap = await getDoc(userRef);
+      
+      if (!userSnap.exists()) {
+        console.log('No user found with ID:', userId);
+        return null;
+      }
+
+      const data = userSnap.data();
+      if (!data) {
+        console.log('No data in user document:', userId);
+        return null;
+      }
+
+      return {
+        ...data,
+        uid: userSnap.id,
+        showInMembers: data.showInMembers ?? false,
+        linkedinUrl: data.linkedinUrl ?? '',
+        isApproved: data.isApproved ?? false,
+        isAdmin: data.isAdmin ?? false,
+        profileCompleted: data.profileCompleted ?? false,
+        status: data.status ?? {
+          lookingForCofounder: false,
+          needsProjectHelp: false,
+          offeringProjectHelp: false,
+          isHiring: false,
+          seekingJob: false,
+          openToNetworking: false,
+        }
+      } as UserProfile;
+    } catch (error) {
+      throw error;
+    }
+  } catch (error) {
+    console.error('Error getting user profile:', error);
+    return null;
+  }
 };
 
 // Update show in members
@@ -82,18 +125,19 @@ export const updateUserProfile = async (userId: string, updates: Partial<UserPro
       throw new Error('User document not found');
     }
 
-    // Add timestamp and perform update
-    await setDoc(userRef, {
+    // Always include lastUpdate timestamp
+    await updateDoc(userRef, {
       ...safeUpdates,
       lastUpdate: new Date().toISOString()
-    }, { merge: true });
+    });
 
   } catch (error) {
     console.error('Error in updateUserProfile:', {
       userId,
       updates,
       error: error instanceof Error ? error.message : 'Unknown error',
-      errorCode: error instanceof FirebaseError ? error.code : 'unknown'
+      errorCode: error instanceof FirebaseError ? error.code : 'unknown',
+      errorObject: error
     });
     throw error;
   }
