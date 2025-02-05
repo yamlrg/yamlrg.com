@@ -17,12 +17,35 @@ import { db } from "./firebase/firebaseConfig";
 
 console.log('Current NODE_ENV:', process.env.NODE_ENV);
 
+if (typeof window === 'undefined') {
+  validateEnvVars();
+}
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
 
 const GA_MEASUREMENT_ID = 'G-F99YRJFQ3K';
+
+export function validateEnvVars() {
+  const required = [
+    'NEXT_PUBLIC_FIREBASE_API_KEY',
+    'NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN',
+    'NEXT_PUBLIC_FIREBASE_PROJECT_ID',
+    'NEXT_FIREBASE_CLIENT_EMAIL',
+    'NEXT_FIREBASE_PRIVATE_KEY',
+    'NEXT_RESEND_API_KEY'
+  ];
+  
+  const missing = required.filter(varName => !process.env[varName]);
+  
+  if (missing.length > 0) {
+    throw new Error(
+      `Missing required environment variables:\n${missing.join('\n')}`
+    );
+  }
+}
 
 export default function RootLayout({
   children,

@@ -1,9 +1,27 @@
 import { Resend } from 'resend';
+import { adminAuth } from '@/app/firebase/firebaseAdmin';
+import { ADMIN_EMAILS } from '@/app/config/admin';
 
 const resend = new Resend(process.env.NEXT_RESEND_API_KEY);
 
 export async function POST(request: Request) {
   try {
+    // Layer 1: Requires a valid Firebase auth token
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Layer 2: Token must be valid (verified by Firebase Admin)
+    const token = authHeader.split('Bearer ')[1];
+    const decodedToken = await adminAuth.verifyIdToken(token);
+    
+    // Layer 3: Email must be in admin whitelist
+    if (!ADMIN_EMAILS.includes(decodedToken.email || '')) {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    // Process email
     const { email } = await request.json();
     console.log('Starting email send process to:', email);
     console.log('API Key exists:', !!process.env.NEXT_RESEND_API_KEY);

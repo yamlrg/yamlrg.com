@@ -1,6 +1,39 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { auth } from './firebase/firebaseConfig';
+import { getUserProfile } from './firebase/firestoreOperations';
 import Link from 'next/link';
 
 export default function Page() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      try {
+        setLoading(true);
+        
+        // Only try to get user profile if user is logged in
+        if (user) {
+          await getUserProfile(user.uid);
+        }
+        
+      } catch (error) {
+        // Just log the error if something goes wrong
+        console.error('Error in home page:', error);
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Don't show loading state when not logged in
+  if (loading && auth.currentUser) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 flex flex-col justify-center items-center px-4">
