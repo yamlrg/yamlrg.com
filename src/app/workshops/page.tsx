@@ -332,7 +332,7 @@ export default function WorkshopsPage() {
               })
               .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Most recent first
               .map(workshop => (
-                <div key={workshop.id} className="border rounded-lg p-4">
+                <div key={workshop.id} className="border rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="text-lg font-medium">{workshop.title}</h3>

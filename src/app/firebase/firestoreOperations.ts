@@ -5,6 +5,7 @@ import { ADMIN_EMAILS } from "../config/admin";
 import { deleteUser } from "firebase/auth";
 import { trackEvent } from "@/utils/analytics";
 import { getFirestore } from "firebase/firestore";
+import { FirebaseError } from "firebase/app";
 
 // Export setDoc for use in other files
 export { setDoc, doc };
@@ -64,15 +65,36 @@ export const updateUserProfile = async (userId: string, updates: Partial<UserPro
   try {
     // Remove any sensitive fields from updates
     const safeUpdates = { ...updates };
-    delete safeUpdates.isApproved;
-    delete safeUpdates.approvedAt;
-    delete safeUpdates.approvedBy;
     delete safeUpdates.isAdmin;
     
+    // Only allow admins to modify approval status
+    if (!ADMIN_EMAILS.includes(auth.currentUser?.email || '')) {
+      delete safeUpdates.isApproved;
+      delete safeUpdates.approvedAt;
+      delete safeUpdates.approvedBy;
+    }
+    
     const userRef = doc(db, "users", userId);
-    await setDoc(userRef, safeUpdates, { merge: true });
+    
+    // First, check if document exists
+    const docSnap = await getDoc(userRef);
+    if (!docSnap.exists()) {
+      throw new Error('User document not found');
+    }
+
+    // Add timestamp and perform update
+    await setDoc(userRef, {
+      ...safeUpdates,
+      lastUpdate: new Date().toISOString()
+    }, { merge: true });
+
   } catch (error) {
-    console.error('Error in updateUserProfile:', { userId, updates, error });
+    console.error('Error in updateUserProfile:', {
+      userId,
+      updates,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      errorCode: error instanceof FirebaseError ? error.code : 'unknown'
+    });
     throw error;
   }
 };
@@ -128,21 +150,33 @@ export const getVisibleMembers = async () => {
     const isAdmin = ADMIN_EMAILS.includes(currentUser.email ?? '');
 
     const usersRef = collection(db, "users");
-    let q;
+    let members: DocumentData[] = [];
 
     // If not admin and not approved, only show admins
     if (!isAdmin && !userProfile?.isApproved) {
       console.log("Filtering for admin-only view");
-      q = query(usersRef, where("email", "in", ADMIN_EMAILS));
+      const adminQuery = query(usersRef, where("email", "in", ADMIN_EMAILS));
+      const adminSnapshot = await getDocs(adminQuery);
+      members = adminSnapshot.docs.map(doc => doc.data());
     } else {
-      // Show all visible members
-      console.log("Showing all visible members");
-      q = query(usersRef, where("showInMembers", "==", true));
+      // Get visible members
+      const visibleQuery = query(usersRef, where("showInMembers", "==", true));
+      const visibleSnapshot = await getDocs(visibleQuery);
+      const visibleMembers = visibleSnapshot.docs.map(doc => doc.data());
+
+      // Get admin members
+      const adminQuery = query(usersRef, where("email", "in", ADMIN_EMAILS));
+      const adminSnapshot = await getDocs(adminQuery);
+      const adminMembers = adminSnapshot.docs.map(doc => doc.data());
+
+      // Combine and deduplicate members
+      const memberMap = new Map();
+      [...visibleMembers, ...adminMembers].forEach(member => {
+        memberMap.set(member.uid, member);
+      });
+      members = Array.from(memberMap.values());
     }
 
-    const querySnapshot = await getDocs(q);
-    const members = querySnapshot.docs.map(doc => doc.data());
-    console.log("Found members:", members.length);
     return members;
   } catch (error) {
     console.error("Error in getVisibleMembers:", error);

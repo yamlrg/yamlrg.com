@@ -72,40 +72,36 @@ export default function ProfilePage() {
     }
   };
 
-  const handleStatusToggle = async (statusKey: keyof UserStatus) => {
-    if (user && profile) {
-      setHasChanges(true);
-      const newStatus = {
-        ...profile.status,
-        [statusKey]: !profile.status[statusKey]
-      };
-      await updateUserProfile(user.uid, { status: newStatus });
-      trackEvent('profile_status_update', {
-        status_type: statusKey,
-        new_value: newStatus[statusKey]
-      });
-      setProfile({ ...profile, status: newStatus });
-    }
-  };
-
   const handleProfileUpdate = async () => {
     if (user && profile) {
       try {
         await updateUserProfile(user.uid, { 
           linkedinUrl,
           showInMembers: profile.showInMembers,
-          status: profile.status
+          status: profile.status,
         });
+        
         setProfile({
           ...profile,
           linkedinUrl
         });
         setHasChanges(false);
         toast.success('Profile updated successfully!');
+        
       } catch (error: unknown) {
-        console.error('Error updating profile:', error);
+        console.error('Profile update error:', error);
+        
         if (error instanceof FirebaseError) {
-          toast.error(error.message);
+          switch (error.code) {
+            case 'permission-denied':
+              toast.error('Please wait a moment before updating again');
+              break;
+            case 'not-found':
+              toast.error('Profile not found. Please try logging in again.');
+              break;
+            default:
+              toast.error(`Update failed: ${error.message}`);
+          }
         } else {
           toast.error('Failed to update profile');
         }
@@ -359,10 +355,17 @@ export default function ProfilePage() {
                   type="checkbox"
                   id={key}
                   checked={profile.status[key]}
-                  onChange={() => handleStatusToggle(key)}
-                  className="h-4 w-4"
+                  onChange={() => {
+                    const newStatus = {
+                      ...profile.status,
+                      [key]: !profile.status[key]
+                    };
+                    setProfile({ ...profile, status: newStatus });
+                    setHasChanges(true);
+                  }}
+                  className="h-4 w-4 cursor-pointer"
                 />
-                <label htmlFor={key} className="text-sm">
+                <label htmlFor={key} className="text-sm cursor-pointer">
                   {label}
                 </label>
               </div>
