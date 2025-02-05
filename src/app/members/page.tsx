@@ -107,7 +107,6 @@ export default function MembersPage() {
         }
       });
 
-      console.log("Final growth data:", data);
       setGrowthData(data);
     };
 
@@ -116,21 +115,31 @@ export default function MembersPage() {
     }
   }, [members]);
 
+  // Filter members based on search query and status filters
+  const filteredMembers = members.filter(member => {
+    // First apply search filter
+    const searchLower = searchQuery.toLowerCase();
+    const matchesSearch = 
+      member.displayName?.toLowerCase().includes(searchLower) ||
+      member.email?.toLowerCase().includes(searchLower);
+
+    if (!matchesSearch) return false;
+
+    // Then apply status filters
+    const activeFilters = Object.entries(filters).filter(([, value]) => value);
+    
+    if (activeFilters.length === 0) return true;
+
+    // Check if member matches ALL active filters
+    return activeFilters.every(([key]) => member.status?.[key as keyof UserStatus]);
+  });
+
   const toggleFilter = (key: keyof UserStatus) => {
     setFilters(prev => ({
       ...prev,
       [key]: !prev[key]
     }));
   };
-
-  // Filter members based on search query
-  const filteredMembers = members.filter(member => {
-    const searchLower = searchQuery.toLowerCase();
-    return (
-      member.displayName?.toLowerCase().includes(searchLower) ||
-      member.email?.toLowerCase().includes(searchLower)
-    );
-  });
 
   return (
     <ProtectedPage>
@@ -194,9 +203,9 @@ export default function MembersPage() {
               {statusOptions.map(({ key, label }) => (
                 <button
                   key={key}
-                  onClick={() => toggleFilter(key)}
+                  onClick={() => toggleFilter(key as keyof UserStatus)}
                   className={`px-4 py-2 rounded-full border ${
-                    filters[key] 
+                    filters[key as keyof UserStatus] 
                       ? 'bg-blue-500 text-white border-blue-500' 
                       : 'bg-white text-gray-700 border-gray-300 hover:border-blue-500'
                   }`}
@@ -206,6 +215,34 @@ export default function MembersPage() {
               ))}
             </div>
           </div>
+
+          {/* Show active filters summary */}
+          {Object.entries(filters).some(([, value]) => value) && (
+            <div className="mb-4 flex flex-wrap gap-2">
+              {Object.entries(filters)
+                .filter(([, value]) => value)
+                .map(([key]) => (
+                  <span 
+                    key={key}
+                    className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800"
+                  >
+                    {statusOptions.find(opt => opt.key === key)?.label}
+                    <button
+                      onClick={() => toggleFilter(key as keyof UserStatus)}
+                      className="ml-1 hover:text-blue-600"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              <button
+                onClick={() => setFilters({})}
+                className="text-sm text-gray-600 hover:text-gray-800"
+              >
+                Clear all filters
+              </button>
+            </div>
+          )}
 
           {/* Members Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -225,7 +262,14 @@ export default function MembersPage() {
                     />
                   )}
                   <div>
-                    <h2 className="font-semibold">{member.displayName}</h2>
+                    <div className="flex items-center gap-2">
+                      <h2 className="font-semibold">{member.displayName}</h2>
+                      {ADMIN_EMAILS.includes(member.email || '') && (
+                        <span className="bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded-full font-medium">
+                          Admin
+                        </span>
+                      )}
+                    </div>
                     <p className="text-sm text-gray-600">{member.email}</p>
                   </div>
                 </div>

@@ -1,7 +1,6 @@
 // Track custom events in Google Analytics
 export const trackEvent = (eventName: string, eventParams?: Record<string, unknown>) => {
   try {
-    console.log('Trying to track event:', eventName, eventParams);
     if (typeof window !== 'undefined' && window.gtag) {
       // Add event category and non-interaction flag
       const enhancedParams = {
