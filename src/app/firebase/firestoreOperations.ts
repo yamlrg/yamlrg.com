@@ -428,6 +428,8 @@ export const addPresentationRequest = async (request: Omit<PresentationRequest, 
 // Get presentation requests (admin only)
 export const getPresentationRequests = async () => {
   const currentUser = auth.currentUser;
+  console.log('Current user:', currentUser);
+  console.log('Current user is admin:', ADMIN_EMAILS.includes(currentUser.email));
   if (!currentUser?.email || !ADMIN_EMAILS.includes(currentUser.email)) {
     throw new Error('Unauthorized: Admin access required');
   }
