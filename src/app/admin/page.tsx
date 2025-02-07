@@ -160,28 +160,52 @@ export default function AdminPage() {
 
   const handleRequestAction = async (requestId: string, action: 'approved' | 'rejected') => {
     try {
-      await updateJoinRequestStatus(requestId, action, auth.currentUser?.email || '');
-      
-      // If approved, only send welcome email
+      // Get the current user's token
+      const token = await auth.currentUser?.getIdToken();
+      if (!token) {
+        throw new Error('Authentication required');
+      }
+
       if (action === 'approved') {
         const request = requests.find(r => r.id === requestId);
         if (request) {
-          // Send welcome email
+          console.log('Starting approval process for:', {
+            requestId,
+            userEmail: request.email,
+            approverEmail: auth.currentUser?.email
+          });
+
+          // Send welcome email first
           const response = await fetch('/api/send-approval-email', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
               email: request.email
             })
           });
 
+          console.log('Email API response:', {
+            status: response.status,
+            statusText: response.statusText,
+            headers: Object.fromEntries(response.headers.entries())
+          });
+
           if (!response.ok) {
-            console.error('Failed to send approval email');
-            toast.error('Request approved but failed to send email');
+            const errorData = await response.json().catch(() => ({}));
+            console.error('Email API error details:', errorData);
+            throw new Error(`Failed to send approval email: ${response.status} ${response.statusText}`);
           }
+
+          console.log('Email sent successfully, updating request status');
+          // Only update request status after email is sent successfully
+          await updateJoinRequestStatus(requestId, action, auth.currentUser?.email || '');
         }
+      } else {
+        // For rejection, just update the status
+        await updateJoinRequestStatus(requestId, action, auth.currentUser?.email || '');
       }
 
       // Refresh both requests and users
@@ -193,8 +217,13 @@ export default function AdminPage() {
       setUsers(updatedUsers as ExtendedUser[]);
       toast.success(`Request ${action} successfully`);
     } catch (error) {
-      console.error('Error updating request:', error);
-      toast.error('Failed to update request');
+      console.error('Error in handleRequestAction:', {
+        error,
+        action,
+        requestId,
+        currentUser: auth.currentUser?.email
+      });
+      toast.error(error instanceof Error ? error.message : 'Failed to update request');
     }
   };
 
