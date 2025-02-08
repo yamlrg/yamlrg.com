@@ -17,11 +17,15 @@ export interface JobListing {
 }
 
 export interface UserProfile {
+  uid: string;
+  email: string;
+  displayName?: string;
+  photoURL?: string;
+  isAdmin?: boolean;
+  isApproved?: boolean;
   showInMembers: boolean;
   linkedinUrl: string;
   status: UserStatus;
-  isApproved: boolean;
-  isAdmin: boolean;
   profileCompleted: boolean;
   approvedAt?: string;
   approvedBy?: string;

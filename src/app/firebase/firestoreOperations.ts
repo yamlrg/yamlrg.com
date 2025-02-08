@@ -1,5 +1,5 @@
 import { db, auth } from "./firebaseConfig";
-import { collection, doc, getDoc, setDoc, getDocs, query, where, DocumentData, orderBy, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc, getDocs, query, where, DocumentData, orderBy, addDoc, updateDoc, deleteDoc, limit, DocumentReference, serverTimestamp, runTransaction } from "firebase/firestore";
 import { User, UserProfile, JoinRequest, Workshop, PresentationRequest } from "../types";
 import { ADMIN_EMAILS } from "../config/admin";
 import { deleteUser } from "firebase/auth";
@@ -46,6 +46,8 @@ export const createUserProfile = async (user: User) => {
 // Get user profile
 export const getUserProfile = async (userId: string) => {
   try {
+    console.log('Getting user profile for:', userId);
+    
     if (!userId) {
       console.log('No user ID provided');
       return null;
@@ -55,6 +57,7 @@ export const getUserProfile = async (userId: string) => {
     
     try {
       const userSnap = await getDoc(userRef);
+      console.log('User document exists:', userSnap.exists());
       
       if (!userSnap.exists()) {
         console.log('No user found with ID:', userId);
@@ -62,12 +65,14 @@ export const getUserProfile = async (userId: string) => {
       }
 
       const data = userSnap.data();
+      console.log('User data:', data);
+      
       if (!data) {
         console.log('No data in user document:', userId);
         return null;
       }
 
-      return {
+      const profile = {
         ...data,
         uid: userSnap.id,
         showInMembers: data.showInMembers ?? false,
@@ -84,7 +89,11 @@ export const getUserProfile = async (userId: string) => {
           openToNetworking: false,
         }
       } as UserProfile;
+
+      console.log('Returning user profile:', profile);
+      return profile;
     } catch (error) {
+      console.error('Error getting user document:', error);
       throw error;
     }
   } catch (error) {
@@ -311,64 +320,70 @@ export const deleteUserAccount = async (userId: string) => {
 };
 
 export const handleFirstLogin = async (user: User) => {
-  const db = getFirestore();
-  
-  // Check if there's an approved join request for this email
-  const requestsRef = collection(db, 'joinRequests');
-  const requestQuery = query(
-    requestsRef, 
-    where('email', '==', user.email),
-    where('status', '==', 'approved')
-  );
-  const requestSnapshot = await getDocs(requestQuery);
-  
-  if (!requestSnapshot.empty) {
-    // Found approved request, create user doc with request data
-    const request = requestSnapshot.docs[0].data();
+  try {
+    console.log('Starting handleFirstLogin for user:', user.email);
     
-    await setDoc(doc(db, 'users', user.uid), {
-      uid: user.uid,
-      email: user.email,
-      displayName: request.name || user.displayName,
-      photoURL: user.photoURL,
-      isApproved: true,
-      showInMembers: false,
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      console.log('User document already exists');
+      return;
+    }
+
+    const defaultProfile: UserProfile = {
+      showInMembers: true,
+      linkedinUrl: "",
+      isApproved: false,
+      isAdmin: ADMIN_EMAILS.includes(user.email ?? ''),
       profileCompleted: false,
-      joinedAt: request.createdAt,
-      approvedAt: request.approvedAt,
-      approvedBy: request.approvedBy,
-      linkedinUrl: request.linkedinUrl || '',
+      joinedAt: new Date().toISOString(),
       status: {
         lookingForCofounder: false,
         needsProjectHelp: false,
         offeringProjectHelp: false,
         isHiring: false,
         seekingJob: false,
-        openToNetworking: false,
+        openToNetworking: true,
       }
+    };
+
+    await setDoc(userRef, {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      ...defaultProfile
     });
-    return;
-  }
-  
-  // If no approved request found, create basic user doc
-  await setDoc(doc(db, 'users', user.uid), {
-    uid: user.uid,
-    email: user.email,
-    displayName: user.displayName,
-    photoURL: user.photoURL,
-    isApproved: false,
-    showInMembers: false,
-    profileCompleted: false,
-    joinedAt: new Date().toISOString(),
-    status: {
-      lookingForCofounder: false,
-      needsProjectHelp: false,
-      offeringProjectHelp: false,
-      isHiring: false,
-      seekingJob: false,
-      openToNetworking: false,
+
+    // After creating the basic profile, check for approved join request
+    const requestsRef = collection(db, 'joinRequests');
+    const requestsSnap = await getDocs(requestsRef);
+    
+    const matchingRequest = requestsSnap.docs.find(doc => {
+      const data = doc.data();
+      return data.email === user.email && data.status === 'approved';
+    });
+
+    if (matchingRequest) {
+      const request = matchingRequest.data();
+      console.log('Found approved request, updating profile...');
+      
+      await updateDoc(userRef, {
+        isApproved: true,
+        showInMembers: true,
+        linkedinUrl: request.linkedinUrl || '',
+        approvedAt: request.approvedAt,
+        approvedBy: request.approvedBy
+      });
     }
-  });
+
+    console.log('Successfully handled first login');
+    
+  } catch (error) {
+    console.error('Error in handleFirstLogin:', error);
+    throw error;
+  }
 };
 
 // Get all workshops
@@ -427,20 +442,27 @@ export const addPresentationRequest = async (request: Omit<PresentationRequest, 
 
 // Get presentation requests (admin only)
 export const getPresentationRequests = async () => {
-  const currentUser = auth.currentUser;
-  console.log('Current user:', currentUser);
-  console.log('Current user is admin:', ADMIN_EMAILS.includes(currentUser.email));
-  if (!currentUser?.email || !ADMIN_EMAILS.includes(currentUser.email)) {
-    throw new Error('Unauthorized: Admin access required');
-  }
+  try {
+    const currentUser = auth.currentUser;
+    if (!currentUser?.email) {
+      throw new Error('No authenticated user');
+    }
+    
+    if (!ADMIN_EMAILS.includes(currentUser.email)) {
+      throw new Error('Unauthorized: Admin access required');
+    }
 
-  const requestsRef = collection(db, "presentationRequests");
-  const q = query(requestsRef, orderBy("createdAt", "desc"));
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  })) as PresentationRequest[];
+    const requestsRef = collection(db, "presentationRequests");
+    const q = query(requestsRef, orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as PresentationRequest[];
+  } catch (error) {
+    console.error('Error getting presentation requests:', error);
+    throw error;
+  }
 };
 
 // Update presentation request status (admin only)
@@ -465,4 +487,23 @@ export const updatePresentationRequestStatus = async (
       completedBy: null
     })
   });
+};
+
+export const deletePresentationRequest = async (requestId: string) => {
+  try {
+    const currentUser = auth.currentUser;
+    if (!currentUser?.email) {
+      throw new Error('No authenticated user');
+    }
+    
+    if (!ADMIN_EMAILS.includes(currentUser.email)) {
+      throw new Error('Unauthorized: Admin access required');
+    }
+
+    const requestRef = doc(db, "presentationRequests", requestId);
+    await deleteDoc(requestRef);
+  } catch (error) {
+    console.error('Error deleting presentation request:', error);
+    throw error;
+  }
 }; 

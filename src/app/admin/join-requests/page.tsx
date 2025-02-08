@@ -84,8 +84,47 @@ export default function JoinRequestsPage() {
     }
   };
 
+  const handleRevertToPending = async (requestId: string) => {
+    try {
+      await updateJoinRequestStatus(requestId, 'pending', auth.currentUser?.email || '');
+      const updatedRequests = await getJoinRequests();
+      setRequests(updatedRequests);
+      toast.success('Request reverted to pending');
+    } catch (error) {
+      console.error('Error reverting request:', error);
+      toast.error('Failed to revert request');
+    }
+  };
+
+  const handleResendEmail = async (request: JoinRequest) => {
+    try {
+      const token = await auth.currentUser?.getIdToken();
+      if (!token) throw new Error('Authentication required');
+
+      const response = await fetch('/api/send-approval-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          email: request.email
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send email');
+      }
+
+      toast.success('Approval email resent');
+    } catch (error) {
+      console.error('Error resending email:', error);
+      toast.error('Failed to resend email');
+    }
+  };
+
   return (
-    <main className="min-h-screen p-4 md:p-8">
+    <main className="min-h-screen p-4">
       <Toaster position="top-center" />
       <div className="max-w-md mx-auto">
         <div className="flex items-center gap-4 mb-8">
@@ -99,68 +138,72 @@ export default function JoinRequestsPage() {
         </div>
 
         <div className="space-y-6">
-          {requests.length === 0 ? (
-            <p className="text-gray-600 text-center py-8">No pending join requests</p>
-          ) : (
-            requests.map((request) => (
-              <div 
-                key={request.id} 
-                className="bg-white rounded-lg shadow p-4 md:p-6"
-              >
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                  {/* Request Info */}
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-lg">{request.name}</h3>
-                    <p className="text-gray-600">{request.email}</p>
-                    <div className="mt-2">
-                      <p className="text-sm text-gray-600">
-                        <span className="font-medium">Interests:</span> {request.interests}
-                      </p>
-                      {request.linkedinUrl && (
-                        <a 
-                          href={request.linkedinUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-emerald-600 hover:text-emerald-700 text-sm"
-                        >
-                          LinkedIn Profile
-                        </a>
-                      )}
-                    </div>
-                  </div>
+          {requests.map((request) => (
+            <div 
+              key={request.id} 
+              className="bg-white rounded-lg shadow p-4"
+            >
+              <h3 className="text-xl font-semibold mb-1">{request.name}</h3>
+              <p className="text-gray-600 mb-3">{request.email}</p>
+              
+              <div className="mb-3">
+                <p className="text-gray-600">
+                  <span className="font-medium">Interests:</span> {request.interests}
+                </p>
+                {request.linkedinUrl && (
+                  <a 
+                    href={request.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-emerald-600 hover:text-emerald-700 text-sm"
+                  >
+                    LinkedIn Profile
+                  </a>
+                )}
+              </div>
 
-                  {/* Request Status */}
-                  <div className="flex flex-wrap md:justify-end gap-2">
+              <div className="flex items-center gap-3">
+                {request.status === 'pending' ? (
+                  <>
+                    <button
+                      onClick={() => handleRequestAction(request.id!, 'approved')}
+                      className="px-4 py-2 text-sm bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      onClick={() => handleRequestAction(request.id!, 'rejected')}
+                      className="px-4 py-2 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100"
+                    >
+                      Reject
+                    </button>
+                  </>
+                ) : (
+                  <div className="flex items-center gap-3">
                     <span className={`px-3 py-1 rounded-full text-sm ${
-                      request.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                      request.status === 'approved' ? 'bg-emerald-100 text-emerald-800' :
-                      'bg-red-100 text-red-800'
+                      request.status === 'approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
                     }`}>
                       {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
                     </span>
+                    <button
+                      onClick={() => handleRevertToPending(request.id!)}
+                      className="px-4 py-2 text-sm bg-yellow-50 text-yellow-600 rounded-lg hover:bg-yellow-100"
+                    >
+                      Revert to Pending
+                    </button>
+                    {request.status === 'approved' && (
+                      <button
+                        onClick={() => handleResendEmail(request)}
+                        className="px-4 py-2 text-sm bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100"
+                      >
+                        Resend Email
+                      </button>
+                    )}
                   </div>
-
-                  {/* Actions */}
-                  {request.status === 'pending' && (
-                    <div className="flex items-center gap-3">
-                      <button
-                        onClick={() => handleRequestAction(request.id!, 'approved')}
-                        className="px-4 py-2 text-sm bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 transition-colors"
-                      >
-                        Approve
-                      </button>
-                      <button
-                        onClick={() => handleRequestAction(request.id!, 'rejected')}
-                        className="px-4 py-2 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
-            ))
-          )}
+            </div>
+          ))}
         </div>
       </div>
     </main>
