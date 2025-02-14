@@ -7,13 +7,13 @@ import { auth } from '../firebase/firebaseConfig';
 import { ADMIN_EMAILS } from '../config/admin';
 import toast, { Toaster } from 'react-hot-toast';
 import ProtectedPage from '@/components/ProtectedPage';
+import { useRouter } from 'next/navigation';
 
 console.log('Workshops page - Admin emails:', ADMIN_EMAILS);
 
 export default function WorkshopsPage() {
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isApproved, setIsApproved] = useState(false);
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestType, setRequestType] = useState<'give' | 'request'>();
   const [newRequest, setNewRequest] = useState<{
@@ -27,26 +27,27 @@ export default function WorkshopsPage() {
     type: 'paper',
     proposedDate: ''
   });
+  const router = useRouter();
 
   useEffect(() => {
     const checkUserStatus = async () => {
       try {
         const currentUser = auth.currentUser;
-        const isAdminUser = currentUser?.email ? ADMIN_EMAILS.includes(currentUser.email) : false;
-        setIsAdmin(isAdminUser);
-        
-        if (isAdminUser) {
-          setIsApproved(true);
+        if (!currentUser) {
+          setIsAdmin(false);
           return;
         }
 
-        if (currentUser) {
-          const userProfile = await getUserProfile(currentUser.uid);
-          setIsApproved(!!userProfile?.isApproved);
+        const isAdminUser = ADMIN_EMAILS.includes(currentUser.email || '');
+        setIsAdmin(isAdminUser);
+        
+        const userProfile = await getUserProfile(currentUser.uid);
+        if (!userProfile && !isAdminUser) {
+          router.push('/join');
         }
       } catch (error) {
         console.error('Error checking user status:', error);
-        setIsApproved(false);
+        router.push('/join');
       }
     };
 
@@ -55,23 +56,22 @@ export default function WorkshopsPage() {
         checkUserStatus();
       } else {
         setIsAdmin(false);
-        setIsApproved(false);
       }
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     const fetchWorkshops = async () => {
-      if (isApproved || isAdmin) {
+      if (isAdmin) {
         const allWorkshops = await getWorkshops();
         setWorkshops(allWorkshops);
       }
     };
 
     fetchWorkshops();
-  }, [isApproved, isAdmin]);
+  }, [isAdmin]);
 
   const handleRequestSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,23 +111,6 @@ export default function WorkshopsPage() {
       toast.error('Failed to submit request');
     }
   };
-
-  if (!isApproved && !isAdmin) {
-    return (
-      <ProtectedPage>
-        <div className="min-h-screen p-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-              <p className="text-yellow-700">
-                You need to be an approved member to view workshops.
-                Please contact an admin for approval.
-              </p>
-            </div>
-          </div>
-        </div>
-      </ProtectedPage>
-    );
-  }
 
   return (
     <ProtectedPage>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { getAllUsers } from '../firebase/firestoreOperations';
-import { ExtendedUser, JobListing } from '../types';
+import { YamlrgUserProfile, JobListing } from '../types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
@@ -13,12 +13,12 @@ import toast, { Toaster } from 'react-hot-toast';
 
 interface JobWithPoster {
   job: JobListing;
-  poster: ExtendedUser;
+  poster: YamlrgUserProfile;
 }
 
 // Extract mapping function
 const mapUserToJobs = (userData: DocumentData): JobWithPoster[] => {
-  const user = userData as ExtendedUser;
+  const user = userData as YamlrgUserProfile;
   return (user.jobListings || []).map((job: JobListing) => ({
     job,
     poster: user
@@ -159,8 +159,6 @@ export default function JobsPage() {
       const userSnap = await getDoc(userRef);
       const userData = userSnap.data();
 
-      console.log('Current user data:', userData);
-
       const currentListings = userData?.jobListings || [];
       const updatedListings = [...currentListings, jobListing];
 
@@ -186,7 +184,7 @@ export default function JobsPage() {
 
       setJobs(prev => [...prev, {
         job: jobListing,
-        poster: userDetails as ExtendedUser
+        poster: userDetails as YamlrgUserProfile
       }]);
 
       // Reset form

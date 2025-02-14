@@ -32,7 +32,7 @@ const nextConfig = {
               "img-src 'self' data: https: blob:",
               "font-src 'self'",
               // Fix connect-src to allow all required endpoints
-              "connect-src 'self' https://*.firebaseapp.com https://*.googleapis.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://firestore.googleapis.com https://www.googleapis.com",
+              "connect-src 'self' https://*.firebaseapp.com https://*.googleapis.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://firestore.googleapis.com https://www.googleapis.com https://api.resend.com",
               "frame-src 'self' https://*.firebaseapp.com https://*.googleapis.com",
               "frame-ancestors 'none'",
               "base-uri 'self'",
