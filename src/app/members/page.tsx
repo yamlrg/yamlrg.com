@@ -2,8 +2,8 @@
 
 import ProtectedPage from "@/components/ProtectedPage";
 import { useEffect, useCallback, useState } from "react";
-import { getVisibleMembers, getUserProfile } from "../firebase/firestoreOperations";
-import { ExtendedUser, UserStatus } from '../types';
+import { getVisibleMembers } from "../firebase/firestoreOperations";
+import { YamlrgUserProfile, UserStatus } from '../types';
 import Image from 'next/image';
 import { auth } from "../firebase/firebaseConfig";
 import Link from "next/link";
@@ -15,22 +15,15 @@ interface GrowthDataPoint {
   members: number;
 }
 
-const getTimestamp = (member: ExtendedUser): number => {
-  if (member.joinedAt) {
-    return new Date(member.joinedAt).getTime();
-  }
-  if (member.approvedAt) {
-    return new Date(member.approvedAt).getTime();
-  }
-  return 0;
+const getTimestamp = (member: YamlrgUserProfile) => {
+  return new Date(member.joinedAt ?? member.approvedAt ?? 0).getTime();
 };
 
 export default function MembersPage() {
-  const [members, setMembers] = useState<ExtendedUser[]>([]);
+  const [members, setMembers] = useState<YamlrgUserProfile[]>([]);
   const [filters, setFilters] = useState<Partial<UserStatus>>({});
   const [searchQuery, setSearchQuery] = useState('');
   const [growthData, setGrowthData] = useState<GrowthDataPoint[]>([]);
-  const [isUserApproved, setIsUserApproved] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
 
   const statusOptions = [
@@ -42,22 +35,10 @@ export default function MembersPage() {
     { key: 'openToNetworking', label: 'Open to Networking' },
   ] as const;
 
-  // First, wait for auth to be ready
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        const isAdmin = ADMIN_EMAILS.includes(user.email || '');
-        if (isAdmin) {
-          setIsUserApproved(true);
-        } else {
-          getUserProfile(user.uid).then(profile => {
-            setIsUserApproved(profile?.isApproved || false);
-          });
-        }
-      }
+    const unsubscribe = auth.onAuthStateChanged(() => {
       setAuthChecked(true);
     });
-
     return () => unsubscribe();
   }, []);
 
@@ -65,7 +46,7 @@ export default function MembersPage() {
     if (!authChecked) return;
     try {
       const visibleMembers = await getVisibleMembers();
-      setMembers(visibleMembers as ExtendedUser[]);
+      setMembers(visibleMembers);
     } catch (error) {
       console.error("Error fetching members:", error);
     }
@@ -76,14 +57,11 @@ export default function MembersPage() {
   }, [fetchMembers]);
 
   useEffect(() => {
-    const processGrowthData = (members: ExtendedUser[]) => {
-      
-      // Sort members by join date (fallback to approvedAt)
+    const processGrowthData = (members: YamlrgUserProfile[]) => {
       const sortedMembers = [...members].sort((a, b) => {
         return getTimestamp(a) - getTimestamp(b);
       });
 
-      // Create cumulative growth data
       const data: GrowthDataPoint[] = [];
       let count = 0;
       sortedMembers.forEach((member) => {
@@ -96,12 +74,10 @@ export default function MembersPage() {
             year: '2-digit'
           });
           
-          // Only add point if it's a new date or the last member
           const lastPoint = data[data.length - 1];
           if (!lastPoint || lastPoint.date !== date) {
             data.push({ date, members: count });
           } else {
-            // Update the count for the existing date
             lastPoint.members = count;
           }
         }
@@ -115,9 +91,7 @@ export default function MembersPage() {
     }
   }, [members]);
 
-  // Filter members based on search query and status filters
   const filteredMembers = members.filter(member => {
-    // First apply search filter
     const searchLower = searchQuery.toLowerCase();
     const matchesSearch = 
       member.displayName?.toLowerCase().includes(searchLower) ||
@@ -125,12 +99,10 @@ export default function MembersPage() {
 
     if (!matchesSearch) return false;
 
-    // Then apply status filters
     const activeFilters = Object.entries(filters).filter(([, value]) => value);
     
     if (activeFilters.length === 0) return true;
 
-    // Check if member matches ALL active filters
     return activeFilters.every(([key]) => member.status?.[key as keyof UserStatus]);
   });
 
@@ -151,31 +123,6 @@ export default function MembersPage() {
           </Link>
         </div>
         
-        {/* Show approval message only if not admin and not approved */}
-        {!isUserApproved && !ADMIN_EMAILS.includes(auth.currentUser?.email || '') && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
-            <p className="text-blue-800">
-              You currently have limited access to our member directory. To see all members, 
-              you need to be approved by our admins. For quick approval, please contact either{' '}
-              <Link 
-                href="https://www.linkedin.com/in/marialuqueanguita/" 
-                target="_blank" 
-                className="text-blue-600 hover:underline font-semibold"
-              >
-                Maria
-              </Link>
-              {' '}or{' '}
-              <Link 
-                href="https://www.linkedin.com/in/callumtilbury/" 
-                target="_blank" 
-                className="text-blue-600 hover:underline font-semibold"
-              >
-                Callum
-              </Link>.
-            </p>
-          </div>
-        )}
-
         <main className="min-h-screen p-4">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold">YAMLRG Members ✨</h1>
@@ -302,7 +249,7 @@ export default function MembersPage() {
           </div>
 
           {/* Growth Graph - shown to approved members and admins */}
-          {(isUserApproved || ADMIN_EMAILS.includes(auth.currentUser?.email || '')) && (
+          {(ADMIN_EMAILS.includes(auth.currentUser?.email || '') || authChecked) && (
             <div className="mt-16 mb-8">
               <h2 className="text-xl font-semibold mb-4">YAMLRG Growth</h2>
               <div className="h-[300px] w-full">

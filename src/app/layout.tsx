@@ -12,8 +12,6 @@ import { ADMIN_EMAILS } from "./config/admin";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import Image from "next/image";
 import { trackEvent } from "@/utils/analytics";
-import { getDoc, doc } from "firebase/firestore";
-import { db } from "./firebase/firebaseConfig";
 
 console.log('Current NODE_ENV:', process.env.NODE_ENV);
 
@@ -54,7 +52,6 @@ export default function RootLayout({
 }) {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isApproved, setIsApproved] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -67,14 +64,6 @@ export default function RootLayout({
         // Check if admin
         const isAdminUser = ADMIN_EMAILS.includes(currentUser.email);
         setIsAdmin(isAdminUser);
-        
-        if (!isAdminUser) {
-          // Check if user has an approved account
-          const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-          setIsApproved(userDoc.exists() && userDoc.data()?.isApproved);
-        } else {
-          setIsApproved(true);
-        }
       }
     });
     return () => unsubscribe();
@@ -136,7 +125,7 @@ export default function RootLayout({
               </button>
               
               <nav className="hidden md:flex items-center gap-4">
-                {user && (isApproved || isAdmin) ? (
+                {user ? (
                   <>
                     <Link href="/members" className={`hover:text-gray-900 ${pathname === '/members' ? 'font-semibold' : ''}`}>
                       Members
@@ -213,7 +202,7 @@ export default function RootLayout({
             {isMobileMenuOpen && (
               <div className="md:hidden">
                 <div className="px-2 pt-2 pb-3 space-y-1">
-                  {user && (isApproved || isAdmin) ? (
+                  {user ? (
                     <>
                       <Link
                         href="/members"

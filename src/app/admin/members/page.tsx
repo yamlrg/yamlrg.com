@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { getAllUsers, removeUserApproval, updateUserVisibility } from '@/app/firebase/firestoreOperations';
-import { ExtendedUser } from '@/app/types';
+import { YamlrgUserProfile } from '@/app/types';
 import { toast, Toaster } from 'react-hot-toast';
 import Link from 'next/link';
 import { ArrowLeftIcon, EyeIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
+import { ADMIN_EMAILS } from '@/app/config/admin';
 
 export default function MembersPage() {
-  const [users, setUsers] = useState<ExtendedUser[]>([]);
+  const [users, setUsers] = useState<YamlrgUserProfile[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
     profileStatus: 'all', // 'all', 'complete', 'incomplete'
@@ -19,7 +20,7 @@ export default function MembersPage() {
   useEffect(() => {
     const fetchUsers = async () => {
       const fetchedUsers = await getAllUsers();
-      setUsers(fetchedUsers as ExtendedUser[]);
+      setUsers(fetchedUsers);
     };
 
     fetchUsers();
@@ -32,14 +33,14 @@ export default function MembersPage() {
       
       // Refresh users
       const updatedUsers = await getAllUsers();
-      setUsers(updatedUsers as ExtendedUser[]);
+      setUsers(updatedUsers);
     } catch (error) {
       console.error('Error removing approval:', error);
       toast.error('Failed to remove approval');
     }
   };
 
-  const toggleUserVisibility = async (user: ExtendedUser) => {
+  const toggleUserVisibility = async (user: YamlrgUserProfile) => {
     try {
       const newVisibility = !user.showInMembers;
       await updateUserVisibility(user.uid, newVisibility);
@@ -47,7 +48,7 @@ export default function MembersPage() {
       
       // Refresh users
       const updatedUsers = await getAllUsers();
-      setUsers(updatedUsers as ExtendedUser[]);
+      setUsers(updatedUsers);
     } catch (error) {
       console.error('Error toggling visibility:', error);
       toast.error('Failed to update visibility');
@@ -55,7 +56,7 @@ export default function MembersPage() {
   };
 
   const isUserAdmin = (email: string | null) => {
-    return email && ['callum.delsol@gmail.com', 'mariaypabloluquea@gmail.com'].includes(email);
+    return email && ADMIN_EMAILS.includes(email);
   };
 
   const filteredUsers = users.filter(user => {

@@ -1,86 +1,70 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/firebaseConfig';
-import { getUserProfile } from '../firebase/firestoreOperations';
-import { UserProfile } from '../types';
-import Link from 'next/link';
 import { Menu } from '@headlessui/react';
-import { logOut } from '../firebase/authFunctions';
-import { useRouter } from 'next/navigation';
+import { getUserProfile } from '../firebase/firestoreOperations';
 import Image from 'next/image';
+import { YamlrgUserProfile } from '../types';
 
 export default function Navigation() {
   const [user, loading] = useAuthState(auth);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const router = useRouter();
+  const [userProfile, setUserProfile] = useState<YamlrgUserProfile | null>(null);
 
   useEffect(() => {
-    const loadProfile = async () => {
-      console.log('Navigation: loadProfile called', { 
-        user: user ? { 
-          uid: user.uid, 
-          email: user.email 
-        } : null, 
-        loading 
-      });
-      
-      if (!user) {
-        console.log('Navigation: No user, clearing profile');
-        setUserProfile(null);
-        return;
-      }
-
-      try {
-        console.log('Navigation: Fetching profile for user:', user.uid);
+    const fetchUserProfile = async () => {
+      if (user) {
+        console.log('Fetching profile for user:', user.email);
         const profile = await getUserProfile(user.uid);
-        console.log('Navigation: Profile fetched:', {
-          hasProfile: !!profile,
-          profileData: profile
-        });
+        console.log('Fetched profile:', profile);
         setUserProfile(profile);
-      } catch (error) {
-        console.error('Navigation: Error loading profile:', error);
+      } else {
+        console.log('No user to fetch profile for');
         setUserProfile(null);
       }
     };
 
-    loadProfile();
-  }, [user, loading]);
+    fetchUserProfile();
+  }, [user]);
 
-  const handleLogout = async () => {
-    await logOut();
-    setUserProfile(null); // Clear profile on logout
-    router.push('/login');
-  };
+  console.log('Navigation render:', { user, loading, userProfile });
 
-  // Debug render info
-  console.log('Navigation: Render state:', {
-    hasUser: !!user,
-    userEmail: user?.email,
-    loading,
-    hasProfile: !!userProfile,
-    profileData: userProfile
-  });
+  if (loading) {
+    return (
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <Link href="/" className="text-xl font-bold text-gray-800">
+                YAMLRG
+              </Link>
+            </div>
+            <div className="flex items-center">
+              <span className="text-gray-500">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   return (
-    <nav className="bg-white shadow-lg">
-      <div className="max-w-7xl mx-auto px-4">
+    <nav className="bg-white shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex">
-            <Link href="/" className="flex items-center">
-              <span className="text-xl font-bold">YAMLRG</span>
+          <div className="flex items-center">
+            <Link href="/" className="text-xl font-bold text-gray-800">
+              YAMLRG
             </Link>
           </div>
 
           <div className="flex items-center">
-            {loading ? (
-              <div>Loading...</div>
-            ) : user && userProfile ? (
+            {user ? (
               <Menu as="div" className="relative">
-                <Menu.Button className="flex items-center">
-                  {user.photoURL ? (
+                <Menu.Button className="flex items-center space-x-2">
+                  {user.photoURL && (
                     <Image
                       src={user.photoURL}
                       alt="Profile"
@@ -88,9 +72,8 @@ export default function Navigation() {
                       height={32}
                       className="rounded-full"
                     />
-                  ) : (
-                    <div className="h-8 w-8 rounded-full bg-gray-300" />
                   )}
+                  <span className="text-gray-700">{user.displayName}</span>
                 </Menu.Button>
 
                 <Menu.Items className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
@@ -107,7 +90,7 @@ export default function Navigation() {
                     )}
                   </Menu.Item>
                   
-                  {userProfile.isAdmin && (
+                  {userProfile?.isAdmin && (
                     <Menu.Item>
                       {({ active }) => (
                         <Link
@@ -124,14 +107,14 @@ export default function Navigation() {
 
                   <Menu.Item>
                     {({ active }) => (
-                      <button
-                        onClick={handleLogout}
+                      <Link
+                        href="/logout"
                         className={`${
                           active ? 'bg-gray-100' : ''
-                        } block w-full text-left px-4 py-2 text-sm text-gray-700`}
+                        } block px-4 py-2 text-sm text-gray-700`}
                       >
                         Sign out
-                      </button>
+                      </Link>
                     )}
                   </Menu.Item>
                 </Menu.Items>

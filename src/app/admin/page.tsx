@@ -5,11 +5,11 @@ import { UsersIcon, UserPlusIcon, PresentationChartBarIcon } from '@heroicons/re
 
 export default function AdminPage() {
   return (
-    <main className="min-h-screen p-4 md:p-8">
-      <div className="max-w-md mx-auto">
+    <main className="min-h-screen p-4">
+      <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
         
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid gap-6 md:grid-cols-2">
           {/* Join Requests */}
           <Link 
             href="/admin/join-requests"
@@ -43,6 +43,16 @@ export default function AdminPage() {
             <h2 className="text-xl font-semibold mb-2">Workshops</h2>
             <p className="text-gray-600 text-center">
               Manage workshop requests and presentations
+            </p>
+          </Link>
+
+          <Link 
+            href="/admin/migrations" 
+            className="p-6 bg-white rounded-lg shadow hover:shadow-md transition-shadow"
+          >
+            <h2 className="text-xl font-semibold mb-2">Database Migrations</h2>
+            <p className="text-gray-600">
+              Run database migrations and fixes
             </p>
           </Link>
         </div>

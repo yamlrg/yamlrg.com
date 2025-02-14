@@ -1,9 +1,9 @@
-import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { auth } from "./firebaseConfig";
 import toast from 'react-hot-toast';
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { trackEvent } from "@/utils/analytics";
-import { handleFirstLogin, getUserProfile } from "./firestoreOperations";
+import { handleFirstLogin } from "./firestoreOperations";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 // Initialize provider outside the function to avoid recreation
 const provider = new GoogleAuthProvider();
@@ -15,32 +15,26 @@ export const signInWithGoogle = async (router: AppRouterInstance) => {
     const result = await signInWithPopup(auth, provider);
     
     if (result.user) {
-      // First check if user has a profile
-      const profile = await getUserProfile(result.user.uid);
+      const loginResult = await handleFirstLogin(result.user);
+      console.log('Login result:', loginResult);
       
-      if (!profile) {
-        // No profile exists, try to create one
-        await handleFirstLogin(result.user);
-        
-        // Check again for profile
-        const newProfile = await getUserProfile(result.user.uid);
-        if (!newProfile) {
-          // Still no profile, sign out and show error
-          await auth.signOut();
-          toast.error('No approved join request found. Please request to join first.');
-          return;
-        }
+      if (loginResult.status === 'pending') {
+        return { status: 'pending' as const };
+      } else if (loginResult.status === 'no_request') {
+        return { status: 'no_request' as const };
+      } else if (loginResult.status === 'approved') {
+        router.replace('/members');
+        return { status: 'approved' as const };
       }
-
-      // If we get here, we have a valid profile
-      router.replace('/members');
+      
+      return { status: 'exists' as const };
     }
     
-    return result;
+    throw new Error('No user returned from Google sign in');
   } catch (error) {
     console.error('Sign-In Error:', error);
     trackEvent('login_error', {
-      error_message: error.message
+      error_message: (error as Error).message
     });
     throw error;
   }

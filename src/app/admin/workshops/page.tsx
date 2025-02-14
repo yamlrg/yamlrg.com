@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Workshop } from '../../types';
+import { Workshop, PresentationRequest } from '../../types';
 import { getWorkshops, addWorkshop, updateWorkshop, getPresentationRequests, deletePresentationRequest } from '../../firebase/firestoreOperations';
 import { toast, Toaster } from 'react-hot-toast';
 import Link from 'next/link';

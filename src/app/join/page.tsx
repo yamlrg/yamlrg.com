@@ -29,6 +29,8 @@ export default function JoinRequestPage() {
     } catch (e) {
       // If URL parsing fails, just use the input as-is
       username = value;
+      console.error('Error parsing LinkedIn URL:', e);
+      // todo: add error handling and/or send google analytics event
     }
 
     // Update form data with the processed username
@@ -38,8 +40,8 @@ export default function JoinRequestPage() {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setIsSubmitting(true);
 
     try {
