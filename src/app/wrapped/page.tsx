@@ -30,7 +30,6 @@ type Wrapped1Type = {
 const wrapped1 = wrapped1Json as Wrapped1Type;
 
 export default function WrappedPage() {
-  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(false);
   const [selectedUser, setSelectedUser] = useState<string | null>(null)
   const router = useRouter()
 
@@ -41,42 +40,19 @@ export default function WrappedPage() {
         return;
       }
 
-      // Check if user is admin
-      if (ADMIN_EMAILS.includes(currentUser.email || '')) {
-        setIsAuthorized(true);
+      const isAdminUser = ADMIN_EMAILS.includes(currentUser.email || '');
+      if (isAdminUser) {
         return;
       }
 
-      // Check if user is approved
       const userProfile = await getUserProfile(currentUser.uid);
-      setIsAuthorized(userProfile?.isApproved || false);
+      if (!userProfile) {
+        router.push('/join');
+      }
     };
 
     checkAuthorization();
-  }, []);
-
-  // Show unauthorized message
-  if (!isAuthorized) {
-    return (
-      <ProtectedPage>
-        <main className="min-h-screen flex flex-col items-center justify-center p-4">
-          <button 
-            onClick={() => router.push('/')}
-            className="absolute top-4 left-4 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-          >
-            ← Return Home
-          </button>
-          <h1 className="text-2xl mb-4">YAMLRG Wrapped 2024 🎁</h1>
-          <p className="text-center mb-4">
-            This content is only available to approved members.
-          </p>
-          <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-            Please contact an admin for approval.
-          </p>
-        </main>
-      </ProtectedPage>
-    );
-  }
+  }, [router]);
 
   return (
     <ProtectedPage>
@@ -216,5 +192,5 @@ export default function WrappedPage() {
         </div>
       </main>
     </ProtectedPage>
-  )
+  );
 } 

@@ -45,16 +45,6 @@ export default function AdminPage() {
               Manage workshop requests and presentations
             </p>
           </Link>
-
-          <Link 
-            href="/admin/migrations" 
-            className="p-6 bg-white rounded-lg shadow hover:shadow-md transition-shadow"
-          >
-            <h2 className="text-xl font-semibold mb-2">Database Migrations</h2>
-            <p className="text-gray-600">
-              Run database migrations and fixes
-            </p>
-          </Link>
         </div>
       </div>
     </main>
