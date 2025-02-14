@@ -1,10 +1,9 @@
 import { db, auth } from "./firebaseConfig";
-import { collection, doc, getDoc, setDoc, getDocs, query, where, DocumentData, orderBy, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import { User, UserProfile, JoinRequest, Workshop, PresentationRequest } from "../types";
+import { collection, doc, getDoc, setDoc, getDocs, query, orderBy, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { User, YamlrgUserProfile, JoinRequest, Workshop, PresentationRequest } from "../types";
 import { ADMIN_EMAILS } from "../config/admin";
 import { deleteUser } from "firebase/auth";
 import { trackEvent } from "@/utils/analytics";
-import { getFirestore } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 
 // Export setDoc for use in other files
@@ -12,34 +11,40 @@ export { setDoc, doc };
 
 // Create or update user profile
 export const createUserProfile = async (user: User) => {
-  const userRef = doc(db, "users", user.uid);
-  const userSnap = await getDoc(userRef);
+  try {
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+    console.log('User document exists:', userSnap.exists());
 
-  if (!userSnap.exists()) {
-    const defaultProfile: UserProfile = {
-      showInMembers: true,
-      linkedinUrl: "",
-      isApproved: false,
-      isAdmin: ADMIN_EMAILS.includes(user.email ?? ''),
-      profileCompleted: false,
-      joinedAt: new Date().toISOString(),
-      status: {
-        lookingForCofounder: false,
-        needsProjectHelp: false,
-        offeringProjectHelp: false,
-        isHiring: false,
-        seekingJob: false,
-        openToNetworking: true,
-      }
-    };
+    if (!userSnap.exists()) {
+      const defaultProfile: YamlrgUserProfile = {
+        uid: user.uid,
+        email: user.email || '',
+        displayName: user.displayName || '',
+        photoURL: user.photoURL || '',
+        showInMembers: true,
+        linkedinUrl: "",
+        isAdmin: ADMIN_EMAILS.includes(user.email ?? ''),
+        profileCompleted: false,
+        joinedAt: new Date().toISOString(),
+        status: {
+          lookingForCofounder: false,
+          needsProjectHelp: false,
+          offeringProjectHelp: false,
+          isHiring: false,
+          seekingJob: false,
+          openToNetworking: true,
+        }
+      };
 
-    await setDoc(userRef, {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      ...defaultProfile
-    });
+      await setDoc(userRef, defaultProfile);
+      return defaultProfile;
+    }
+
+    return userSnap.data() as YamlrgUserProfile;
+  } catch (error) {
+    console.error('Error in createUserProfile:', error);
+    throw error;
   }
 };
 
@@ -55,6 +60,7 @@ export const getUserProfile = async (userId: string) => {
     
     try {
       const userSnap = await getDoc(userRef);
+      console.log('User document exists:', userSnap.exists());
       
       if (!userSnap.exists()) {
         console.log('No user found with ID:', userId);
@@ -62,17 +68,17 @@ export const getUserProfile = async (userId: string) => {
       }
 
       const data = userSnap.data();
+      
       if (!data) {
         console.log('No data in user document:', userId);
         return null;
       }
 
-      return {
+      const profile = {
         ...data,
         uid: userSnap.id,
         showInMembers: data.showInMembers ?? false,
         linkedinUrl: data.linkedinUrl ?? '',
-        isApproved: data.isApproved ?? false,
         isAdmin: data.isAdmin ?? false,
         profileCompleted: data.profileCompleted ?? false,
         status: data.status ?? {
@@ -83,8 +89,11 @@ export const getUserProfile = async (userId: string) => {
           seekingJob: false,
           openToNetworking: false,
         }
-      } as UserProfile;
+      } as YamlrgUserProfile;
+
+      return profile;
     } catch (error) {
+      console.error('Error getting user document:', error);
       throw error;
     }
   } catch (error) {
@@ -100,7 +109,7 @@ export const updateShowInMembers = async (userId: string, showInMembers: boolean
 };
 
 // Update user profile
-export const updateUserProfile = async (userId: string, updates: Partial<UserProfile>) => {
+export const updateUserProfile = async (userId: string, updates: Partial<YamlrgUserProfile>) => {
   if (!userId) {
     throw new Error('User ID is required');
   }
@@ -109,13 +118,6 @@ export const updateUserProfile = async (userId: string, updates: Partial<UserPro
     // Remove any sensitive fields from updates
     const safeUpdates = { ...updates };
     delete safeUpdates.isAdmin;
-    
-    // Only allow admins to modify approval status
-    if (!ADMIN_EMAILS.includes(auth.currentUser?.email || '')) {
-      delete safeUpdates.isApproved;
-      delete safeUpdates.approvedAt;
-      delete safeUpdates.approvedBy;
-    }
     
     const userRef = doc(db, "users", userId);
     
@@ -144,7 +146,7 @@ export const updateUserProfile = async (userId: string, updates: Partial<UserPro
 };
 
 // Create a separate function for admin operations
-export const adminUpdateUser = async (userId: string, updates: Partial<UserProfile>) => {
+export const adminUpdateUser = async (userId: string, updates: Partial<YamlrgUserProfile>) => {
   const currentUser = auth.currentUser;
   if (!currentUser?.email || !ADMIN_EMAILS.includes(currentUser.email)) {
     throw new Error('Unauthorized: Admin access required');
@@ -155,10 +157,39 @@ export const adminUpdateUser = async (userId: string, updates: Partial<UserProfi
 };
 
 // Get all users (for admin)
-export const getAllUsers = async (): Promise<DocumentData[]> => {
-  const usersRef = collection(db, "users");
-  const querySnapshot = await getDocs(usersRef);
-  return querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+export const getAllUsers = async () => {
+  try {
+    const usersRef = collection(db, "users");
+    const querySnapshot = await getDocs(usersRef);
+    
+    return querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        uid: doc.id,
+        email: data.email || '',
+        displayName: data.displayName || '',
+        photoURL: data.photoURL || '',
+        showInMembers: data.showInMembers || false,
+        linkedinUrl: data.linkedinUrl || '',
+        isAdmin: ADMIN_EMAILS.includes(data.email || ''),
+        profileCompleted: data.profileCompleted || false,
+        joinedAt: data.joinedAt || '',
+        approvedAt: data.approvedAt,
+        status: data.status || {
+          lookingForCofounder: false,
+          needsProjectHelp: false,
+          offeringProjectHelp: false,
+          isHiring: false,
+          seekingJob: false,
+          openToNetworking: false,
+        },
+        jobListings: data.jobListings || []
+      } as YamlrgUserProfile;
+    });
+  } catch (error) {
+    console.error("Error getting all users:", error);
+    return [];
+  }
 };
 
 // Approve user
@@ -167,7 +198,7 @@ export const approveUser = async (userId: string) => {
   await setDoc(userRef, {
     isApproved: true,
     approvedAt: new Date().toISOString(),
-    approvedBy: auth.currentUser?.email || ''
+    approvedBy: auth.currentUser?.email ?? ''
   }, { merge: true });
 };
 
@@ -184,46 +215,61 @@ export const removeApproval = async (userId: string) => {
 // Get visible members
 export const getVisibleMembers = async () => {
   try {
+    const usersRef = collection(db, "users");
+    const querySnapshot = await getDocs(usersRef);
     const currentUser = auth.currentUser;
+    
     if (!currentUser) {
-      console.log("No current user");
+      console.log('No authenticated user');
       return [];
     }
 
-    const userProfile = await getUserProfile(currentUser.uid);
-    const isAdmin = ADMIN_EMAILS.includes(currentUser.email ?? '');
-
-    const usersRef = collection(db, "users");
-    let members: DocumentData[] = [];
-
-    // If not admin and not approved, only show admins
-    if (!isAdmin && !userProfile?.isApproved) {
-      console.log("Filtering for admin-only view");
-      const adminQuery = query(usersRef, where("email", "in", ADMIN_EMAILS));
-      const adminSnapshot = await getDocs(adminQuery);
-      members = adminSnapshot.docs.map(doc => doc.data());
-    } else {
-      // Get visible members
-      const visibleQuery = query(usersRef, where("showInMembers", "==", true));
-      const visibleSnapshot = await getDocs(visibleQuery);
-      const visibleMembers = visibleSnapshot.docs.map(doc => doc.data());
-
-      // Get admin members
-      const adminQuery = query(usersRef, where("email", "in", ADMIN_EMAILS));
-      const adminSnapshot = await getDocs(adminQuery);
-      const adminMembers = adminSnapshot.docs.map(doc => doc.data());
-
-      // Combine and deduplicate members
-      const memberMap = new Map();
-      [...visibleMembers, ...adminMembers].forEach(member => {
-        memberMap.set(member.uid, member);
+    const members = querySnapshot.docs
+      .map(doc => {
+        const data = doc.data();
+        return {
+          uid: doc.id,
+          id: doc.id,
+          email: data.email || '',
+          displayName: data.displayName || '',
+          photoURL: data.photoURL || '',
+          showInMembers: data.showInMembers || false,
+          linkedinUrl: data.linkedinUrl || '',
+          isAdmin: ADMIN_EMAILS.includes(data.email || ''),
+          profileCompleted: data.profileCompleted || false,
+          joinedAt: data.joinedAt || '',
+          approvedAt: data.approvedAt,
+          status: data.status || {
+            lookingForCofounder: false,
+            needsProjectHelp: false,
+            offeringProjectHelp: false,
+            isHiring: false,
+            seekingJob: false,
+            openToNetworking: false,
+          }
+        } as YamlrgUserProfile;
+      })
+      .filter(user => {
+        // Show admins and users who have opted to be visible
+        return ADMIN_EMAILS.includes(user.email) || user.showInMembers;
+      })
+      .sort((a, b) => {
+        // Sort admins to the top
+        const aIsAdmin = ADMIN_EMAILS.includes(a.email);
+        const bIsAdmin = ADMIN_EMAILS.includes(b.email);
+        
+        if (aIsAdmin && !bIsAdmin) return -1;
+        if (!aIsAdmin && bIsAdmin) return 1;
+        
+        // For non-admins or between admins, sort by display name
+        const aName = a.displayName.toLowerCase();
+        const bName = b.displayName.toLowerCase();
+        return aName.localeCompare(bName);
       });
-      members = Array.from(memberMap.values());
-    }
 
     return members;
   } catch (error) {
-    console.error("Error in getVisibleMembers:", error);
+    console.error("Error getting visible members:", error);
     return [];
   }
 };
@@ -276,15 +322,29 @@ export const getJoinRequests = async () => {
 // Update join request status
 export const updateJoinRequestStatus = async (
   requestId: string, 
-  status: 'approved' | 'rejected',
-  approverEmail: string
+  status: 'approved' | 'rejected' | 'pending',
+  updatedBy: string
 ) => {
-  const requestRef = doc(db, "joinRequests", requestId);
-  await updateDoc(requestRef, {
-    status,
-    approvedAt: new Date().toISOString(),
-    approvedBy: approverEmail
-  });
+  try {
+    const requestRef = doc(db, 'joinRequests', requestId);
+    const updateData: {
+      status: 'approved' | 'rejected' | 'pending';
+      approvedAt?: string;
+      approvedBy?: string;
+    } = {
+      status
+    };
+
+    if (status === 'approved') {
+      updateData.approvedAt = new Date().toISOString();
+      updateData.approvedBy = updatedBy;
+    }
+
+    await updateDoc(requestRef, updateData);
+  } catch (error) {
+    console.error('Error updating join request:', error);
+    throw error;
+  }
 };
 
 // Add new function
@@ -311,64 +371,71 @@ export const deleteUserAccount = async (userId: string) => {
 };
 
 export const handleFirstLogin = async (user: User) => {
-  const db = getFirestore();
-  
-  // Check if there's an approved join request for this email
-  const requestsRef = collection(db, 'joinRequests');
-  const requestQuery = query(
-    requestsRef, 
-    where('email', '==', user.email),
-    where('status', '==', 'approved')
-  );
-  const requestSnapshot = await getDocs(requestQuery);
-  
-  if (!requestSnapshot.empty) {
-    // Found approved request, create user doc with request data
-    const request = requestSnapshot.docs[0].data();
+  try {
+    console.log('Starting handleFirstLogin for user:', user.email);
     
-    await setDoc(doc(db, 'users', user.uid), {
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      console.log('User document already exists');
+      return { status: 'exists' as const };
+    }
+
+    // Check for any join request for this email
+    const requestsRef = collection(db, 'joinRequests');
+    const requestsSnap = await getDocs(requestsRef);
+    
+    const matchingRequest = requestsSnap.docs.find(doc => {
+      const data = doc.data();
+      return data.email === user.email;
+    });
+
+    // If no request exists at all, redirect to join page
+    if (!matchingRequest) {
+      await auth.signOut();
+      return { status: 'no_request' as const };
+    }
+
+    // If request exists but isn't approved, show pending message
+    const request = matchingRequest.data();
+    if (request.status !== 'approved') {
+      await auth.signOut();
+      return { status: 'pending' as const };
+    }
+
+    // If we get here, request exists and is approved
+    const approvedAt = request.approvedAt;
+
+    // Create user profile
+    await setDoc(userRef, {
       uid: user.uid,
       email: user.email,
-      displayName: request.name || user.displayName,
+      displayName: user.displayName,
       photoURL: user.photoURL,
-      isApproved: true,
-      showInMembers: false,
-      profileCompleted: false,
-      joinedAt: request.createdAt,
-      approvedAt: request.approvedAt,
-      approvedBy: request.approvedBy,
+      showInMembers: true,
       linkedinUrl: request.linkedinUrl || '',
+      isAdmin: ADMIN_EMAILS.includes(user.email ?? ''),
+      profileCompleted: false,
+      joinedAt: approvedAt,
+      approvedAt: approvedAt,
       status: {
         lookingForCofounder: false,
         needsProjectHelp: false,
         offeringProjectHelp: false,
         isHiring: false,
         seekingJob: false,
-        openToNetworking: false,
+        openToNetworking: true,
       }
     });
-    return;
+
+    console.log('Successfully handled first login');
+    return { status: 'approved' as const };
+    
+  } catch (error) {
+    console.error('Error in handleFirstLogin:', error);
+    throw error;
   }
-  
-  // If no approved request found, create basic user doc
-  await setDoc(doc(db, 'users', user.uid), {
-    uid: user.uid,
-    email: user.email,
-    displayName: user.displayName,
-    photoURL: user.photoURL,
-    isApproved: false,
-    showInMembers: false,
-    profileCompleted: false,
-    joinedAt: new Date().toISOString(),
-    status: {
-      lookingForCofounder: false,
-      needsProjectHelp: false,
-      offeringProjectHelp: false,
-      isHiring: false,
-      seekingJob: false,
-      openToNetworking: false,
-    }
-  });
 };
 
 // Get all workshops
@@ -427,18 +494,27 @@ export const addPresentationRequest = async (request: Omit<PresentationRequest, 
 
 // Get presentation requests (admin only)
 export const getPresentationRequests = async () => {
-  const currentUser = auth.currentUser;
-  if (!currentUser?.email || !ADMIN_EMAILS.includes(currentUser.email)) {
-    throw new Error('Unauthorized: Admin access required');
-  }
+  try {
+    const currentUser = auth.currentUser;
+    if (!currentUser?.email) {
+      throw new Error('No authenticated user');
+    }
+    
+    if (!ADMIN_EMAILS.includes(currentUser.email)) {
+      throw new Error('Unauthorized: Admin access required');
+    }
 
-  const requestsRef = collection(db, "presentationRequests");
-  const q = query(requestsRef, orderBy("createdAt", "desc"));
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  })) as PresentationRequest[];
+    const requestsRef = collection(db, "presentationRequests");
+    const q = query(requestsRef, orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as PresentationRequest[];
+  } catch (error) {
+    console.error('Error getting presentation requests:', error);
+    throw error;
+  }
 };
 
 // Update presentation request status (admin only)
@@ -463,4 +539,113 @@ export const updatePresentationRequestStatus = async (
       completedBy: null
     })
   });
+};
+
+export const deletePresentationRequest = async (requestId: string) => {
+  try {
+    const currentUser = auth.currentUser;
+    if (!currentUser?.email) {
+      throw new Error('No authenticated user');
+    }
+    
+    if (!ADMIN_EMAILS.includes(currentUser.email)) {
+      throw new Error('Unauthorized: Admin access required');
+    }
+
+    const requestRef = doc(db, "presentationRequests", requestId);
+    await deleteDoc(requestRef);
+  } catch (error) {
+    console.error('Error deleting presentation request:', error);
+    throw error;
+  }
+};
+
+// Remove approval from a user
+export const removeUserApproval = async (userId: string) => {
+  try {
+    const userRef = doc(db, "users", userId);
+    await updateDoc(userRef, {
+      isApproved: false,
+      showInMembers: false,
+      approvedAt: null,
+      approvedBy: null
+    });
+  } catch (error) {
+    console.error('Error removing user approval:', error);
+    throw error;
+  }
+};
+
+// Toggle user visibility in members directory
+export const updateUserVisibility = async (userId: string, showInMembers: boolean) => {
+  try {
+    const userRef = doc(db, "users", userId);
+    await updateDoc(userRef, {
+      showInMembers: showInMembers
+    });
+  } catch (error) {
+    console.error('Error updating user visibility:', error);
+    throw error;
+  }
+};
+
+export const fixMissingJoinDates = async () => {
+  try {
+    const usersRef = collection(db, "users");
+    const querySnapshot = await getDocs(usersRef);
+    
+    const updates = querySnapshot.docs
+      .filter(doc => {
+        const data = doc.data();
+        return !data.joinedAt && data.approvedAt;
+      })
+      .map(async (doc) => {
+        const data = doc.data();
+        console.log(`Fixing joinedAt for user: ${data.email}`);
+        const userRef = doc.ref;
+        return updateDoc(userRef, {
+          joinedAt: data.approvedAt
+        });
+      });
+
+    await Promise.all(updates);
+    console.log('Fixed join dates for all users');
+  } catch (error) {
+    console.error('Error fixing join dates:', error);
+    throw error;
+  }
+};
+
+export const fixTimestampJoinDates = async () => {
+  try {
+    const usersRef = collection(db, "users");
+    const querySnapshot = await getDocs(usersRef);
+    
+    const updates = querySnapshot.docs
+      .filter(doc => {
+        const data = doc.data();
+        // Check if joinedAt is a Timestamp
+        return data.joinedAt && typeof data.joinedAt.toDate === 'function';
+      })
+      .map(async (doc) => {
+        const data = doc.data();
+        console.log(`Converting Timestamp joinedAt to ISO string for user: ${data.email}`);
+        const userRef = doc.ref;
+        
+        // Convert Timestamp to ISO string
+        const timestamp = data.joinedAt;
+        const date = timestamp.toDate();
+        const isoString = date.toISOString();
+        
+        return updateDoc(userRef, {
+          joinedAt: isoString
+        });
+      });
+
+    await Promise.all(updates);
+    console.log('Converted all Timestamp joinedAt fields to ISO strings');
+  } catch (error) {
+    console.error('Error fixing timestamp join dates:', error);
+    throw error;
+  }
 }; 

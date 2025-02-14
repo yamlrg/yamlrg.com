@@ -18,22 +18,49 @@ export default function JoinRequestPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleLinkedInChange = (value: string) => {
+    // Extract username from full LinkedIn URL if pasted
+    let username = value;
+    try {
+      if (value.includes('linkedin.com/in/')) {
+        const url = new URL(value.startsWith('http') ? value : `https://${value}`);
+        username = url.pathname.split('/in/')[1].replace(/\/$/, '');
+      }
+    } catch (e) {
+      // If URL parsing fails, just use the input as-is
+      username = value;
+      console.error('Error parsing LinkedIn URL:', e);
+      // todo: add error handling and/or send google analytics event
+    }
+
+    // Update form data with the processed username
+    setFormData(prev => ({ 
+      ...prev, 
+      linkedinUrl: username
+    }));
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setIsSubmitting(true);
 
     try {
+      // Construct full LinkedIn URL for storage
+      const fullLinkedInUrl = formData.linkedinUrl.includes('linkedin.com/in/') 
+        ? formData.linkedinUrl 
+        : `https://linkedin.com/in/${formData.linkedinUrl}`;
+
       await addJoinRequest({
         ...formData,
+        linkedinUrl: fullLinkedInUrl, // Store the full URL
         status: 'pending',
         createdAt: new Date().toISOString()
       });
 
       trackEvent('join_request_submitted', {
-        has_linkedin: true // Always true now as it's required
+        has_linkedin: true
       });
 
-      // Sign out the user after successful submission
       await signOut(auth);
       
       toast.success('Request submitted successfully!');
@@ -76,15 +103,23 @@ export default function JoinRequestPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">LinkedIn URL *</label>
-            <input
-              type="url"
-              required
-              value={formData.linkedinUrl}
-              onChange={(e) => setFormData(prev => ({ ...prev, linkedinUrl: e.target.value }))}
-              className="w-full px-3 py-2 border rounded"
-              placeholder="https://linkedin.com/in/yourusername"
-            />
+            <label className="block text-sm font-medium mb-1">LinkedIn Username *</label>
+            <div className="flex items-center">
+              <span className="text-gray-500 bg-gray-50 px-3 py-2 border border-r-0 rounded-l">
+                linkedin.com/in/
+              </span>
+              <input
+                type="text"
+                required
+                value={formData.linkedinUrl}
+                onChange={(e) => handleLinkedInChange(e.target.value)}
+                className="flex-1 px-3 py-2 border rounded-r"
+                placeholder="yourusername"
+              />
+            </div>
+            <p className="mt-1 text-sm text-gray-500">
+              Enter your LinkedIn username or paste your full profile URL
+            </p>
           </div>
 
           <div>

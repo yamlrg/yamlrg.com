@@ -16,38 +16,18 @@ export interface JobListing {
   postedAt: string;
 }
 
-export interface UserProfile {
+export interface YamlrgUserProfile {
+  uid: string;
+  email: string;
+  displayName: string;
+  photoURL: string;
   showInMembers: boolean;
   linkedinUrl: string;
-  status: UserStatus;
-  isApproved: boolean;
   isAdmin: boolean;
   profileCompleted: boolean;
+  joinedAt: string;
   approvedAt?: string;
-  approvedBy?: string;
-  joinedAt?: string;
-  jobListings?: JobListing[];
-}
-
-// Extend Firebase User with our additional properties
-export interface User extends FirebaseUser {
-  linkedinUrl?: string;
-  status?: UserStatus;
-}
-
-// For when we need the full user data
-export interface ExtendedUser {
-  uid: string;
-  email: string | null;
-  displayName: string | null;
-  photoURL: string | null;
-  isApproved: boolean;
-  showInMembers: boolean;
-  profileCompleted: boolean;
-  linkedinUrl?: string;
-  approvedAt?: string;
-  joinedAt?: string;
-  status?: {
+  status: {
     lookingForCofounder: boolean;
     needsProjectHelp: boolean;
     offeringProjectHelp: boolean;
@@ -61,6 +41,12 @@ export interface ExtendedUser {
     link: string;
     postedAt: string;
   }>;
+}
+
+// Extend Firebase User with our additional properties
+export interface User extends FirebaseUser {
+  linkedinUrl?: string;
+  status?: UserStatus;
 }
 
 export interface JoinRequest {

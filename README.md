@@ -64,6 +64,8 @@ npm start
 - [x] Search for members
 - [x] Add a "reading list" page
 - [x] Add jobs from companies that are hiring
+- [ ] User does not have firebase permissions to delete their account
+- [ ] privacy policy and tos
 
 ## Authentication Flow
 
