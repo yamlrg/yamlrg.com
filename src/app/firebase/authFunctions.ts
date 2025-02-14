@@ -1,10 +1,8 @@
-import { GoogleAuthProvider, signInWithPopup, signOut, AuthError } from "firebase/auth";
-import { auth, db } from "./firebaseConfig";
+import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { auth } from "./firebaseConfig";
 import toast from 'react-hot-toast';
-import { doc, setDoc, getDoc, collection, query, where, getDocs, serverTimestamp } from "firebase/firestore";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { trackEvent } from "@/utils/analytics";
-import { ADMIN_EMAILS } from "../config/admin";
 import { handleFirstLogin, getUserProfile } from "./firestoreOperations";
 
 // Initialize provider outside the function to avoid recreation

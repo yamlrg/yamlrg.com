@@ -32,6 +32,7 @@ export async function POST(request: Request) {
     const { email } = await request.json();
     console.log('Starting email send process to:', email);
     console.log('API Key exists:', !!process.env.NEXT_RESEND_API_KEY);
+    console.log('Sending welcome email with WhatsApp group link...');
 
     if (!process.env.NEXT_RESEND_API_KEY) {
       throw new Error('Missing Resend API key');
@@ -57,6 +58,7 @@ export async function POST(request: Request) {
       return Response.json({ error: error.message }, { status: 500 });
     }
 
+    console.log('Email sent successfully to:', email);
     return Response.json({ success: true });
   } catch (error) {
     console.error('Error in email send process:', error);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getAllUsers } from '@/app/firebase/firestoreOperations';
+import { getAllUsers, removeUserApproval, updateUserVisibility } from '@/app/firebase/firestoreOperations';
 import { ExtendedUser } from '@/app/types';
 import { toast, Toaster } from 'react-hot-toast';
 import Link from 'next/link';
@@ -27,8 +27,9 @@ export default function MembersPage() {
 
   const handleRemoveApproval = async (userId: string) => {
     try {
-      // Add your remove approval logic here
+      await removeUserApproval(userId);
       toast.success('Approval removed successfully');
+      
       // Refresh users
       const updatedUsers = await getAllUsers();
       setUsers(updatedUsers as ExtendedUser[]);
@@ -40,8 +41,10 @@ export default function MembersPage() {
 
   const toggleUserVisibility = async (user: ExtendedUser) => {
     try {
-      // Add your visibility toggle logic here
-      toast.success(`User is now ${user.showInMembers ? 'hidden' : 'visible'}`);
+      const newVisibility = !user.showInMembers;
+      await updateUserVisibility(user.uid, newVisibility);
+      toast.success(`User is now ${newVisibility ? 'visible' : 'hidden'}`);
+      
       // Refresh users
       const updatedUsers = await getAllUsers();
       setUsers(updatedUsers as ExtendedUser[]);

@@ -1,10 +1,9 @@
 import { db, auth } from "./firebaseConfig";
-import { collection, doc, getDoc, setDoc, getDocs, query, where, DocumentData, orderBy, addDoc, updateDoc, deleteDoc, limit, DocumentReference, serverTimestamp, runTransaction } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc, getDocs, query, where, DocumentData, orderBy, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { User, UserProfile, JoinRequest, Workshop, PresentationRequest } from "../types";
 import { ADMIN_EMAILS } from "../config/admin";
 import { deleteUser } from "firebase/auth";
 import { trackEvent } from "@/utils/analytics";
-import { getFirestore } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 
 // Export setDoc for use in other files
@@ -46,8 +45,6 @@ export const createUserProfile = async (user: User) => {
 // Get user profile
 export const getUserProfile = async (userId: string) => {
   try {
-    console.log('Getting user profile for:', userId);
-    
     if (!userId) {
       console.log('No user ID provided');
       return null;
@@ -65,7 +62,6 @@ export const getUserProfile = async (userId: string) => {
       }
 
       const data = userSnap.data();
-      console.log('User data:', data);
       
       if (!data) {
         console.log('No data in user document:', userId);
@@ -90,7 +86,6 @@ export const getUserProfile = async (userId: string) => {
         }
       } as UserProfile;
 
-      console.log('Returning user profile:', profile);
       return profile;
     } catch (error) {
       console.error('Error getting user document:', error);
@@ -504,6 +499,35 @@ export const deletePresentationRequest = async (requestId: string) => {
     await deleteDoc(requestRef);
   } catch (error) {
     console.error('Error deleting presentation request:', error);
+    throw error;
+  }
+};
+
+// Remove approval from a user
+export const removeUserApproval = async (userId: string) => {
+  try {
+    const userRef = doc(db, "users", userId);
+    await updateDoc(userRef, {
+      isApproved: false,
+      showInMembers: false,
+      approvedAt: null,
+      approvedBy: null
+    });
+  } catch (error) {
+    console.error('Error removing user approval:', error);
+    throw error;
+  }
+};
+
+// Toggle user visibility in members directory
+export const updateUserVisibility = async (userId: string, showInMembers: boolean) => {
+  try {
+    const userRef = doc(db, "users", userId);
+    await updateDoc(userRef, {
+      showInMembers: showInMembers
+    });
+  } catch (error) {
+    console.error('Error updating user visibility:', error);
     throw error;
   }
 }; 

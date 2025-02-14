@@ -73,7 +73,7 @@ export default function LoginPage() {
         {isSigningIn ? 'Signing in...' : 'Sign in with Google'}
       </button>
       <p className="mt-6 text-gray-600">
-        Don't have an account?{' '}
+        Don&apos;t have an account?{' '}
         <Link href="/join" className="text-emerald-600 hover:text-emerald-700">
           Request to join YAMLRG
         </Link>

@@ -9,16 +9,22 @@ import Link from 'next/link';
 import { Menu } from '@headlessui/react';
 import { logOut } from '../firebase/authFunctions';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function Navigation() {
   const [user, loading] = useAuthState(auth);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const loadProfile = async () => {
-      console.log('Navigation: loadProfile called', { user, loading });
+      console.log('Navigation: loadProfile called', { 
+        user: user ? { 
+          uid: user.uid, 
+          email: user.email 
+        } : null, 
+        loading 
+      });
       
       if (!user) {
         console.log('Navigation: No user, clearing profile');
@@ -29,7 +35,10 @@ export default function Navigation() {
       try {
         console.log('Navigation: Fetching profile for user:', user.uid);
         const profile = await getUserProfile(user.uid);
-        console.log('Navigation: Profile fetched:', profile);
+        console.log('Navigation: Profile fetched:', {
+          hasProfile: !!profile,
+          profileData: profile
+        });
         setUserProfile(profile);
       } catch (error) {
         console.error('Navigation: Error loading profile:', error);
@@ -38,7 +47,7 @@ export default function Navigation() {
     };
 
     loadProfile();
-  }, [user, loading]); // React to both user and loading changes
+  }, [user, loading]);
 
   const handleLogout = async () => {
     await logOut();
@@ -47,10 +56,12 @@ export default function Navigation() {
   };
 
   // Debug render info
-  console.log('Navigation: Rendering with:', { 
-    hasUser: !!user, 
-    loading, 
-    hasProfile: !!userProfile 
+  console.log('Navigation: Render state:', {
+    hasUser: !!user,
+    userEmail: user?.email,
+    loading,
+    hasProfile: !!userProfile,
+    profileData: userProfile
   });
 
   return (
@@ -70,10 +81,12 @@ export default function Navigation() {
               <Menu as="div" className="relative">
                 <Menu.Button className="flex items-center">
                   {user.photoURL ? (
-                    <img
+                    <Image
                       src={user.photoURL}
                       alt="Profile"
-                      className="h-8 w-8 rounded-full"
+                      width={32}
+                      height={32}
+                      className="rounded-full"
                     />
                   ) : (
                     <div className="h-8 w-8 rounded-full bg-gray-300" />

@@ -159,8 +159,6 @@ export default function JobsPage() {
       const userSnap = await getDoc(userRef);
       const userData = userSnap.data();
 
-      console.log('Current user data:', userData);
-
       const currentListings = userData?.jobListings || [];
       const updatedListings = [...currentListings, jobListing];
 
