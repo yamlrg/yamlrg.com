@@ -12,86 +12,77 @@ export default function JoinRequestsPage() {
   const [requests, setRequests] = useState<JoinRequest[]>([]);
 
   useEffect(() => {
-    const fetchRequests = async () => {
-      const fetchedRequests = await getJoinRequests();
-      setRequests(fetchedRequests);
-    };
-
-    fetchRequests();
+    loadJoinRequests();
   }, []);
+
+  const loadJoinRequests = async () => {
+    const fetchedRequests = await getJoinRequests();
+    setRequests(fetchedRequests);
+  };
 
   const handleRequestAction = async (requestId: string, action: 'approved' | 'rejected') => {
     try {
-      // If rejecting, we can proceed directly
       if (action === 'rejected') {
-        await updateJoinRequestStatus(requestId, action, auth.currentUser?.email ?? '');
-        toast.success('Request rejected successfully');
-        const updatedRequests = await getJoinRequests();
-        setRequests(updatedRequests);
+        await handleRejection(requestId);
         return;
       }
-
-      // For approvals, we need to send the email first
-      console.log('Request being approved, sending welcome email first...');
-      const request = requests.find(r => r.id === requestId);
-      if (!request) {
-        toast.error('Request not found');
-        return;
-      }
-
-      const token = await auth.currentUser?.getIdToken();
-      if (!token) {
-        toast.error('Authentication error');
-        return;
-      }
-
-      // Try to send email first
-      const response = await fetch('/api/send-approval-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          email: request.email
-        })
-      });
-
-      // Clone the response so we can read it multiple times if needed
-      const responseClone = response.clone();
-      
-      let responseData;
-      try {
-        responseData = await response.json();
-      } catch (error) {
-        console.error('Error parsing response:', error);
-        console.error('Response status:', response.status);
-        // Try to get the text from the cloned response
-        const responseText = await responseClone.text();
-        console.error('Response text:', responseText);
-        toast.error(`Server error (${response.status}) - check console for details`);
-        return;
-      }
-
-      if (!response.ok) {
-        console.error('Email send failed:', responseData);
-        toast.error(`Failed to send welcome email: ${responseData.error}${responseData.details ? ` - ${responseData.details}` : ''}`);
-        return;
-      }
-
-      // Only if email succeeds, update the status
-      await updateJoinRequestStatus(requestId, action, auth.currentUser?.email ?? '');
-      toast.success('Request approved and welcome email sent successfully');
-      const updatedRequests = await getJoinRequests();
-      setRequests(updatedRequests);
-
+      await handleApproval(requestId);
     } catch (error) {
-      console.error('Error in request action:', error);
-      if (error instanceof Error) {
-        toast.error(`Failed to process request: ${error.message}`);
-      } else {
-        toast.error('Failed to process request');
+      handleActionError(error);
+    }
+  };
+
+  const handleRejection = async (requestId: string) => {
+    await updateJoinRequestStatus(requestId, 'rejected', auth.currentUser?.email ?? '');
+    toast.success('Request rejected successfully');
+    await loadJoinRequests();
+  };
+
+  const handleApproval = async (requestId: string) => {
+    const request = requests.find(r => r.id === requestId);
+    if (!request) {
+      toast.error('Request not found');
+      return;
+    }
+
+    const token = await auth.currentUser?.getIdToken();
+    if (!token) {
+      toast.error('Authentication error');
+      return;
+    }
+
+    await sendApprovalEmail(request.email, token);
+    await updateJoinRequestStatus(requestId, 'approved', auth.currentUser?.email ?? '');
+    toast.success('Request approved and welcome email sent successfully');
+    await loadJoinRequests();
+  };
+
+  const sendApprovalEmail = async (email: string, token: string) => {
+    const response = await fetch('/api/send-approval-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ email })
+    });
+
+    const responseClone = response.clone();
+    
+    try {
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error);
       }
+      return data;
+    } catch (error) {
+      const responseText = await responseClone.text();
+      console.error('Error sending approval email:', {
+        error,
+        status: response.status,
+        responseText
+      });
+      throw new Error('Failed to send approval email');
     }
   };
 
@@ -131,6 +122,15 @@ export default function JoinRequestsPage() {
     } catch (error) {
       console.error('Error resending email:', error);
       toast.error('Failed to resend email');
+    }
+  };
+
+  const handleActionError = (error: unknown) => {
+    console.error('Error in request action:', error);
+    if (error instanceof Error) {
+      toast.error(`Failed to process request: ${error.message}`);
+    } else {
+      toast.error('Failed to process request');
     }
   };
 
