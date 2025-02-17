@@ -19,9 +19,14 @@ export async function POST(request: Request) {
     // Layer 2: Token must be valid (verified by Firebase Admin)
     const token = authHeader.split('Bearer ')[1];
     console.log('Attempting to verify token');
-    const decodedToken = await adminAuth.verifyIdToken(token);
-    console.log('Token verified for user:', decodedToken.email);
-    
+    try {
+      const decodedToken = await adminAuth.verifyIdToken(token);
+      console.log('Token verified for user:', decodedToken.email);
+    } catch (tokenError) {
+      console.error('Token verification failed:', tokenError);
+      return Response.json({ error: 'Invalid token' }, { status: 401 });
+    }
+
     // Layer 3: Email must be in admin whitelist
     if (!ADMIN_EMAILS.includes(decodedToken.email || '')) {
       console.error('User not in admin whitelist:', decodedToken.email);
@@ -35,7 +40,8 @@ export async function POST(request: Request) {
     console.log('Sending welcome email with WhatsApp group link...');
 
     if (!process.env.NEXT_RESEND_API_KEY) {
-      throw new Error('Missing Resend API key');
+      console.error('Missing Resend API key in environment');
+      return Response.json({ error: 'Server configuration error' }, { status: 500 });
     }
 
     const { data, error } = await resend.emails.send({
@@ -54,14 +60,23 @@ export async function POST(request: Request) {
     console.log('Resend API response:', { data, error });
 
     if (error) {
-      console.error('Resend API error:', error);
+      console.error('Resend API error details:', {
+        error,
+        message: error.message,
+        name: error.name,
+        statusCode: error.statusCode
+      });
       return Response.json({ error: error.message }, { status: 500 });
     }
 
     console.log('Email sent successfully to:', email);
     return Response.json({ success: true });
   } catch (error) {
-    console.error('Error in email send process:', error);
+    console.error('Error in email send process:', {
+      error,
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
     return Response.json({ 
       error: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined

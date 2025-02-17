@@ -44,11 +44,13 @@ export default function JoinRequestsPage() {
             });
 
             if (!response.ok) {
-              throw new Error('Failed to send email');
+              const errorData = await response.json();
+              console.error('Email send failed:', errorData);
+              toast.error(`Failed to send welcome email: ${errorData.error}`);
             }
           } catch (emailError) {
             console.error('Error sending welcome email:', emailError);
-            // Don't throw here, we still want to show success for the approval
+            toast.error('Failed to send welcome email, but approval was successful');
           }
         }
       }
@@ -58,13 +60,8 @@ export default function JoinRequestsPage() {
       const updatedRequests = await getJoinRequests();
       setRequests(updatedRequests);
     } catch (error) {
-      console.error('Error updating request:', {
-        action,
-        requestId,
-        currentUser: auth.currentUser?.email,
-        error
-      });
-      toast.error(error instanceof Error ? error.message : 'Failed to update request');
+      console.error('Error updating request:', error);
+      toast.error('Failed to update request');
     }
   };
 
