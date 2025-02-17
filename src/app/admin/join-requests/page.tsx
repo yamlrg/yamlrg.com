@@ -57,7 +57,16 @@ export default function JoinRequestsPage() {
         })
       });
 
-      const responseData = await response.json();
+      let responseData;
+      try {
+        responseData = await response.json();
+      } catch (error) {
+        console.error('Error parsing response:', error);
+        console.error('Response status:', response.status);
+        console.error('Response text:', await response.text());
+        toast.error('Server error - please check logs');
+        return;
+      }
 
       if (!response.ok) {
         console.error('Email send failed:', responseData);
@@ -73,7 +82,11 @@ export default function JoinRequestsPage() {
 
     } catch (error) {
       console.error('Error in request action:', error);
-      toast.error('Failed to process request');
+      if (error instanceof Error) {
+        toast.error(`Failed to process request: ${error.message}`);
+      } else {
+        toast.error('Failed to process request');
+      }
     }
   };
 
