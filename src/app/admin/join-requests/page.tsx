@@ -57,14 +57,19 @@ export default function JoinRequestsPage() {
         })
       });
 
+      // Clone the response so we can read it multiple times if needed
+      const responseClone = response.clone();
+      
       let responseData;
       try {
         responseData = await response.json();
       } catch (error) {
         console.error('Error parsing response:', error);
         console.error('Response status:', response.status);
-        console.error('Response text:', await response.text());
-        toast.error('Server error - please check logs');
+        // Try to get the text from the cloned response
+        const responseText = await responseClone.text();
+        console.error('Response text:', responseText);
+        toast.error(`Server error (${response.status}) - check console for details`);
         return;
       }
 
