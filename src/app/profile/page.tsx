@@ -21,6 +21,7 @@ export default function ProfilePage() {
   const [linkedinUrl, setLinkedinUrl] = useState("");
   const [displayName, setDisplayName] = useState("");
   const router = useRouter();
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const statusOptions = [
     { key: 'lookingForCofounder', label: 'Looking for a Co-founder' },
@@ -164,7 +165,7 @@ export default function ProfilePage() {
                     <Menu.Item>
                       {({ active }) => (
                         <button
-                          onClick={handleDeleteAccount}
+                          onClick={() => setShowDeleteConfirmation(true)}
                           className={`${
                             active ? 'bg-red-50 text-red-700' : 'text-red-600'
                           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
@@ -228,14 +229,19 @@ export default function ProfilePage() {
             ) : (
               <div>
                 {profile.linkedinUrl ? (
-                  <a
-                    href={`https://www.linkedin.com/in/${profile.linkedinUrl.replace(/.*linkedin\.com\/in\//i, '').replace(/\/$/, '')}/`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-emerald-600 hover:text-emerald-700"
-                  >
-                    View LinkedIn Profile
-                  </a>
+                  <div className="flex items-center gap-2">
+                    <a
+                      href={profile.linkedinUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-emerald-600 hover:text-emerald-700"
+                    >
+                      View LinkedIn Profile
+                    </a>
+                    <span className="text-gray-500">
+                      ({profile.linkedinUrl.replace(/.*linkedin\.com\/in\//i, '').replace(/\/$/, '')})
+                    </span>
+                  </div>
                 ) : (
                   <p className="text-gray-500 italic">No LinkedIn profile added</p>
                 )}
@@ -309,6 +315,33 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+      {showDeleteConfirmation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+            <h3 className="text-lg font-semibold mb-4">Delete Account</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete your account? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowDeleteConfirmation(false)}
+                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  handleDeleteAccount();
+                  setShowDeleteConfirmation(false);
+                }}
+                className="px-4 py-2 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100"
+              >
+                Delete Account
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
