@@ -57,11 +57,12 @@ export default function JoinRequestsPage() {
         })
       });
 
+      const responseData = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response' }));
-        console.error('Email send failed:', errorData);
-        toast.error(`Failed to send welcome email: ${errorData.error}`);
-        return; // Don't proceed with approval if email fails
+        console.error('Email send failed:', responseData);
+        toast.error(`Failed to send welcome email: ${responseData.error}${responseData.details ? ` - ${responseData.details}` : ''}`);
+        return;
       }
 
       // Only if email succeeds, update the status
