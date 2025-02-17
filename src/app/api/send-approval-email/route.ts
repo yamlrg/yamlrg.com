@@ -87,7 +87,7 @@ async function sendWelcomeEmail(email: string) {
         <p>Your request to join has been approved. You can now join our WhatsApp group:</p>
         <p><a href="https://chat.whatsapp.com/DMqsymB8YmFD5za7R9IdwO">Click here to join the WhatsApp group</a></p>
         <p>We're excited to have you as part of our community!</p>
-        <p>Please also complete your profile on the website: <a href="https://yamlrg.com/login">https://yamlrg.com/profile</a></p>
+        <p>Please also complete your profile on the website: <a href="https://www.yamlrg.com/login">https://www.yamlrg.com/profile</a></p>
       `
     });
 
