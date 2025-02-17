@@ -1,6 +1,7 @@
 import { Resend } from 'resend';
 import { adminAuth } from '@/app/firebase/firebaseAdmin';
 import { ADMIN_EMAILS } from '@/app/config/admin';
+import { DecodedIdToken } from 'firebase-admin/auth';
 
 const resend = new Resend(process.env.NEXT_RESEND_API_KEY);
 
@@ -19,8 +20,10 @@ export async function POST(request: Request) {
     // Layer 2: Token must be valid (verified by Firebase Admin)
     const token = authHeader.split('Bearer ')[1];
     console.log('Attempting to verify token');
+    
+    let decodedToken: DecodedIdToken;
     try {
-      const decodedToken = await adminAuth.verifyIdToken(token);
+      decodedToken = await adminAuth.verifyIdToken(token);
       console.log('Token verified for user:', decodedToken.email);
     } catch (tokenError) {
       console.error('Token verification failed:', tokenError);
@@ -63,8 +66,7 @@ export async function POST(request: Request) {
       console.error('Resend API error details:', {
         error,
         message: error.message,
-        name: error.name,
-        statusCode: error.statusCode
+        name: error.name
       });
       return Response.json({ error: error.message }, { status: 500 });
     }
