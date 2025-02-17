@@ -22,46 +22,57 @@ export default function JoinRequestsPage() {
 
   const handleRequestAction = async (requestId: string, action: 'approved' | 'rejected') => {
     try {
-      await updateJoinRequestStatus(requestId, action, auth.currentUser?.email ?? '');
-      
-      // If approved, try to send welcome email
-      if (action === 'approved') {
-        console.log('Request was approved, sending welcome email...');
-        const request = requests.find(r => r.id === requestId);
-        if (request) {
-          try {
-            const token = await auth.currentUser?.getIdToken();
-            
-            const response = await fetch('/api/send-approval-email', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-              },
-              body: JSON.stringify({
-                email: request.email
-              })
-            });
-
-            if (!response.ok) {
-              const errorData = await response.json();
-              console.error('Email send failed:', errorData);
-              toast.error(`Failed to send welcome email: ${errorData.error}`);
-            }
-          } catch (emailError) {
-            console.error('Error sending welcome email:', emailError);
-            toast.error('Failed to send welcome email, but approval was successful');
-          }
-        }
+      // If rejecting, we can proceed directly
+      if (action === 'rejected') {
+        await updateJoinRequestStatus(requestId, action, auth.currentUser?.email ?? '');
+        toast.success('Request rejected successfully');
+        const updatedRequests = await getJoinRequests();
+        setRequests(updatedRequests);
+        return;
       }
 
-      toast.success(`Request ${action} successfully`);
-      // Refresh requests
+      // For approvals, we need to send the email first
+      console.log('Request being approved, sending welcome email first...');
+      const request = requests.find(r => r.id === requestId);
+      if (!request) {
+        toast.error('Request not found');
+        return;
+      }
+
+      const token = await auth.currentUser?.getIdToken();
+      if (!token) {
+        toast.error('Authentication error');
+        return;
+      }
+
+      // Try to send email first
+      const response = await fetch('/api/send-approval-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          email: request.email
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response' }));
+        console.error('Email send failed:', errorData);
+        toast.error(`Failed to send welcome email: ${errorData.error}`);
+        return; // Don't proceed with approval if email fails
+      }
+
+      // Only if email succeeds, update the status
+      await updateJoinRequestStatus(requestId, action, auth.currentUser?.email ?? '');
+      toast.success('Request approved and welcome email sent successfully');
       const updatedRequests = await getJoinRequests();
       setRequests(updatedRequests);
+
     } catch (error) {
-      console.error('Error updating request:', error);
-      toast.error('Failed to update request');
+      console.error('Error in request action:', error);
+      toast.error('Failed to process request');
     }
   };
 

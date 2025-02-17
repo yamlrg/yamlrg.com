@@ -5,6 +5,12 @@ import { DecodedIdToken } from 'firebase-admin/auth';
 
 const resend = new Resend(process.env.NEXT_RESEND_API_KEY);
 
+// Add initialization check
+if (!resend) {
+  console.error('Failed to initialize Resend');
+  throw new Error('Email service initialization failed');
+}
+
 export async function POST(request: Request) {
   try {
     console.log('Starting email send process');
@@ -84,4 +90,9 @@ export async function POST(request: Request) {
       stack: error instanceof Error ? error.stack : undefined
     }, { status: 500 });
   }
+}
+
+// Add a GET method to test if the route is accessible
+export async function GET() {
+  return Response.json({ status: 'healthy', env: !!process.env.NEXT_RESEND_API_KEY });
 } 
