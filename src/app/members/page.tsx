@@ -27,7 +27,6 @@ export default function MembersPage() {
   const [filters, setFilters] = useState<Partial<UserStatus>>({});
   const [searchQuery, setSearchQuery] = useState('');
   const [growthData, setGrowthData] = useState<GrowthDataPoint[]>([]);
-  const [authChecked, setAuthChecked] = useState(false);
 
   const statusOptions = [
     { key: 'lookingForCofounder', label: 'Looking for Co-founders', color: 'bg-purple-100 text-purple-800' },
@@ -38,22 +37,14 @@ export default function MembersPage() {
     { key: 'openToNetworking', label: 'Open to Networking', color: 'bg-emerald-100 text-emerald-800' },
   ] as const;
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(() => {
-      setAuthChecked(true);
-    });
-    return () => unsubscribe();
-  }, []);
-
   const fetchMembers = useCallback(async () => {
-    if (!authChecked) return;
     try {
       const visibleMembers = await getVisibleMembers();
       setMembers(visibleMembers);
     } catch (error) {
       console.error("Error fetching members:", error);
     }
-  }, [authChecked]);
+  }, []);
 
   useEffect(() => {
     fetchMembers();
@@ -272,7 +263,7 @@ export default function MembersPage() {
           </div>
 
           {/* Growth Graph - shown to approved members and admins */}
-          {(ADMIN_EMAILS.includes(auth.currentUser?.email || '') || authChecked) && (
+          {ADMIN_EMAILS.includes(auth.currentUser?.email || '') && (
             <div className="mt-16 mb-8">
               <h2 className="text-xl font-semibold mb-4">YAMLRG Growth</h2>
               <div className="h-[300px] w-full">
