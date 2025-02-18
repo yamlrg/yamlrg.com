@@ -91,8 +91,8 @@ export default function RootLayout({
       <head>
         <GoogleAnalytics GA_MEASUREMENT_ID={GA_MEASUREMENT_ID} />
       </head>
-      <body className="h-full">
-        <div className="h-full flex flex-col">
+      <body className="min-h-screen">
+        <div className="min-h-screen flex flex-col">
           <header className="py-2 px-4 sm:px-6 lg:px-8 border-b">
             <div className="container mx-auto flex justify-between items-center">
               <div className="flex items-center">
@@ -271,9 +271,44 @@ export default function RootLayout({
               </div>
             )}
           </header>
-          <main className="flex-1 overflow-auto">
+          <main className="flex-1">
             {children}
           </main>
+          <footer className="text-xs py-4 border-t mt-auto">
+            <div className="max-w-7xl mx-auto px-4">
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="text-gray-600">
+                  Created by{' '}
+                  <a 
+                    className="text-emerald-700 hover:text-emerald-800" 
+                    href="https://www.linkedin.com/in/marialuqueanguita/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
+                    María Luque Anguita
+                  </a>
+                  {' '}and{' '}
+                  <a 
+                    className="text-emerald-700 hover:text-emerald-800" 
+                    href="https://callum.tilbury.co.za" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
+                    Callum Rhys Tilbury
+                  </a>
+                </div>
+                <div className="flex items-center gap-4 text-gray-600">
+                  <Link href="/privacy" className="hover:text-emerald-700">
+                    Privacy Policy
+                  </Link>
+                  <span>•</span>
+                  <Link href="/terms" className="hover:text-emerald-700">
+                    Terms of Service
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </footer>
         </div>
       </body>
     </html>

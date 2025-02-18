@@ -14,7 +14,6 @@ export const createUserProfile = async (user: User) => {
   try {
     const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
-    console.log('User document exists:', userSnap.exists());
 
     if (!userSnap.exists()) {
       const defaultProfile: YamlrgUserProfile = {
@@ -60,7 +59,6 @@ export const getUserProfile = async (userId: string) => {
     
     try {
       const userSnap = await getDoc(userRef);
-      console.log('User document exists:', userSnap.exists());
       
       if (!userSnap.exists()) {
         console.log('No user found with ID:', userId);
