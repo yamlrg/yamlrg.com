@@ -260,7 +260,7 @@ export default function WorkshopsPage() {
                           href={workshop.presenterLinkedIn}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+                          className="text-emerald-600 hover:text-emerald-800 hover:underline font-medium"
                         >
                           {workshop.presenterName}
                         </a>
@@ -283,43 +283,46 @@ export default function WorkshopsPage() {
                         {workshop.type}
                       </span>
                     </div>
-                    <div>
-                      {workshop.youtubeUrl && (
-                        <a
-                          href={workshop.youtubeUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-red-600 hover:text-red-700 transition-colors"
-                          title="Watch Recording"
-                        >
-                          <FaYoutube className="w-6 h-6" />
-                        </a>
-                      )}
-                    </div>
                   </div>
 
                   <p className="mt-4 text-gray-700">{workshop.description}</p>
 
-                  {workshop.resources && workshop.resources.length > 0 && (
+                  {/* Resources section with YouTube */}
+                  {(workshop.resources?.length > 0 || workshop.youtubeUrl) && (
                     <div className="mt-4 pt-4 border-t">
-                      <p className="font-medium text-gray-900 mb-2">📚 Resources</p>
-                      <div className="space-y-2">
-                        {workshop.resources.map((resource, index) => (
+                      <div className="flex flex-wrap justify-between items-start gap-4">
+                        {workshop.resources?.length > 0 && (
+                          <div className="space-y-2">
+                            {workshop.resources.map((resource, index) => (
+                              <a
+                                key={index}
+                                href={resource}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline"
+                              >
+                                {resource.includes('github.com') ? (
+                                  <FaBook className="w-4 h-4" />
+                                ) : (
+                                  <FaLink className="w-4 h-4" />
+                                )}
+                                <span>Resource {index + 1}</span>
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                        {workshop.youtubeUrl && (
                           <a
-                            key={index}
-                            href={resource}
+                            href={workshop.youtubeUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline"
+                            className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:underline ml-auto"
+                            title="Watch Recording"
                           >
-                            {resource.includes('github.com') ? (
-                              <FaBook className="w-4 h-4" />
-                            ) : (
-                              <FaLink className="w-4 h-4" />
-                            )}
-                            <span>Resource {index + 1}</span>
+                            <FaYoutube className="w-4 h-4" />
+                            <span>Watch Recording</span>
                           </a>
-                        ))}
+                        )}
                       </div>
                     </div>
                   )}
@@ -380,7 +383,7 @@ export default function WorkshopsPage() {
                           href={workshop.presenterLinkedIn}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+                          className="text-emerald-600 hover:text-emerald-800 hover:underline font-medium"
                         >
                           {workshop.presenterName}
                         </a>
@@ -403,42 +406,46 @@ export default function WorkshopsPage() {
                         {workshop.type}
                       </span>
                     </div>
-                    <div>
-                      {workshop.youtubeUrl && (
-                        <a
-                          href={workshop.youtubeUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-red-600 hover:text-red-700 transition-colors"
-                          title="Watch Recording"
-                        >
-                          <FaYoutube className="w-6 h-6" />
-                        </a>
-                      )}
-                    </div>
                   </div>
 
                   <p className="mt-4 text-gray-700">{workshop.description}</p>
 
-                  {workshop.resources && workshop.resources.length > 0 && (
+                  {/* Resources section with YouTube */}
+                  {(workshop.resources?.length > 0 || workshop.youtubeUrl) && (
                     <div className="mt-4 pt-4 border-t">
-                      <div className="space-y-2">
-                        {workshop.resources.map((resource, index) => (
+                      <div className="flex flex-wrap justify-between items-start gap-4">
+                        {workshop.resources?.length > 0 && (
+                          <div className="space-y-2">
+                            {workshop.resources.map((resource, index) => (
+                              <a
+                                key={index}
+                                href={resource}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline"
+                              >
+                                {resource.includes('github.com') ? (
+                                  <FaBook className="w-4 h-4" />
+                                ) : (
+                                  <FaLink className="w-4 h-4" />
+                                )}
+                                <span>Resource {index + 1}</span>
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                        {workshop.youtubeUrl && (
                           <a
-                            key={index}
-                            href={resource}
+                            href={workshop.youtubeUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline"
+                            className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:underline ml-auto"
+                            title="Watch Recording"
                           >
-                            {resource.includes('github.com') ? (
-                              <FaBook className="w-4 h-4" />
-                            ) : (
-                              <FaLink className="w-4 h-4" />
-                            )}
-                            <span>Resource {index + 1}</span>
+                            <FaYoutube className="w-4 h-4" />
+                            <span>Watch Recording</span>
                           </a>
-                        ))}
+                        )}
                       </div>
                     </div>
                   )}
