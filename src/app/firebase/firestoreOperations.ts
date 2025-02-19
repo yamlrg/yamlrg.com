@@ -1,5 +1,5 @@
 import { db, auth } from "./firebaseConfig";
-import { collection, doc, getDoc, setDoc, getDocs, query, orderBy, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc, getDocs, query, orderBy, addDoc, updateDoc, deleteDoc, where } from "firebase/firestore";
 import { User, YamlrgUserProfile, JoinRequest, Workshop, PresentationRequest } from "../types";
 import { ADMIN_EMAILS } from "../config/admin";
 import { deleteUser } from "firebase/auth";
@@ -14,7 +14,6 @@ export const createUserProfile = async (user: User) => {
   try {
     const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
-    console.log('User document exists:', userSnap.exists());
 
     if (!userSnap.exists()) {
       const defaultProfile: YamlrgUserProfile = {
@@ -60,7 +59,6 @@ export const getUserProfile = async (userId: string) => {
     
     try {
       const userSnap = await getDoc(userRef);
-      console.log('User document exists:', userSnap.exists());
       
       if (!userSnap.exists()) {
         console.log('No user found with ID:', userId);
@@ -302,10 +300,32 @@ export const addToReadingList = async (item: {
   });
 };
 
-// Add join request
 export const addJoinRequest = async (request: Omit<JoinRequest, 'id'>) => {
-  const requestsRef = collection(db, "joinRequests");
-  await addDoc(requestsRef, request);
+  try {
+    // Check for existing request with this email using a query
+    const requestsRef = collection(db, "joinRequests");
+    const q = query(
+      requestsRef, 
+      where("email", "==", request.email.toLowerCase())
+    );
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      // If request exists, just return success
+      return { success: true, exists: true };
+    }
+
+    // If no existing request, create new one
+    const docRef = await addDoc(requestsRef, {
+      ...request,
+      email: request.email.toLowerCase() // Store email in lowercase
+    });
+
+    return { success: true, exists: false, id: docRef.id };
+  } catch (error) {
+    console.error('Error creating join request:', error);
+    throw error;
+  }
 };
 
 // Get all join requests

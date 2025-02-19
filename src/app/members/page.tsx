@@ -9,6 +9,9 @@ import { auth } from "../firebase/firebaseConfig";
 import Link from "next/link";
 import { ADMIN_EMAILS } from '../config/admin';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { UserIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
+import { FaLinkedin } from 'react-icons/fa';
+import { toast, Toaster } from 'react-hot-toast';
 
 interface GrowthDataPoint {
   date: string;
@@ -24,33 +27,24 @@ export default function MembersPage() {
   const [filters, setFilters] = useState<Partial<UserStatus>>({});
   const [searchQuery, setSearchQuery] = useState('');
   const [growthData, setGrowthData] = useState<GrowthDataPoint[]>([]);
-  const [authChecked, setAuthChecked] = useState(false);
 
   const statusOptions = [
-    { key: 'lookingForCofounder', label: 'Looking for Co-founders' },
-    { key: 'needsProjectHelp', label: 'Need Project Help' },
-    { key: 'offeringProjectHelp', label: 'Offering Help' },
-    { key: 'isHiring', label: 'Hiring' },
-    { key: 'seekingJob', label: 'Job Seeking' },
-    { key: 'openToNetworking', label: 'Open to Networking' },
+    { key: 'lookingForCofounder', label: 'Looking for Co-founders', color: 'bg-purple-100 text-purple-800' },
+    { key: 'needsProjectHelp', label: 'Need Project Help', color: 'bg-red-100 text-red-800' },
+    { key: 'offeringProjectHelp', label: 'Offering Help', color: 'bg-green-100 text-green-800' },
+    { key: 'isHiring', label: 'Hiring', color: 'bg-blue-100 text-blue-800' },
+    { key: 'seekingJob', label: 'Job Seeking', color: 'bg-yellow-100 text-yellow-800' },
+    { key: 'openToNetworking', label: 'Open to Networking', color: 'bg-emerald-100 text-emerald-800' },
   ] as const;
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(() => {
-      setAuthChecked(true);
-    });
-    return () => unsubscribe();
-  }, []);
-
   const fetchMembers = useCallback(async () => {
-    if (!authChecked) return;
     try {
       const visibleMembers = await getVisibleMembers();
       setMembers(visibleMembers);
     } catch (error) {
       console.error("Error fetching members:", error);
     }
-  }, [authChecked]);
+  }, []);
 
   useEffect(() => {
     fetchMembers();
@@ -116,6 +110,7 @@ export default function MembersPage() {
   return (
     <ProtectedPage>
       <div className="container mx-auto px-4 py-8">
+        <Toaster position="top-center" />
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold mb-4">Members</h1>
           <Link href="/wrapped" className="inline-block text-blue-600 hover:text-blue-800">
@@ -194,50 +189,69 @@ export default function MembersPage() {
           {/* Members Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredMembers.map((member) => (
-              <div
-                key={member.uid}
-                className="p-4 border rounded-lg shadow-sm"
-              >
-                <div className="flex items-center gap-2 mb-3">
-                  {member.photoURL && (
-                    <Image
-                      src={member.photoURL}
-                      alt={member.displayName || ''}
-                      width={40}
-                      height={40}
-                      className="rounded-full"
-                    />
-                  )}
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h2 className="font-semibold">{member.displayName}</h2>
-                      {ADMIN_EMAILS.includes(member.email || '') && (
-                        <span className="bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded-full font-medium">
-                          Admin
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-gray-600">{member.email}</p>
-                  </div>
-                </div>
-                
+              <div key={member.uid} className="bg-white rounded-lg shadow p-4 relative">
                 {member.linkedinUrl && (
                   <a
                     href={member.linkedinUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline text-sm block mb-2"
+                    className="absolute top-4 right-4 text-gray-400 hover:text-blue-600"
+                    title="View LinkedIn Profile"
                   >
-                    LinkedIn Profile
+                    <FaLinkedin className="w-5 h-5" />
                   </a>
                 )}
 
-                <div className="flex flex-wrap gap-1">
+                <div className="flex items-start gap-4">
+                  {member.photoURL ? (
+                    <Image
+                      src={member.photoURL}
+                      alt={member.displayName}
+                      width={48}
+                      height={48}
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                      <UserIcon className="w-6 h-6 text-gray-400" />
+                    </div>
+                  )}
+                  <div className="flex-grow">
+                    <h3 className="font-medium">{member.displayName}</h3>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(member.email);
+                        toast.success('Email copied to clipboard!');
+                      }}
+                      className="text-gray-400 hover:text-gray-600"
+                      title={member.email}
+                    >
+                      <EnvelopeIcon className="w-5 h-5" />
+                    </button>
+                    {member.linkedinUrl && (
+                      <a
+                        href={member.linkedinUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-blue-600"
+                        title="View LinkedIn Profile"
+                      >
+                        <FaLinkedin className="w-5 h-5" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="flex flex-wrap gap-1 mt-3">
                   {member.status && Object.entries(member.status).map(([key, value]) => 
                     value ? (
                       <span
                         key={key}
-                        className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full"
+                        className={`text-xs px-2 py-1 rounded-full ${
+                          statusOptions.find(opt => opt.key === key)?.color
+                        }`}
                       >
                         {statusOptions.find(opt => opt.key === key)?.label}
                       </span>
@@ -249,7 +263,7 @@ export default function MembersPage() {
           </div>
 
           {/* Growth Graph - shown to approved members and admins */}
-          {(ADMIN_EMAILS.includes(auth.currentUser?.email || '') || authChecked) && (
+          {ADMIN_EMAILS.includes(auth.currentUser?.email || '') && (
             <div className="mt-16 mb-8">
               <h2 className="text-xl font-semibold mb-4">YAMLRG Growth</h2>
               <div className="h-[300px] w-full">

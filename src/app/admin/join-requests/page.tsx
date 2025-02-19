@@ -12,59 +12,77 @@ export default function JoinRequestsPage() {
   const [requests, setRequests] = useState<JoinRequest[]>([]);
 
   useEffect(() => {
-    const fetchRequests = async () => {
-      const fetchedRequests = await getJoinRequests();
-      setRequests(fetchedRequests);
-    };
-
-    fetchRequests();
+    loadJoinRequests();
   }, []);
+
+  const loadJoinRequests = async () => {
+    const fetchedRequests = await getJoinRequests();
+    setRequests(fetchedRequests);
+  };
 
   const handleRequestAction = async (requestId: string, action: 'approved' | 'rejected') => {
     try {
-      await updateJoinRequestStatus(requestId, action, auth.currentUser?.email ?? '');
-      
-      // If approved, try to send welcome email
-      if (action === 'approved') {
-        console.log('Request was approved, sending welcome email...');
-        const request = requests.find(r => r.id === requestId);
-        if (request) {
-          try {
-            const token = await auth.currentUser?.getIdToken();
-            
-            const response = await fetch('/api/send-approval-email', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-              },
-              body: JSON.stringify({
-                email: request.email
-              })
-            });
-
-            if (!response.ok) {
-              throw new Error('Failed to send email');
-            }
-          } catch (emailError) {
-            console.error('Error sending welcome email:', emailError);
-            // Don't throw here, we still want to show success for the approval
-          }
-        }
+      if (action === 'rejected') {
+        await handleRejection(requestId);
+        return;
       }
-
-      toast.success(`Request ${action} successfully`);
-      // Refresh requests
-      const updatedRequests = await getJoinRequests();
-      setRequests(updatedRequests);
+      await handleApproval(requestId);
     } catch (error) {
-      console.error('Error updating request:', {
-        action,
-        requestId,
-        currentUser: auth.currentUser?.email,
-        error
+      handleActionError(error);
+    }
+  };
+
+  const handleRejection = async (requestId: string) => {
+    await updateJoinRequestStatus(requestId, 'rejected', auth.currentUser?.email ?? '');
+    toast.success('Request rejected successfully');
+    await loadJoinRequests();
+  };
+
+  const handleApproval = async (requestId: string) => {
+    const request = requests.find(r => r.id === requestId);
+    if (!request) {
+      toast.error('Request not found');
+      return;
+    }
+
+    const token = await auth.currentUser?.getIdToken();
+    if (!token) {
+      toast.error('Authentication error');
+      return;
+    }
+
+    await sendApprovalEmail(request.email, token);
+    await updateJoinRequestStatus(requestId, 'approved', auth.currentUser?.email ?? '');
+    toast.success('Request approved and welcome email sent successfully');
+    await loadJoinRequests();
+  };
+
+  const sendApprovalEmail = async (email: string, token: string) => {
+    const response = await fetch('/api/send-approval-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ email })
+    });
+
+    const responseClone = response.clone();
+    
+    try {
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error);
+      }
+      return data;
+    } catch (error) {
+      const responseText = await responseClone.text();
+      console.error('Error sending approval email:', {
+        error,
+        status: response.status,
+        responseText
       });
-      toast.error(error instanceof Error ? error.message : 'Failed to update request');
+      throw new Error('Failed to send approval email');
     }
   };
 
@@ -104,6 +122,15 @@ export default function JoinRequestsPage() {
     } catch (error) {
       console.error('Error resending email:', error);
       toast.error('Failed to resend email');
+    }
+  };
+
+  const handleActionError = (error: unknown) => {
+    console.error('Error in request action:', error);
+    if (error instanceof Error) {
+      toast.error(`Failed to process request: ${error.message}`);
+    } else {
+      toast.error('Failed to process request');
     }
   };
 

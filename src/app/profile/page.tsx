@@ -12,6 +12,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { trackEvent } from "@/utils/analytics";
 import { Menu, Transition } from '@headlessui/react';
+import { FaLinkedin } from 'react-icons/fa';
 
 export default function ProfilePage() {
   const [user] = useAuthState(auth);
@@ -21,14 +22,16 @@ export default function ProfilePage() {
   const [linkedinUrl, setLinkedinUrl] = useState("");
   const [displayName, setDisplayName] = useState("");
   const router = useRouter();
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [showInMembers, setShowInMembers] = useState(false);
 
   const statusOptions = [
-    { key: 'lookingForCofounder', label: 'Looking for a Co-founder' },
-    { key: 'needsProjectHelp', label: 'Need help with a project' },
-    { key: 'offeringProjectHelp', label: 'Looking to help on projects' },
-    { key: 'isHiring', label: 'Hiring' },
-    { key: 'seekingJob', label: 'Looking for a job' },
-    { key: 'openToNetworking', label: 'Open to networking' },
+    { key: 'lookingForCofounder', label: 'Looking for a Co-founder', color: 'bg-emerald-100 text-emerald-800' },
+    { key: 'needsProjectHelp', label: 'Need help with a project', color: 'bg-yellow-100 text-yellow-800' },
+    { key: 'offeringProjectHelp', label: 'Looking to help on projects', color: 'bg-teal-100 text-teal-800' },
+    { key: 'isHiring', label: 'Hiring', color: 'bg-blue-100 text-blue-800' },
+    { key: 'seekingJob', label: 'Looking for a job', color: 'bg-pink-100 text-pink-800' },
+    { key: 'openToNetworking', label: 'Open to networking', color: 'bg-purple-100 text-purple-800' },
   ] as const;
 
   useEffect(() => {
@@ -40,6 +43,7 @@ export default function ProfilePage() {
             setProfile(userProfile);
             setLinkedinUrl(userProfile.linkedinUrl);
             setDisplayName(userProfile.displayName);
+            setShowInMembers(userProfile.showInMembers);
           }
         } catch (error) {
           console.error('Error fetching profile:', error);
@@ -61,7 +65,8 @@ export default function ProfilePage() {
         linkedinUrl,
         displayName,
         profileCompleted: !!linkedinUrl,
-        status: profile.status
+        status: profile.status,
+        showInMembers
       };
 
       await updateUserProfile(user.uid, updates);
@@ -133,9 +138,10 @@ export default function ProfilePage() {
       <Toaster position="top-center" />
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex justify-end mb-4">
+          {/* Settings Menu */}
+          <div className="flex justify-end mb-6">
             <Menu as="div" className="relative">
-              <Menu.Button className="text-gray-600 hover:text-gray-900">
+              <Menu.Button className="text-gray-400 hover:text-gray-600 transition-colors">
                 <Cog6ToothIcon className="w-6 h-6" />
               </Menu.Button>
               <Transition
@@ -147,7 +153,7 @@ export default function ProfilePage() {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div className="px-1 py-1">
                     <Menu.Item>
                       {({ active }) => (
@@ -164,7 +170,7 @@ export default function ProfilePage() {
                     <Menu.Item>
                       {({ active }) => (
                         <button
-                          onClick={handleDeleteAccount}
+                          onClick={() => setShowDeleteConfirmation(true)}
                           className={`${
                             active ? 'bg-red-50 text-red-700' : 'text-red-600'
                           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
@@ -180,74 +186,89 @@ export default function ProfilePage() {
           </div>
 
           {/* User Info Section */}
-          <div className="flex items-start gap-4 mb-6">
+          <div className="flex items-start gap-6 mb-8">
             {profile.photoURL ? (
               <Image
                 src={profile.photoURL}
                 alt={displayName}
-                width={80}
-                height={80}
+                width={96}
+                height={96}
                 className="rounded-full"
               />
             ) : (
-              <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center">
-                <span className="text-2xl text-emerald-700">
+              <div className="w-24 h-24 rounded-full bg-emerald-100 flex items-center justify-center">
+                <span className="text-3xl text-emerald-700">
                   {displayName[0].toUpperCase()}
                 </span>
               </div>
             )}
-            <div>
+            <div className="flex-grow">
               {isEditing ? (
                 <input
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  className="text-xl font-semibold p-1 border rounded mb-1"
+                  className="text-2xl font-bold p-1 border rounded mb-2 w-full"
                   placeholder="Your name"
                 />
               ) : (
-                <h2 className="text-xl font-semibold">{displayName}</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">{displayName}</h2>
               )}
               <p className="text-gray-600">{profile.email}</p>
             </div>
           </div>
 
-          {/* LinkedIn URL Section */}
-          <div className="mb-6">
+          {/* LinkedIn Section */}
+          <div className="mb-8">
             {isEditing ? (
-              <div className="flex items-center">
-                <span className="text-gray-500 mr-1">linkedin.com/in/</span>
+              <div className="flex items-center bg-gray-50 rounded-lg p-3">
+                <span className="text-gray-500 mr-2">linkedin.com/in/</span>
                 <input
                   type="text"
                   value={linkedinUrl.replace(/.*linkedin\.com\/in\//i, '').replace(/\/$/, '')}
                   onChange={handleLinkedinChange}
                   placeholder="username"
-                  className="flex-1 p-2 border rounded"
+                  className="flex-1 p-2 border rounded bg-white"
                 />
               </div>
             ) : (
-              <div>
-                {profile.linkedinUrl ? (
+              <div className="flex items-center gap-2">
+                {profile.linkedinUrl && (
                   <a
-                    href={`https://www.linkedin.com/in/${profile.linkedinUrl.replace(/.*linkedin\.com\/in\//i, '').replace(/\/$/, '')}/`}
+                    href={profile.linkedinUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-emerald-600 hover:text-emerald-700"
+                    className="text-gray-400 hover:text-blue-600 transition-colors"
                   >
-                    View LinkedIn Profile
+                    <FaLinkedin className="w-5 h-5" />
                   </a>
-                ) : (
-                  <p className="text-gray-500 italic">No LinkedIn profile added</p>
                 )}
               </div>
             )}
           </div>
 
+          {!isEditing && (
+            <div className="mb-8">
+              <div className="flex items-center gap-2">
+                <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
+                  showInMembers 
+                    ? 'bg-emerald-100 text-emerald-800' 
+                    : 'bg-gray-100 text-gray-800'
+                }`}>
+                  <span className={`w-2 h-2 rounded-full ${
+                    showInMembers ? 'bg-emerald-500' : 'bg-gray-500'
+                  }`} />
+                  {showInMembers ? 'Profile visible in members directory' : 'Profile hidden from members directory'}
+                </span>
+              </div>
+            </div>
+          )}
+
           {/* Status Tags Section */}
-          <div className="mb-6">
-            <h3 className="font-medium mb-2">Your Status</h3>
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold mb-3">Your Status</h3>
             {isEditing ? (
-              <div className="space-y-2">
+              <div className="space-y-3 bg-gray-50 p-4 rounded-lg">
                 {statusOptions.map(({ key, label }) => (
                   <div key={key} className="flex items-center">
                     <label className="flex items-center cursor-pointer">
@@ -263,9 +284,9 @@ export default function ProfilePage() {
                             }
                           });
                         }}
-                        className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                        className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 mr-3"
                       />
-                      <span className="ml-2 text-sm text-gray-700">{label}</span>
+                      <span className="text-gray-700">{label}</span>
                     </label>
                   </div>
                 ))}
@@ -274,41 +295,87 @@ export default function ProfilePage() {
               <div className="flex flex-wrap gap-2">
                 {statusOptions
                   .filter(({ key }) => profile.status[key as keyof typeof profile.status])
-                  .map(({ key, label }) => (
+                  .map(({ key, label, color }) => (
                     <span
                       key={key}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800"
+                      className={`px-3 py-1 rounded-full text-sm ${color}`}
                     >
                       {label}
                     </span>
                   ))}
                 {!Object.values(profile.status).some(Boolean) && (
-                  <p className="text-gray-500 italic text-sm">No status set</p>
+                  <p className="text-gray-500 italic">No status set</p>
                 )}
               </div>
             )}
           </div>
 
           {/* Actions */}
-          <div className="flex justify-between items-center">
-            <button
-              onClick={() => setIsEditing(!isEditing)}
-              className="px-4 py-2 text-emerald-600 hover:text-emerald-700"
-            >
-              {isEditing ? 'Cancel' : 'Edit Profile'}
-            </button>
-            {isEditing && (
+          {isEditing && (
+            <div className="flex justify-end gap-3 pt-4 border-t">
+              <button
+                onClick={() => setIsEditing(false)}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+              >
+                Cancel
+              </button>
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 disabled:bg-gray-400"
+                className="px-4 py-2 bg-emerald-700 text-white rounded hover:bg-emerald-800 disabled:opacity-50"
               >
                 {isSaving ? 'Saving...' : 'Save Changes'}
               </button>
-            )}
-          </div>
+            </div>
+          )}
+
+          {isEditing && (
+            <div className="mt-4 pt-4 border-t">
+              <div className="flex items-center gap-2">
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={showInMembers}
+                    onChange={() => setShowInMembers(!showInMembers)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                </label>
+                <span className="text-gray-700">Show my profile in members directory</span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Delete Account Modal */}
+      {showDeleteConfirmation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+            <h3 className="text-lg font-semibold mb-4">Delete Account</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete your account? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowDeleteConfirmation(false)}
+                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  handleDeleteAccount();
+                  setShowDeleteConfirmation(false);
+                }}
+                className="px-4 py-2 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100"
+              >
+                Delete Account
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

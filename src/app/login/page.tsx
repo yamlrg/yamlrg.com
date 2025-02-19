@@ -37,8 +37,6 @@ export default function LoginPage() {
       sessionStorage.setItem('signingIn', 'true');
       const result = await signInWithGoogle(router);
       
-      console.log('Sign in result:', result);
-      
       if (result?.status === 'pending') {
         setShowPendingMessage(true);
       } else if (result?.status === 'no_request') {

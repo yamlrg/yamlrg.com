@@ -1,19 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Workshop } from '../types';
-import { addPresentationRequest, getWorkshops, getUserProfile } from '../firebase/firestoreOperations';
-import { auth } from '../firebase/firebaseConfig';
+import { addPresentationRequest, getUserProfile } from '../firebase/firestoreOperations';
+import { auth, db } from '../firebase/firebaseConfig';
 import { ADMIN_EMAILS } from '../config/admin';
 import toast, { Toaster } from 'react-hot-toast';
 import ProtectedPage from '@/components/ProtectedPage';
 import { useRouter } from 'next/navigation';
-
-console.log('Workshops page - Admin emails:', ADMIN_EMAILS);
+import { collection, getDocs } from 'firebase/firestore';
+import { FaYoutube, FaBook, FaLink } from 'react-icons/fa';
 
 export default function WorkshopsPage() {
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestType, setRequestType] = useState<'give' | 'request'>();
   const [newRequest, setNewRequest] = useState<{
@@ -29,20 +28,40 @@ export default function WorkshopsPage() {
   });
   const router = useRouter();
 
+  const fetchWorkshops = useCallback(async () => {
+    try {
+      const workshopsRef = collection(db, 'workshops');
+      const workshopsSnap = await getDocs(workshopsRef);
+      
+      if (workshopsSnap.empty) {
+        return;
+      }
+
+      const workshopData = workshopsSnap.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as Workshop));
+
+      setWorkshops(workshopData);
+    } catch (error) {
+      console.error('Error fetching workshops:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchWorkshops();
+  }, [fetchWorkshops]);
+
   useEffect(() => {
     const checkUserStatus = async () => {
       try {
         const currentUser = auth.currentUser;
         if (!currentUser) {
-          setIsAdmin(false);
           return;
         }
-
-        const isAdminUser = ADMIN_EMAILS.includes(currentUser.email || '');
-        setIsAdmin(isAdminUser);
         
         const userProfile = await getUserProfile(currentUser.uid);
-        if (!userProfile && !isAdminUser) {
+        if (!userProfile && !ADMIN_EMAILS.includes(currentUser.email || '')) {
           router.push('/join');
         }
       } catch (error) {
@@ -54,24 +73,11 @@ export default function WorkshopsPage() {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         checkUserStatus();
-      } else {
-        setIsAdmin(false);
       }
     });
 
     return () => unsubscribe();
   }, [router]);
-
-  useEffect(() => {
-    const fetchWorkshops = async () => {
-      if (isAdmin) {
-        const allWorkshops = await getWorkshops();
-        setWorkshops(allWorkshops);
-      }
-    };
-
-    fetchWorkshops();
-  }, [isAdmin]);
 
   const handleRequestSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -244,30 +250,79 @@ export default function WorkshopsPage() {
               })
               .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
               .map(workshop => (
-                <div key={workshop.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div key={workshop.id} className="border rounded-lg p-6 bg-white hover:shadow-lg transition-shadow">
                   <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-lg font-medium">{workshop.title}</h3>
-                      <p className="text-gray-600">
-                        By{' '}
+                    <div className="flex-grow">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">{workshop.title}</h3>
+                      <div className="flex items-center gap-2 text-gray-600 mb-1">
+                        <span>By </span>
                         <a
                           href={workshop.presenterLinkedIn}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline"
+                          className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
                         >
                           {workshop.presenterName}
                         </a>
+                      </div>
+                      <p className="text-sm text-gray-500 mb-2">
+                        {new Date(workshop.date).toLocaleDateString('en-GB', {
+                          weekday: 'long',
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric'
+                        })}
                       </p>
-                      <p className="text-sm text-gray-500">
-                        {new Date(workshop.date).toLocaleDateString()}
-                      </p>
+                      <span className={`px-3 py-1 text-sm rounded-full inline-block ${
+                        workshop.type === 'startup' 
+                          ? 'bg-purple-100 text-purple-800' 
+                          : workshop.type === 'paper'
+                          ? 'bg-blue-100 text-blue-800'
+                          : 'bg-emerald-100 text-emerald-800'
+                      }`}>
+                        {workshop.type}
+                      </span>
                     </div>
-                    <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
-                      {workshop.type}
-                    </span>
+                    <div>
+                      {workshop.youtubeUrl && (
+                        <a
+                          href={workshop.youtubeUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-red-600 hover:text-red-700 transition-colors"
+                          title="Watch Recording"
+                        >
+                          <FaYoutube className="w-6 h-6" />
+                        </a>
+                      )}
+                    </div>
                   </div>
-                  <p className="mt-2">{workshop.description}</p>
+
+                  <p className="mt-4 text-gray-700">{workshop.description}</p>
+
+                  {workshop.resources && workshop.resources.length > 0 && (
+                    <div className="mt-4 pt-4 border-t">
+                      <p className="font-medium text-gray-900 mb-2">📚 Resources</p>
+                      <div className="space-y-2">
+                        {workshop.resources.map((resource, index) => (
+                          <a
+                            key={index}
+                            href={resource}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline"
+                          >
+                            {resource.includes('github.com') ? (
+                              <FaBook className="w-4 h-4" />
+                            ) : (
+                              <FaLink className="w-4 h-4" />
+                            )}
+                            <span>Resource {index + 1}</span>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
 
@@ -279,29 +334,29 @@ export default function WorkshopsPage() {
             }) && (
               <div className="text-center py-6 px-4 border-2 border-dashed rounded-lg">
                 <p className="text-gray-600 mb-3">No upcoming workshops scheduled yet!</p>
-                <p className="text-gray-600 mb-3">
-                  Have something interesting to share? Or want to learn about a specific topic?
-                </p>
-                <div className="flex justify-center gap-3">
+                <p className="text-gray-600">
+                  Have something interesting to share? {' '}
                   <button
                     onClick={() => {
                       setRequestType('give');
                       setShowRequestForm(true);
                     }}
-                    className="bg-emerald-700 text-white px-4 py-2 rounded hover:bg-emerald-800 text-sm"
+                    className="text-emerald-600 hover:text-emerald-800 hover:underline font-medium"
                   >
-                    Present Something
+                    Present something
                   </button>
+                  {' '} or {' '}
                   <button
                     onClick={() => {
                       setRequestType('request');
                       setShowRequestForm(true);
                     }}
-                    className="bg-emerald-700 text-white px-4 py-2 rounded hover:bg-emerald-800 text-sm"
+                    className="text-emerald-600 hover:text-emerald-800 hover:underline font-medium"
                   >
-                    Request a Topic
+                    request a topic
                   </button>
-                </div>
+                  .
+                </p>
               </div>
             )}
 
@@ -315,57 +370,76 @@ export default function WorkshopsPage() {
               })
               .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Most recent first
               .map(workshop => (
-                <div key={workshop.id} className="border rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                <div key={workshop.id} className="border rounded-lg p-6 bg-white hover:shadow-lg transition-shadow">
                   <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-lg font-medium">{workshop.title}</h3>
-                      <p className="text-gray-600">
-                        By{' '}
+                    <div className="flex-grow">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">{workshop.title}</h3>
+                      <div className="flex items-center gap-2 text-gray-600 mb-1">
+                        <span>By </span>
                         <a
                           href={workshop.presenterLinkedIn}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline"
+                          className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
                         >
                           {workshop.presenterName}
                         </a>
+                      </div>
+                      <p className="text-sm text-gray-500 mb-2">
+                        {new Date(workshop.date).toLocaleDateString('en-GB', {
+                          weekday: 'long',
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric'
+                        })}
                       </p>
-                      <p className="text-sm text-gray-500">
-                        {new Date(workshop.date).toLocaleDateString()}
-                      </p>
+                      <span className={`px-3 py-1 text-sm rounded-full inline-block ${
+                        workshop.type === 'startup' 
+                          ? 'bg-purple-100 text-purple-800' 
+                          : workshop.type === 'paper'
+                          ? 'bg-blue-100 text-blue-800'
+                          : 'bg-emerald-100 text-emerald-800'
+                      }`}>
+                        {workshop.type}
+                      </span>
                     </div>
-                    <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">
-                      {workshop.type}
-                    </span>
+                    <div>
+                      {workshop.youtubeUrl && (
+                        <a
+                          href={workshop.youtubeUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-red-600 hover:text-red-700 transition-colors"
+                          title="Watch Recording"
+                        >
+                          <FaYoutube className="w-6 h-6" />
+                        </a>
+                      )}
+                    </div>
                   </div>
-                  <p className="mt-2">{workshop.description}</p>
-                  {workshop.youtubeUrl && (
-                    <a
-                      href={workshop.youtubeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline block mt-2"
-                    >
-                      Watch Recording →
-                    </a>
-                  )}
+
+                  <p className="mt-4 text-gray-700">{workshop.description}</p>
+
                   {workshop.resources && workshop.resources.length > 0 && (
-                    <div className="mt-2">
-                      <p className="font-medium">Resources:</p>
-                      <ul className="list-disc list-inside">
+                    <div className="mt-4 pt-4 border-t">
+                      <div className="space-y-2">
                         {workshop.resources.map((resource, index) => (
-                          <li key={index}>
-                            <a
-                              href={resource}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline"
-                            >
-                              Resource {index + 1}
-                            </a>
-                          </li>
+                          <a
+                            key={index}
+                            href={resource}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline"
+                          >
+                            {resource.includes('github.com') ? (
+                              <FaBook className="w-4 h-4" />
+                            ) : (
+                              <FaLink className="w-4 h-4" />
+                            )}
+                            <span>Resource {index + 1}</span>
+                          </a>
                         ))}
-                      </ul>
+                      </div>
                     </div>
                   )}
                 </div>

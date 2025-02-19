@@ -16,7 +16,6 @@ export const signInWithGoogle = async (router: AppRouterInstance) => {
     
     if (result.user) {
       const loginResult = await handleFirstLogin(result.user);
-      console.log('Login result:', loginResult);
       
       if (loginResult.status === 'pending') {
         return { status: 'pending' as const };

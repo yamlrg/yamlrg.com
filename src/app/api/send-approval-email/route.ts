@@ -1,44 +1,84 @@
 import { Resend } from 'resend';
 import { adminAuth } from '@/app/firebase/firebaseAdmin';
 import { ADMIN_EMAILS } from '@/app/config/admin';
+import { DecodedIdToken } from 'firebase-admin/auth';
+import { NextResponse } from 'next/server';
 
+// Initialize Resend once
 const resend = new Resend(process.env.NEXT_RESEND_API_KEY);
+
+if (!resend) {
+  throw new Error('Email service initialization failed');
+}
+
+// Health check endpoint
+export async function GET() {
+  return NextResponse.json({ status: 'healthy' });
+}
 
 export async function POST(request: Request) {
   try {
-    console.log('Starting email send process');
+    // Layer 1: Validate auth token
+    const token = await validateAuthToken(request);
     
-    // Layer 1: Requires a valid Firebase auth token
-    const authHeader = request.headers.get('authorization');
-    console.log('Auth header present:', !!authHeader);
-    if (!authHeader?.startsWith('Bearer ')) {
-      console.error('Missing or invalid auth header');
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Layer 2: Token must be valid (verified by Firebase Admin)
-    const token = authHeader.split('Bearer ')[1];
-    console.log('Attempting to verify token');
-    const decodedToken = await adminAuth.verifyIdToken(token);
-    console.log('Token verified for user:', decodedToken.email);
+    // Layer 2: Validate admin access
+    await validateAdminAccess(token);
     
-    // Layer 3: Email must be in admin whitelist
-    if (!ADMIN_EMAILS.includes(decodedToken.email || '')) {
-      console.error('User not in admin whitelist:', decodedToken.email);
-      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    // Layer 3: Send email
+    const { email } = await validateAndParseRequest(request);
+    await sendWelcomeEmail(email);
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error in email send process:', error);
+    return NextResponse.json({ 
+      error: error instanceof Error ? error.message : 'Unknown error',
+      details: error instanceof Error ? error.stack : undefined
+    }, { status: getErrorStatus(error) });
+  }
+}
+
+async function validateAuthToken(request: Request): Promise<DecodedIdToken> {
+  const authHeader = request.headers.get('authorization');
+  if (!authHeader?.startsWith('Bearer ')) {
+    throw new UnauthorizedError('Missing or invalid auth header');
+  }
+
+  const token = authHeader.split('Bearer ')[1];
+  try {
+    return await adminAuth.verifyIdToken(token);
+  } catch (error) {
+    console.error('Error verifying auth token:', error);
+    throw new UnauthorizedError('Invalid token');
+  }
+}
+
+async function validateAdminAccess(decodedToken: DecodedIdToken) {
+  if (!ADMIN_EMAILS.includes(decodedToken.email || '')) {
+    throw new ForbiddenError(`User ${decodedToken.email} is not an admin`);
+  }
+}
+
+async function validateAndParseRequest(request: Request) {
+  try {
+    const data = await request.json();
+    if (!data.email) {
+      throw new BadRequestError('Email is required');
     }
+    return data;
+  } catch (error) {
+    console.error('Error parsing request body:', error);
+    throw new BadRequestError('Invalid request body');
+  }
+}
 
-    // Process email
-    const { email } = await request.json();
-    console.log('Starting email send process to:', email);
-    console.log('API Key exists:', !!process.env.NEXT_RESEND_API_KEY);
-    console.log('Sending welcome email with WhatsApp group link...');
+async function sendWelcomeEmail(email: string) {
+  if (!process.env.NEXT_RESEND_API_KEY) {
+    throw new ConfigurationError('Missing Resend API key');
+  }
 
-    if (!process.env.NEXT_RESEND_API_KEY) {
-      throw new Error('Missing Resend API key');
-    }
-
-    const { data, error } = await resend.emails.send({
+  try {
+    const { error } = await resend.emails.send({
       from: 'YAMLRG <hello@onboarding.yamlrg.com>',
       to: email,
       subject: 'Welcome to YAMLRG!',
@@ -46,25 +86,57 @@ export async function POST(request: Request) {
         <h1>Welcome to YAMLRG! 🎉</h1>
         <p>Your request to join has been approved. You can now join our WhatsApp group:</p>
         <p><a href="https://chat.whatsapp.com/DMqsymB8YmFD5za7R9IdwO">Click here to join the WhatsApp group</a></p>
+        <p>When you join the WhatsApp group, feel free to send a short message introducing yourself! 😊</p>
         <p>We're excited to have you as part of our community!</p>
-        <p>Please also complete your profile on the website: <a href="https://yamlrg.com/profile">https://yamlrg.com/profile</a></p>
+        <p>Please also complete your profile on the website: <a href="https://www.yamlrg.com/login">https://www.yamlrg.com/profile</a></p>
       `
     });
 
-    console.log('Resend API response:', { data, error });
-
     if (error) {
-      console.error('Resend API error:', error);
-      return Response.json({ error: error.message }, { status: 500 });
+      throw new EmailError(error.message);
     }
-
-    console.log('Email sent successfully to:', email);
-    return Response.json({ success: true });
   } catch (error) {
-    console.error('Error in email send process:', error);
-    return Response.json({ 
-      error: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined
-    }, { status: 500 });
+    throw new EmailError(error instanceof Error ? error.message : 'Failed to send email');
   }
+}
+
+// Custom error classes for better error handling
+class APIError extends Error {
+  constructor(message: string, public status: number) {
+    super(message);
+  }
+}
+
+class UnauthorizedError extends APIError {
+  constructor(message: string) {
+    super(message, 401);
+  }
+}
+
+class ForbiddenError extends APIError {
+  constructor(message: string) {
+    super(message, 403);
+  }
+}
+
+class BadRequestError extends APIError {
+  constructor(message: string) {
+    super(message, 400);
+  }
+}
+
+class ConfigurationError extends APIError {
+  constructor(message: string) {
+    super(message, 500);
+  }
+}
+
+class EmailError extends APIError {
+  constructor(message: string) {
+    super(message, 500);
+  }
+}
+
+function getErrorStatus(error: unknown): number {
+  return error instanceof APIError ? error.status : 500;
 } 

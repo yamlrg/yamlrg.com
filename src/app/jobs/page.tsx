@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react';
 import { getAllUsers } from '../firebase/firestoreOperations';
 import { YamlrgUserProfile, JobListing } from '../types';
 import Image from 'next/image';
-import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import { auth, db } from '../firebase/firebaseConfig';
 import { doc, updateDoc, DocumentData, getDoc } from 'firebase/firestore';
 import { ADMIN_EMAILS } from '../config/admin';
 import toast, { Toaster } from 'react-hot-toast';
+import { EnvelopeIcon } from '@heroicons/react/24/outline';
+import { FaLinkedin } from 'react-icons/fa';
 
 interface JobWithPoster {
   job: JobListing;
@@ -32,36 +33,12 @@ const sortJobsByDate = (a: JobWithPoster, b: JobWithPoster): number => {
 
 export default function JobsPage() {
   const [jobs, setJobs] = useState<JobWithPoster[]>([]);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isApproved, setIsApproved] = useState(false);
   const [showNewJobForm, setShowNewJobForm] = useState(false);
   const [newJob, setNewJob] = useState({
     title: '',
     company: '',
     link: ''
   });
-
-  useEffect(() => {
-    const checkUserStatus = async () => {
-      const currentUser = auth.currentUser;
-      if (!currentUser) return;
-
-      const userRef = doc(db, 'users', currentUser.uid);
-      const userSnap = await getDoc(userRef);
-      const userData = userSnap.data();
-      
-      setIsApproved(userData?.isApproved || false);
-    };
-
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setIsAdmin(user?.email ? ADMIN_EMAILS.includes(user.email) : false);
-      if (user) {
-        checkUserStatus();
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -82,15 +59,8 @@ export default function JobsPage() {
     }
 
     try {
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        toast.error('You must be logged in');
-        return;
-      }
-
       // Check if user is admin or the job poster
-      const isAdmin = ADMIN_EMAILS.includes(currentUser.email || '');
-      if (!isAdmin && currentUser.uid !== posterUid) {
+      if (!ADMIN_EMAILS.includes(auth.currentUser?.email || '') && auth.currentUser?.uid !== posterUid) {
         toast.error('You can only delete your own job listings');
         return;
       }
@@ -134,52 +104,29 @@ export default function JobsPage() {
 
   const handleAddJob = async () => {
     try {
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        toast.error('You must be logged in');
-        return;
-      }
-
-      console.log('User status:', { isAdmin, isApproved, uid: currentUser.uid });
-
-      if (!isAdmin && !isApproved) {
-        toast.error('You must be an approved member to post jobs');
-        return;
-      }
-
       const jobListing: JobListing = {
         ...newJob,
         postedAt: new Date().toISOString()
       };
 
-      console.log('Attempting to add job:', jobListing);
-
       // Get current user document
-      const userRef = doc(db, 'users', currentUser.uid);
+      const userRef = doc(db, 'users', auth.currentUser!.uid);
       const userSnap = await getDoc(userRef);
       const userData = userSnap.data();
 
       const currentListings = userData?.jobListings || [];
       const updatedListings = [...currentListings, jobListing];
 
-      console.log('Updating with listings:', updatedListings);
-
       // Update Firestore
-      try {
-        await updateDoc(userRef, {
-          jobListings: updatedListings
-        });
-        console.log('Firestore update successful');
-      } catch (error) {
-        console.error('Firestore update failed:', error);
-        throw error;
-      }
+      await updateDoc(userRef, {
+        jobListings: updatedListings
+      });
 
       // Update local state
-      const userDetails = jobs.find(j => j.poster.uid === currentUser.uid)?.poster || {
-        uid: currentUser.uid,
-        displayName: currentUser.displayName,
-        photoURL: currentUser.photoURL
+      const userDetails = jobs.find(j => j.poster.uid === auth.currentUser!.uid)?.poster || {
+        uid: auth.currentUser!.uid,
+        displayName: auth.currentUser!.displayName,
+        photoURL: auth.currentUser!.photoURL
       };
 
       setJobs(prev => [...prev, {
@@ -202,30 +149,13 @@ export default function JobsPage() {
       <Toaster position="top-center" />
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold">Jobs at YAMLRG Companies</h1>
-        {(isAdmin || isApproved) && (
-          <button
-            onClick={() => setShowNewJobForm(true)}
-            className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Post a Job
-          </button>
-        )}
+        <button
+          onClick={() => setShowNewJobForm(true)}
+          className="w-full sm:w-auto bg-emerald-700 text-white px-4 py-2 rounded hover:bg-emerald-800"
+        >
+          Post a Job
+        </button>
       </div>
-
-      {!isApproved && !isAdmin && (
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-            <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <p className="text-sm text-yellow-700">
-              You need to be an approved member to post jobs. Please contact an admin for approval.
-            </p>
-          </div>
-        </div>
-      )}
 
       {/* New Job Form Modal */}
       {showNewJobForm && (
@@ -264,7 +194,7 @@ export default function JobsPage() {
                 <button
                   onClick={handleAddJob}
                   disabled={!newJob.title || !newJob.company || !newJob.link}
-                  className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+                  className="w-full sm:w-auto bg-emerald-700 text-white px-4 py-2 rounded hover:bg-emerald-800 disabled:opacity-50"
                 >
                   Post Job
                 </button>
@@ -276,59 +206,101 @@ export default function JobsPage() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {jobs.map(({ job, poster }, index) => (
-          <div key={`${poster.uid}-${index}`} className="border rounded-lg p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex flex-col gap-4">
-              <div className="space-y-2">
-                <div className="flex justify-between items-start gap-2">
-                  <h2 className="text-xl font-semibold break-words">{job.title}</h2>
-                  {(isAdmin || auth.currentUser?.uid === poster.uid) && (
+          <div key={`${poster.uid}-${index}`} className="relative group">
+            <a
+              href={job.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block border rounded-lg p-6 bg-white hover:shadow-lg transition-shadow"
+            >
+              <div className="flex justify-between items-start">
+                <div className="flex-grow">
+                  <h2 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">
+                    {job.title}
+                  </h2>
+                  <div className="flex items-center gap-2 text-gray-600 mb-1">
+                    <span>at </span>
+                    <span className="font-medium">{job.company}</span>
+                  </div>
+                  <p className="text-sm text-gray-500 mb-3">
+                    Posted {formatDistanceToNow(new Date(job.postedAt))} ago
+                  </p>
+                </div>
+                {(ADMIN_EMAILS.includes(auth.currentUser?.email || '') || auth.currentUser?.uid === poster.uid) && (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault(); // Prevent card click when clicking delete
+                      handleDeleteJob(poster.uid, job);
+                    }}
+                    className="text-gray-400 hover:text-red-600 transition-colors z-10"
+                    title="Delete job listing"
+                  >
+                    ❌
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between gap-3 mt-4 pt-4 border-t">
+                <div className="flex items-center gap-3">
+                  {poster.photoURL && (
+                    <Image
+                      src={poster.photoURL}
+                      alt={poster.displayName ?? ''}
+                      width={32}
+                      height={32}
+                      className="rounded-full"
+                    />
+                  )}
+                  <span className="text-sm text-gray-600">
+                    Posted by {poster.displayName}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigator.clipboard.writeText(poster.email);
+                      toast.success('Email copied to clipboard!');
+                    }}
+                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                    title={poster.email}
+                  >
+                    <EnvelopeIcon className="w-5 h-5" />
+                  </button>
+                  {poster.linkedinUrl && (
                     <button
-                      onClick={() => handleDeleteJob(poster.uid, job)}
-                      className="text-red-600 hover:text-red-800 text-sm flex-shrink-0"
-                      title="Delete job listing"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const url = poster.linkedinUrl.startsWith('http') 
+                          ? poster.linkedinUrl 
+                          : `https://www.linkedin.com/in/${poster.linkedinUrl}`;
+                        window.open(url, '_blank', 'noopener,noreferrer');
+                      }}
+                      className="text-gray-400 hover:text-blue-600 transition-colors"
+                      title="View LinkedIn Profile"
                     >
-                      ❌
+                      <FaLinkedin className="w-5 h-5" />
                     </button>
                   )}
                 </div>
-                <p className="text-gray-600">{job.company}</p>
               </div>
-              
-              <div className="flex items-center gap-3">
-                {poster.photoURL && (
-                  <Image
-                    src={poster.photoURL}
-                    alt={poster.displayName ?? ''}
-                    width={32}
-                    height={32}
-                    className="rounded-full"
-                  />
-                )}
-                <span className="text-sm text-gray-500">
-                  Posted by {poster.displayName}
-                </span>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                <Link 
-                  href={job.link}
-                  target="_blank"
-                  className="text-blue-600 hover:text-blue-800"
-                >
-                  View Job →
-                </Link>
-                <span className="text-sm text-gray-500">
-                  {formatDistanceToNow(new Date(job.postedAt))} ago
-                </span>
-              </div>
-            </div>
+            </a>
           </div>
         ))}
 
         {jobs.length === 0 && (
-          <p className="text-center text-gray-500 col-span-full py-8">
-            No jobs posted yet. Check back soon!
-          </p>
+          <div className="col-span-full text-center py-6 px-4 border-2 border-dashed rounded-lg">
+            <p className="text-gray-600 mb-3">No jobs posted yet!</p>
+            <p className="text-gray-600">
+              Have a position to fill? {' '}
+              <button
+                onClick={() => setShowNewJobForm(true)}
+                className="text-emerald-600 hover:text-emerald-800 hover:underline font-medium"
+              >
+                Post a job
+              </button>
+            </p>
+          </div>
         )}
       </div>
     </main>
