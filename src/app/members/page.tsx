@@ -5,13 +5,12 @@ import { useEffect, useCallback, useState } from "react";
 import { getVisibleMembers } from "../firebase/firestoreOperations";
 import { YamlrgUserProfile, UserStatus } from '../types';
 import Image from 'next/image';
-import { auth } from "../firebase/firebaseConfig";
 import Link from "next/link";
-import { ADMIN_EMAILS } from '../config/admin';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { UserIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import { FaLinkedin } from 'react-icons/fa';
 import { toast, Toaster } from 'react-hot-toast';
+import { ADMIN_EMAILS } from '../config/admin';
 
 interface GrowthDataPoint {
   date: string;
@@ -189,19 +188,12 @@ export default function MembersPage() {
           {/* Members Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredMembers.map((member) => (
-              <div key={member.uid} className="bg-white rounded-lg shadow p-4 relative">
-                {member.linkedinUrl && (
-                  <a
-                    href={member.linkedinUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute top-4 right-4 text-gray-400 hover:text-blue-600"
-                    title="View LinkedIn Profile"
-                  >
-                    <FaLinkedin className="w-5 h-5" />
-                  </a>
-                )}
-
+              <div 
+                key={member.uid} 
+                className={`bg-white rounded-lg shadow p-4 relative ${
+                  ADMIN_EMAILS.includes(member.email) ? 'border-2 border-purple-300' : ''
+                }`}
+              >
                 <div className="flex items-start gap-4">
                   {member.photoURL ? (
                     <Image
@@ -219,27 +211,34 @@ export default function MembersPage() {
                   <div className="flex-grow">
                     <h3 className="font-medium">{member.displayName}</h3>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(member.email);
-                        toast.success('Email copied to clipboard!');
-                      }}
-                      className="text-gray-400 hover:text-gray-600"
-                      title={member.email}
-                    >
-                      <EnvelopeIcon className="w-5 h-5" />
-                    </button>
-                    {member.linkedinUrl && (
-                      <a
-                        href={member.linkedinUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-blue-600"
-                        title="View LinkedIn Profile"
+                  <div className="flex flex-col items-end gap-2">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(member.email);
+                          toast.success('Email copied to clipboard!');
+                        }}
+                        className="text-gray-400 hover:text-gray-600"
+                        title={member.email}
                       >
-                        <FaLinkedin className="w-5 h-5" />
-                      </a>
+                        <EnvelopeIcon className="w-5 h-5" />
+                      </button>
+                      {member.linkedinUrl && (
+                        <a
+                          href={member.linkedinUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-gray-400 hover:text-blue-600"
+                          title="View LinkedIn Profile"
+                        >
+                          <FaLinkedin className="w-5 h-5" />
+                        </a>
+                      )}
+                    </div>
+                    {ADMIN_EMAILS.includes(member.email) && (
+                      <span className="text-xs px-2 py-1 rounded-full bg-purple-100 text-purple-800 border border-purple-300">
+                        Admin
+                      </span>
                     )}
                   </div>
                 </div>
@@ -262,35 +261,33 @@ export default function MembersPage() {
             ))}
           </div>
 
-          {/* Growth Graph - shown to approved members and admins */}
-          {ADMIN_EMAILS.includes(auth.currentUser?.email || '') && (
-            <div className="mt-16 mb-8">
-              <h2 className="text-xl font-semibold mb-4">YAMLRG Growth</h2>
-              <div className="h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={growthData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis 
-                      dataKey="date" 
-                      tick={{ fontSize: 12 }}
-                    />
-                    <YAxis 
-                      tick={{ fontSize: 12 }}
-                      domain={[0, 'dataMax + 5']}
-                    />
-                    <Tooltip />
-                    <Line 
-                      type="monotone" 
-                      dataKey="members" 
-                      stroke="#4F46E5" 
-                      strokeWidth={2}
-                      dot={{ fill: '#4F46E5', r: 4 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
+          {/* Growth Graph */}
+          <div className="mt-16 mb-8">
+            <h2 className="text-xl font-semibold mb-4">YAMLRG Growth</h2>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={growthData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="date" 
+                    tick={{ fontSize: 12 }}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 12 }}
+                    domain={[0, 'dataMax + 5']}
+                  />
+                  <Tooltip />
+                  <Line 
+                    type="monotone" 
+                    dataKey="members" 
+                    stroke="#4F46E5" 
+                    strokeWidth={2}
+                    dot={{ fill: '#4F46E5', r: 4 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
-          )}
+          </div>
         </main>
       </div>
     </ProtectedPage>
