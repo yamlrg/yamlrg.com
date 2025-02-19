@@ -367,6 +367,17 @@ export const updateJoinRequestStatus = async (
   }
 };
 
+// Add this function
+export const deleteJoinRequest = async (requestId: string) => {
+  try {
+    const requestRef = doc(db, 'joinRequests', requestId);
+    await deleteDoc(requestRef);
+  } catch (error) {
+    console.error('Error deleting join request:', error);
+    throw error;
+  }
+};
+
 // Add new function
 export const deleteUserAccount = async (userId: string) => {
   try {

@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getJoinRequests, updateJoinRequestStatus } from '@/app/firebase/firestoreOperations';
+import { getJoinRequests, updateJoinRequestStatus, deleteJoinRequest } from '@/app/firebase/firestoreOperations';
 import { JoinRequest } from '@/app/types';
 import { toast, Toaster } from 'react-hot-toast';
 import Link from 'next/link';
-import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { auth } from '@/app/firebase/firebaseConfig';
 
 export default function JoinRequestsPage() {
@@ -125,6 +125,21 @@ export default function JoinRequestsPage() {
     }
   };
 
+  const handleDelete = async (requestId: string) => {
+    if (!confirm('Are you sure you want to delete this request?')) {
+      return;
+    }
+
+    try {
+      await deleteJoinRequest(requestId);
+      toast.success('Request deleted successfully');
+      await loadJoinRequests();
+    } catch (error) {
+      console.error('Error deleting request:', error);
+      toast.error('Failed to delete request');
+    }
+  };
+
   const handleActionError = (error: unknown) => {
     console.error('Error in request action:', error);
     if (error instanceof Error) {
@@ -163,8 +178,15 @@ export default function JoinRequestsPage() {
                 {pendingRequests.map((request) => (
                   <div 
                     key={request.id} 
-                    className="bg-white rounded-lg shadow p-4 border-l-4 border-yellow-400"
+                    className="bg-white rounded-lg shadow p-4 border-l-4 border-yellow-400 relative"
                   >
+                    <button
+                      onClick={() => handleDelete(request.id!)}
+                      className="absolute top-2 right-2 text-gray-400 hover:text-red-600 transition-colors"
+                      title="Delete request"
+                    >
+                      <XMarkIcon className="w-5 h-5" />
+                    </button>
                     {/* Request content */}
                     <h3 className="text-xl font-semibold mb-1">{request.name}</h3>
                     <p className="text-gray-600 mb-3">{request.email}</p>
@@ -220,10 +242,17 @@ export default function JoinRequestsPage() {
                 {otherRequests.map((request) => (
                   <div 
                     key={request.id} 
-                    className={`bg-white rounded-lg shadow p-4 border-l-4 ${
+                    className={`bg-white rounded-lg shadow p-4 border-l-4 relative ${
                       request.status === 'approved' ? 'border-emerald-400' : 'border-red-400'
                     }`}
                   >
+                    <button
+                      onClick={() => handleDelete(request.id!)}
+                      className="absolute top-2 right-2 text-gray-400 hover:text-red-600 transition-colors"
+                      title="Delete request"
+                    >
+                      <XMarkIcon className="w-5 h-5" />
+                    </button>
                     {/* Request content */}
                     <h3 className="text-xl font-semibold mb-1">{request.name}</h3>
                     <p className="text-gray-600 mb-3">{request.email}</p>
