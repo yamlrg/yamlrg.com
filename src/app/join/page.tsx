@@ -50,15 +50,16 @@ export default function JoinRequestPage() {
         ? formData.linkedinUrl 
         : `https://linkedin.com/in/${formData.linkedinUrl}`;
 
-      await addJoinRequest({
+      const result = await addJoinRequest({
         ...formData,
-        linkedinUrl: fullLinkedInUrl, // Store the full URL
+        linkedinUrl: fullLinkedInUrl,
         status: 'pending',
         createdAt: new Date().toISOString()
       });
 
+      // Always track and redirect, whether new or existing
       trackEvent('join_request_submitted', {
-        has_linkedin: true
+        is_duplicate: result.exists
       });
 
       await signOut(auth);
