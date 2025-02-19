@@ -288,12 +288,12 @@ export default function WorkshopsPage() {
                   <p className="mt-4 text-gray-700">{workshop.description}</p>
 
                   {/* Resources section with YouTube */}
-                  {(workshop.resources?.length > 0 || workshop.youtubeUrl) && (
+                  {((workshop.resources || []).length > 0 || workshop.youtubeUrl) && (
                     <div className="mt-4 pt-4 border-t">
                       <div className="flex flex-wrap justify-between items-start gap-4">
-                        {workshop.resources?.length > 0 && (
+                        {(workshop.resources || []).length > 0 && (
                           <div className="space-y-2">
-                            {workshop.resources.map((resource, index) => (
+                            {(workshop.resources || []).map((resource, index) => (
                               <a
                                 key={index}
                                 href={resource}
@@ -411,12 +411,12 @@ export default function WorkshopsPage() {
                   <p className="mt-4 text-gray-700">{workshop.description}</p>
 
                   {/* Resources section with YouTube */}
-                  {(workshop.resources?.length > 0 || workshop.youtubeUrl) && (
+                  {((workshop.resources || []).length > 0 || workshop.youtubeUrl) && (
                     <div className="mt-4 pt-4 border-t">
                       <div className="flex flex-wrap justify-between items-start gap-4">
-                        {workshop.resources?.length > 0 && (
+                        {(workshop.resources || []).length > 0 && (
                           <div className="space-y-2">
-                            {workshop.resources.map((resource, index) => (
+                            {(workshop.resources || []).map((resource, index) => (
                               <a
                                 key={index}
                                 href={resource}
