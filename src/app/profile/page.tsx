@@ -24,6 +24,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showInMembers, setShowInMembers] = useState(false);
+  const [nameError, setNameError] = useState('');
 
   const statusOptions = [
     { key: 'lookingForCofounder', label: 'Looking for a Co-founder', color: 'bg-emerald-100 text-emerald-800' },
@@ -58,12 +59,17 @@ export default function ProfilePage() {
   const handleSave = async () => {
     if (!user || !profile) return;
 
+    if (!displayName.trim()) {
+      setNameError('Name cannot be empty');
+      return;
+    }
+
     try {
       setIsSaving(true);
       
       const updates = {
         linkedinUrl,
-        displayName,
+        displayName: displayName.trim(),
         profileCompleted: !!linkedinUrl,
         status: profile.status,
         showInMembers
@@ -73,6 +79,7 @@ export default function ProfilePage() {
       
       setProfile({ ...profile, ...updates });
       setIsEditing(false);
+      setNameError('');
       toast.success('Profile updated successfully');
       
       trackEvent('profile_update', {
@@ -204,13 +211,23 @@ export default function ProfilePage() {
             )}
             <div className="flex-grow">
               {isEditing ? (
-                <input
-                  type="text"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  className="text-2xl font-bold p-1 border rounded mb-2 w-full"
-                  placeholder="Your name"
-                />
+                <div>
+                  <input
+                    type="text"
+                    value={displayName}
+                    onChange={(e) => {
+                      setDisplayName(e.target.value);
+                      setNameError('');
+                    }}
+                    className={`text-2xl font-bold p-1 border rounded mb-2 w-full ${
+                      nameError ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    placeholder="Your name"
+                  />
+                  {nameError && (
+                    <p className="text-red-500 text-sm mt-1">{nameError}</p>
+                  )}
+                </div>
               ) : (
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">{displayName}</h2>
               )}
@@ -321,8 +338,8 @@ export default function ProfilePage() {
               </button>
               <button
                 onClick={handleSave}
-                disabled={isSaving}
-                className="px-4 py-2 bg-emerald-700 text-white rounded hover:bg-emerald-800 disabled:opacity-50"
+                disabled={isSaving || !displayName.trim()}
+                className="px-4 py-2 bg-emerald-700 text-white rounded hover:bg-emerald-800 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSaving ? 'Saving...' : 'Save Changes'}
               </button>
