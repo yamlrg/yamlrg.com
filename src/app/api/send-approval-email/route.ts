@@ -100,6 +100,34 @@ async function sendWelcomeEmail(email: string) {
   }
 }
 
+export const sendAdminNotification = async (newRequest: { name: string; email: string; interests: string }) => {
+  if (!process.env.NEXT_RESEND_API_KEY) {
+    throw new ConfigurationError('Missing Resend API key');
+  }
+
+  try {
+    const { error } = await resend.emails.send({
+      from: 'YAMLRG <hello@onboarding.yamlrg.com>',
+      to: ADMIN_EMAILS,
+      subject: 'New YAMLRG Join Request',
+      html: `
+        <h2>New Join Request Received</h2>
+        <p><strong>Name:</strong> ${newRequest.name}</p>
+        <p><strong>Email:</strong> ${newRequest.email}</p>
+        <p><strong>Interests:</strong> ${newRequest.interests}</p>
+        <p><a href="https://www.yamlrg.com/admin/join-requests">Review request in admin dashboard</a></p>
+      `
+    });
+
+    if (error) {
+      console.error('Error sending admin notification:', error);
+    }
+  } catch (error) {
+    console.error('Error sending admin notification:', error);
+    // Don't throw error to prevent blocking the main flow
+  }
+};
+
 // Custom error classes for better error handling
 class APIError extends Error {
   constructor(message: string, public status: number) {

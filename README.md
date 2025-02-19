@@ -57,15 +57,9 @@ npm start
 
 ## Future Ideas
 
-- [x] Send email to people when they are approved
 - [ ] Gravity: randomly match people in 1-on-1 calls to meet each other
-- [x] Add Google Analytics / PostHog
-- [x] Show number of members in the members page
-- [x] Search for members
-- [x] Add a "reading list" page
-- [x] Add jobs from companies that are hiring
-- [x] User does not have firebase permissions to delete their account
-- [x] privacy policy and tos
+- [ ] Points system for members
+- [ ] Send email to admins when someone sends a join request
 
 ## Authentication Flow
 

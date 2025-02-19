@@ -42,6 +42,13 @@ export default function JoinRequestPage() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    
+    // Check if email is Gmail
+    if (!formData.email.toLowerCase().endsWith('@gmail.com')) {
+      toast.error('Please use a Gmail address to join YAMLRG');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -56,6 +63,24 @@ export default function JoinRequestPage() {
         status: 'pending',
         createdAt: new Date().toISOString()
       });
+
+      // Send admin notification
+      try {
+        await fetch('/api/send-approval-email/admin-notification', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            interests: formData.interests
+          })
+        });
+      } catch (error) {
+        console.error('Error sending admin notification:', error);
+        // Don't block the main flow if notification fails
+      }
 
       // Always track and redirect, whether new or existing
       trackEvent('join_request_submitted', {
@@ -97,10 +122,15 @@ export default function JoinRequestPage() {
             <input
               type="email"
               required
+              pattern=".*@gmail\.com$"
               value={formData.email}
               onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
               className="w-full px-3 py-2 border rounded"
+              placeholder="your.email@gmail.com"
             />
+            <p className="mt-1 text-sm text-gray-500">
+              Please use a Gmail address to join YAMLRG
+            </p>
           </div>
 
           <div>
