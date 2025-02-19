@@ -14,10 +14,10 @@ export function middleware() {
   response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  // Add Permissions-Policy header
+  // Add Permissions-Policy header with only necessary features
   response.headers.set(
     'Permissions-Policy',
-    'private-state-token-redemption=*, private-state-token-issuance=*, browsing-topics=*'
+    'camera=(), microphone=(), geolocation=()'
   );
 
   // Add Cross-Origin-Opener-Policy header
