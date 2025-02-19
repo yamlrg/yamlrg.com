@@ -50,8 +50,10 @@ export default function ReadingListPage() {
       setNewItem({ title: '', url: '', author: '' });
       setShowAddForm(false);
       await fetchReadingList();
+      toast.success('Resource added successfully!');
     } catch (error) {
       console.error('Error adding item:', error);
+      toast.error('Failed to add resource');
     }
   };
 
@@ -93,7 +95,7 @@ export default function ReadingListPage() {
           <h1 className="text-2xl sm:text-3xl font-bold">Reading List 📚</h1>
           <button
             onClick={() => setShowAddForm(!showAddForm)}
-            className="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            className="w-full sm:w-auto px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800"
           >
             {showAddForm ? 'Cancel' : 'Add Resource'}
           </button>
@@ -134,7 +136,7 @@ export default function ReadingListPage() {
               </div>
               <button
                 type="submit"
-                className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                className="w-full px-4 py-2 bg-emerald-700 text-white rounded hover:bg-emerald-800"
               >
                 Add to Reading List
               </button>
