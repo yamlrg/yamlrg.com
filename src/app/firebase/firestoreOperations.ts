@@ -288,14 +288,15 @@ export const addToReadingList = async (item: {
   url: string;
   author?: string;
 }) => {
-  const readingListRef = collection(db, "readingList");
   const currentUser = auth.currentUser;
   
   if (!currentUser) throw new Error("User not authenticated");
+  if (!currentUser.email) throw new Error("User email not found");
   
-  await addDoc(readingListRef, {
+  await addDoc(collection(db, "readingList"), {
     ...item,
-    addedBy: currentUser.displayName || currentUser.email,
+    addedBy: currentUser.email,
+    addedByName: currentUser.displayName || currentUser.email,
     addedAt: new Date().toISOString(),
   });
 };
@@ -311,14 +312,20 @@ export const addJoinRequest = async (request: Omit<JoinRequest, 'id'>) => {
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
-      // If request exists, just return success
+      // Log and track duplicate attempt
+      console.log(`Duplicate join request attempt for email: ${request.email}`);
+      trackEvent('duplicate_join_request', {
+        email: request.email,
+        timestamp: new Date().toISOString()
+      });
+      
       return { success: true, exists: true };
     }
 
     // If no existing request, create new one
     const docRef = await addDoc(requestsRef, {
       ...request,
-      email: request.email.toLowerCase() // Store email in lowercase
+      email: request.email.toLowerCase()
     });
 
     return { success: true, exists: false, id: docRef.id };
@@ -677,6 +684,42 @@ export const fixTimestampJoinDates = async () => {
     console.log('Converted all Timestamp joinedAt fields to ISO strings');
   } catch (error) {
     console.error('Error fixing timestamp join dates:', error);
+    throw error;
+  }
+};
+
+export const deleteReadingListItem = async (itemId: string) => {
+  try {
+    const currentUser = auth.currentUser;
+    if (!currentUser?.email) {
+      throw new Error('No authenticated user email');
+    }
+
+    // Get the item to check ownership
+    const itemRef = doc(db, "readingList", itemId);
+    const itemSnap = await getDoc(itemRef);
+    
+    if (!itemSnap.exists()) {
+      throw new Error('Item not found');
+    }
+
+    const itemData = itemSnap.data();
+    
+    // Check ownership using email
+    if (itemData.addedBy !== currentUser.email && 
+        !ADMIN_EMAILS.includes(currentUser.email)) {
+      throw new Error('Unauthorized: You can only delete your own items');
+    }
+
+    await deleteDoc(itemRef);
+    
+    // Track deletion
+    trackEvent('reading_list_item_deleted', {
+      title: itemData.title,
+      by_admin: ADMIN_EMAILS.includes(currentUser.email)
+    });
+  } catch (error) {
+    console.error('Error deleting reading list item:', error);
     throw error;
   }
 }; 

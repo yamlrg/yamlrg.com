@@ -2,22 +2,28 @@
 
 import ProtectedPage from "@/components/ProtectedPage";
 import { useEffect, useState } from "react";
-import { getReadingList, addToReadingList } from "../firebase/firestoreOperations";
+import { getReadingList, addToReadingList, deleteReadingListItem } from "../firebase/firestoreOperations";
 import Link from "next/link";
 import { trackEvent } from "@/utils/analytics";
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import { auth } from "../firebase/firebaseConfig";
+import { toast } from "react-hot-toast";
+import { ADMIN_EMAILS } from "../config/admin";
 
 type ReadingItem = {
   id: string;
   title: string;
   url: string;
   author?: string;
-  addedBy: string;
+  addedBy: string;  // email for identification
+  addedByName: string;  // display name for UI
   addedAt: string;
 };
 
 export default function ReadingListPage() {
   const [readingList, setReadingList] = useState<ReadingItem[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<ReadingItem | null>(null);
   const [newItem, setNewItem] = useState({
     title: '',
     url: '',
@@ -46,6 +52,37 @@ export default function ReadingListPage() {
       await fetchReadingList();
     } catch (error) {
       console.error('Error adding item:', error);
+    }
+  };
+
+  const handleDeleteClick = (item: ReadingItem) => {
+    const currentUser = auth.currentUser;
+    if (!currentUser?.email) return;
+
+    // Check if user can delete this item
+    const canDelete = item.addedBy === currentUser.email || 
+                     ADMIN_EMAILS.includes(currentUser.email);
+    
+    if (!canDelete) {
+      toast.error('You can only delete your own items');
+      return;
+    }
+
+    setItemToDelete(item);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!itemToDelete) return;
+
+    try {
+      await deleteReadingListItem(itemToDelete.id);
+      toast.success('Item deleted successfully');
+      await fetchReadingList();
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      toast.error('Failed to delete item');
+    } finally {
+      setItemToDelete(null);
     }
   };
 
@@ -107,7 +144,7 @@ export default function ReadingListPage() {
 
         <div className="space-y-4">
           {readingList.map((item) => (
-            <div key={item.id} className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow">
+            <div key={item.id} className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow relative">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                 <div className="space-y-1 min-w-0 flex-1">
                   <h2 className="text-lg sm:text-xl font-semibold break-words">
@@ -120,10 +157,23 @@ export default function ReadingListPage() {
                   )}
                 </div>
                 <div className="text-sm text-gray-500 dark:text-gray-400 shrink-0">
-                  <p>Added by {item.addedBy}</p>
+                  <p>Added by {item.addedByName}</p>
                   <p>{new Date(item.addedAt).toLocaleDateString()}</p>
                 </div>
               </div>
+              
+              {/* Delete button */}
+              {(auth.currentUser?.email && 
+                (item.addedBy === auth.currentUser.email ||
+                 ADMIN_EMAILS.includes(auth.currentUser.email))) && (
+                <button
+                  onClick={() => handleDeleteClick(item)}
+                  className="absolute top-4 right-4 p-1 text-gray-400 hover:text-red-600 rounded-full hover:bg-gray-100"
+                  title="Delete item"
+                >
+                  <XMarkIcon className="w-5 h-5" />
+                </button>
+              )}
             </div>
           ))}
 
@@ -133,6 +183,32 @@ export default function ReadingListPage() {
             </p>
           )}
         </div>
+
+        {/* Confirmation Modal */}
+        {itemToDelete && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-sm w-full">
+              <h3 className="text-lg font-semibold mb-4">Confirm Deletion</h3>
+              <p className="mb-6">
+                Are you sure you want to delete &quot;{itemToDelete.title}&quot;?
+              </p>
+              <div className="flex justify-end gap-4">
+                <button
+                  onClick={() => setItemToDelete(null)}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConfirmDelete}
+                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </ProtectedPage>
   );
