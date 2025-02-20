@@ -1,0 +1,21 @@
+export const POINTS = {
+  // Participation
+  GRADIENT_CONNECT_SIGNUP: 10,
+  GRADIENT_CONNECT_ATTENDANCE: 15,
+  
+  // Content
+  READING_LIST_ADD: 1,
+  WORKSHOP_PRESENTATION: 100,
+  WORKSHOP_ATTENDANCE: 5,
+  WORKSHOP_QUESTION: 5,
+  
+  // Profile
+  PROFILE_COMPLETION: 20,
+  JOIN_REQUEST_APPROVED: 50,
+  
+  // Engagement
+  FIRST_LOGIN_STREAK: 20,
+  WEEKLY_LOGIN: 5,
+} as const;
+
+export type PointAction = keyof typeof POINTS; 

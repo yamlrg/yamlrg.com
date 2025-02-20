@@ -11,6 +11,7 @@ import { ADMIN_EMAILS } from '../config/admin';
 import toast, { Toaster } from 'react-hot-toast';
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
 import { FaLinkedin } from 'react-icons/fa';
+import ProtectedPage from "@/components/ProtectedPage";
 
 interface JobWithPoster {
   job: JobListing;
@@ -145,164 +146,166 @@ export default function JobsPage() {
   };
 
   return (
-    <main className="min-h-screen p-4 sm:p-8">
-      <Toaster position="top-center" />
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold">Jobs at YAMLRG Companies</h1>
-        <button
-          onClick={() => setShowNewJobForm(true)}
-          className="w-full sm:w-auto bg-emerald-700 text-white px-4 py-2 rounded hover:bg-emerald-800"
-        >
-          Post a Job
-        </button>
-      </div>
+    <ProtectedPage>
+      <main className="min-h-screen p-4 sm:p-8">
+        <Toaster position="top-center" />
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold">Jobs at YAMLRG Companies</h1>
+          <button
+            onClick={() => setShowNewJobForm(true)}
+            className="w-full sm:w-auto bg-emerald-700 text-white px-4 py-2 rounded hover:bg-emerald-800"
+          >
+            Post a Job
+          </button>
+        </div>
 
-      {/* New Job Form Modal */}
-      {showNewJobForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-semibold mb-4">Post a New Job</h2>
-            <div className="space-y-4">
-              <input
-                type="text"
-                placeholder="Job Title"
-                value={newJob.title}
-                onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
-                className="w-full p-2 border rounded"
-              />
-              <input
-                type="text"
-                placeholder="Company"
-                value={newJob.company}
-                onChange={(e) => setNewJob({ ...newJob, company: e.target.value })}
-                className="w-full p-2 border rounded"
-              />
-              <input
-                type="url"
-                placeholder="Link to Job Posting"
-                value={newJob.link}
-                onChange={(e) => setNewJob({ ...newJob, link: e.target.value })}
-                className="w-full p-2 border rounded"
-              />
-              <div className="flex flex-col sm:flex-row justify-end gap-2 pt-4">
-                <button
-                  onClick={() => setShowNewJobForm(false)}
-                  className="w-full sm:w-auto px-4 py-2 text-gray-600 hover:text-gray-800"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleAddJob}
-                  disabled={!newJob.title || !newJob.company || !newJob.link}
-                  className="w-full sm:w-auto bg-emerald-700 text-white px-4 py-2 rounded hover:bg-emerald-800 disabled:opacity-50"
-                >
-                  Post Job
-                </button>
+        {/* New Job Form Modal */}
+        {showNewJobForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+              <h2 className="text-xl font-semibold mb-4">Post a New Job</h2>
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Job Title"
+                  value={newJob.title}
+                  onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
+                  className="w-full p-2 border rounded"
+                />
+                <input
+                  type="text"
+                  placeholder="Company"
+                  value={newJob.company}
+                  onChange={(e) => setNewJob({ ...newJob, company: e.target.value })}
+                  className="w-full p-2 border rounded"
+                />
+                <input
+                  type="url"
+                  placeholder="Link to Job Posting"
+                  value={newJob.link}
+                  onChange={(e) => setNewJob({ ...newJob, link: e.target.value })}
+                  className="w-full p-2 border rounded"
+                />
+                <div className="flex flex-col sm:flex-row justify-end gap-2 pt-4">
+                  <button
+                    onClick={() => setShowNewJobForm(false)}
+                    className="w-full sm:w-auto px-4 py-2 text-gray-600 hover:text-gray-800"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAddJob}
+                    disabled={!newJob.title || !newJob.company || !newJob.link}
+                    className="w-full sm:w-auto bg-emerald-700 text-white px-4 py-2 rounded hover:bg-emerald-800 disabled:opacity-50"
+                  >
+                    Post Job
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {jobs.map(({ job, poster }, index) => (
-          <div key={`${poster.uid}-${index}`} className="relative group">
-            <a
-              href={job.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block border rounded-lg p-6 bg-white hover:shadow-lg transition-shadow"
-            >
-              <div className="flex justify-between items-start">
-                <div className="flex-grow">
-                  <h2 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">
-                    {job.title}
-                  </h2>
-                  <div className="flex items-center gap-2 text-gray-600 mb-1">
-                    <span>at </span>
-                    <span className="font-medium">{job.company}</span>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {jobs.map(({ job, poster }, index) => (
+            <div key={`${poster.uid}-${index}`} className="relative group">
+              <a
+                href={job.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block border rounded-lg p-6 bg-white hover:shadow-lg transition-shadow"
+              >
+                <div className="flex justify-between items-start">
+                  <div className="flex-grow">
+                    <h2 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">
+                      {job.title}
+                    </h2>
+                    <div className="flex items-center gap-2 text-gray-600 mb-1">
+                      <span>at </span>
+                      <span className="font-medium">{job.company}</span>
+                    </div>
+                    <p className="text-sm text-gray-500 mb-3">
+                      Posted {formatDistanceToNow(new Date(job.postedAt))} ago
+                    </p>
                   </div>
-                  <p className="text-sm text-gray-500 mb-3">
-                    Posted {formatDistanceToNow(new Date(job.postedAt))} ago
-                  </p>
-                </div>
-                {(ADMIN_EMAILS.includes(auth.currentUser?.email || '') || auth.currentUser?.uid === poster.uid) && (
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault(); // Prevent card click when clicking delete
-                      handleDeleteJob(poster.uid, job);
-                    }}
-                    className="text-gray-400 hover:text-red-600 transition-colors z-10"
-                    title="Delete job listing"
-                  >
-                    ❌
-                  </button>
-                )}
-              </div>
-
-              <div className="flex items-center justify-between gap-3 mt-4 pt-4 border-t">
-                <div className="flex items-center gap-3">
-                  {poster.photoURL && (
-                    <Image
-                      src={poster.photoURL}
-                      alt={poster.displayName ?? ''}
-                      width={32}
-                      height={32}
-                      className="rounded-full"
-                    />
-                  )}
-                  <span className="text-sm text-gray-600">
-                    Posted by {poster.displayName}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigator.clipboard.writeText(poster.email);
-                      toast.success('Email copied to clipboard!');
-                    }}
-                    className="text-gray-400 hover:text-gray-600 transition-colors"
-                    title={poster.email}
-                  >
-                    <EnvelopeIcon className="w-5 h-5" />
-                  </button>
-                  {poster.linkedinUrl && (
+                  {(ADMIN_EMAILS.includes(auth.currentUser?.email || '') || auth.currentUser?.uid === poster.uid) && (
                     <button
                       onClick={(e) => {
-                        e.preventDefault();
-                        const url = poster.linkedinUrl.startsWith('http') 
-                          ? poster.linkedinUrl 
-                          : `https://www.linkedin.com/in/${poster.linkedinUrl}`;
-                        window.open(url, '_blank', 'noopener,noreferrer');
+                        e.preventDefault(); // Prevent card click when clicking delete
+                        handleDeleteJob(poster.uid, job);
                       }}
-                      className="text-gray-400 hover:text-blue-600 transition-colors"
-                      title="View LinkedIn Profile"
+                      className="text-gray-400 hover:text-red-600 transition-colors z-10"
+                      title="Delete job listing"
                     >
-                      <FaLinkedin className="w-5 h-5" />
+                      ❌
                     </button>
                   )}
                 </div>
-              </div>
-            </a>
-          </div>
-        ))}
 
-        {jobs.length === 0 && (
-          <div className="col-span-full text-center py-6 px-4 border-2 border-dashed rounded-lg">
-            <p className="text-gray-600 mb-3">No jobs posted yet!</p>
-            <p className="text-gray-600">
-              Have a position to fill? {' '}
-              <button
-                onClick={() => setShowNewJobForm(true)}
-                className="text-emerald-600 hover:text-emerald-800 hover:underline font-medium"
-              >
-                Post a job
-              </button>
-            </p>
-          </div>
-        )}
-      </div>
-    </main>
+                <div className="flex items-center justify-between gap-3 mt-4 pt-4 border-t">
+                  <div className="flex items-center gap-3">
+                    {poster.photoURL && (
+                      <Image
+                        src={poster.photoURL}
+                        alt={poster.displayName ?? ''}
+                        width={32}
+                        height={32}
+                        className="rounded-full"
+                      />
+                    )}
+                    <span className="text-sm text-gray-600">
+                      Posted by {poster.displayName}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigator.clipboard.writeText(poster.email);
+                        toast.success('Email copied to clipboard!');
+                      }}
+                      className="text-gray-400 hover:text-gray-600 transition-colors"
+                      title={poster.email}
+                    >
+                      <EnvelopeIcon className="w-5 h-5" />
+                    </button>
+                    {poster.linkedinUrl && (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const url = poster.linkedinUrl?.startsWith('http')
+                            ? poster.linkedinUrl
+                            : `https://www.linkedin.com/in/${poster.linkedinUrl || ''}`;
+                          window.open(url, '_blank', 'noopener,noreferrer');
+                        }}
+                        className="text-gray-400 hover:text-blue-600 transition-colors"
+                        title="View LinkedIn Profile"
+                      >
+                        <FaLinkedin className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </a>
+            </div>
+          ))}
+
+          {jobs.length === 0 && (
+            <div className="col-span-full text-center py-6 px-4 border-2 border-dashed rounded-lg">
+              <p className="text-gray-600 mb-3">No jobs posted yet!</p>
+              <p className="text-gray-600">
+                Have a position to fill? {' '}
+                <button
+                  onClick={() => setShowNewJobForm(true)}
+                  className="text-emerald-600 hover:text-emerald-800 hover:underline font-medium"
+                >
+                  Post a job
+                </button>
+              </p>
+            </div>
+          )}
+        </div>
+      </main>
+    </ProtectedPage>
   );
 } 

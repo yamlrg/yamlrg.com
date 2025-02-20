@@ -9,6 +9,7 @@ import { toast, Toaster } from 'react-hot-toast';
 import { ADMIN_EMAILS } from '../config/admin';
 import { trackEvent } from "@/utils/analytics";
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import ProtectedPage from '@/components/ProtectedPage';
 
 // Move this outside the component
 const MEETUP_DATE = new Date('2024-03-05T17:00:00Z');
@@ -18,6 +19,9 @@ export default function GradientConnectPage() {
   const [isSignedUp, setIsSignedUp] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const [signupStatus, setSignupStatus] = useState<{
+    inviteSent: boolean;
+  } | null>(null);
 
   // Use the constant instead
   const meetupDate = MEETUP_DATE;
@@ -51,6 +55,30 @@ export default function GradientConnectPage() {
 
     checkUserStatus();
   }, [user, router, meetupDate]);
+
+  useEffect(() => {
+    const fetchSignupStatus = async () => {
+      if (!user?.email) return;
+      
+      const db = getFirestore();
+      const signupsRef = collection(db, 'gradientConnectSignups');
+      const q = query(
+        signupsRef,
+        where('userEmail', '==', user.email),
+        where('matchingDate', '==', meetupDate.toISOString())
+      );
+      
+      const snapshot = await getDocs(q);
+      if (!snapshot.empty) {
+        const data = snapshot.docs[0].data();
+        setSignupStatus({
+          inviteSent: data.status.inviteSent,
+        });
+      }
+    };
+
+    fetchSignupStatus();
+  }, [user?.email, meetupDate]);
 
   const handleSignUp = async () => {
     if (!user) {
@@ -115,57 +143,61 @@ export default function GradientConnectPage() {
   }
 
   return (
-    <main className="min-h-screen p-4">
-      <Toaster position="top-center" />
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold mb-4">Gradient Connect</h1>
-        
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Next Meetup</h2>
-          <div className="bg-emerald-50 p-4 rounded-lg mb-6">
-            <p className="text-lg font-medium text-emerald-900">
-              Wednesday, March 5th at 5:00 PM GMT
-            </p>
-          </div>
-          <p className="text-gray-600 mb-6">
-            Sign up to be matched with another YAMLRG member for a 30-minute 1v1 chat!
-          </p>
-          <p className="text-gray-500 text-sm italic mb-6">
-            Psst... yes, you can ask Maria to play cupid and match you with someone you really want to talk to 😉
-          </p>
-
-          {!user ? (
-            <p className="text-gray-600">
-              Please <a href="/login" className="text-emerald-700 hover:underline">log in</a> to sign up for Gradient Connect
-            </p>
-          ) : isSignedUp ? (
-            <div className="bg-gradient-to-r from-pink-100 via-orange-50 to-orange-100 text-pink-900 p-6 rounded-lg border border-pink-200/50 shadow-sm">
-              <p className="font-medium">
-                You&apos;re all set! Maria will send you a calendar invite soon.
+    <ProtectedPage>
+      <main className="min-h-screen p-4">
+        <Toaster position="top-center" />
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-3xl font-bold mb-4">Gradient Connect</h1>
+          
+          <div className="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 className="text-xl font-semibold mb-4">Next Meetup</h2>
+            <div className="bg-emerald-50 p-4 rounded-lg mb-6">
+              <p className="text-lg font-medium text-emerald-900">
+                Wednesday, March 5th at 5:00 PM GMT
               </p>
             </div>
-          ) : (
-            <button
-              onClick={handleSignUp}
-              disabled={isSubmitting}
-              className="bg-emerald-700 text-white px-6 py-2 rounded-lg hover:bg-emerald-800 disabled:opacity-50 transition-colors"
-            >
-              {isSubmitting ? 'Signing up...' : "I'm in!"}
-            </button>
-          )}
-        </div>
+            <p className="text-gray-600 mb-6">
+              Sign up to be matched with another YAMLRG member for a 30-minute 1v1 chat!
+            </p>
+            <p className="text-gray-500 text-sm italic mb-6">
+              Psst... yes, you can ask Maria to play cupid and match you with someone you really want to talk to 😉
+            </p>
 
-        <div className="bg-gray-50 rounded-lg p-6">
-          <h2 className="text-lg font-semibold mb-4">How it works</h2>
-          <ul className="space-y-3 text-gray-700">
-            <li>• Sign up for the next round</li>
-            <li>• You&apos;ll be matched with another YAMLRG member</li>
-            <li>• Maria will send you a calendar invite for March 5th at 5pm GMT</li>
-            <li>• Join the call and enjoy a 30-minute chat!</li>
-            <li>• Meet someone new and expand your network!</li>
-          </ul>
+            {!user ? (
+              <p className="text-gray-600">
+                Please <a href="/login" className="text-emerald-700 hover:underline">log in</a> to sign up for Gradient Connect
+              </p>
+            ) : isSignedUp ? (
+              <div className="bg-gradient-to-r from-pink-100 via-orange-50 to-orange-100 text-pink-900 p-6 rounded-lg border border-pink-200/50 shadow-sm">
+                <p className="font-medium">
+                  {signupStatus?.inviteSent 
+                    ? "Check your email, you should have received an invite!"
+                    : "You'll receive an email soon!"}
+                </p>
+              </div>
+            ) : (
+              <button
+                onClick={handleSignUp}
+                disabled={isSubmitting}
+                className="bg-emerald-700 text-white px-6 py-2 rounded-lg hover:bg-emerald-800 disabled:opacity-50 transition-colors"
+              >
+                {isSubmitting ? 'Signing up...' : "I'm in!"}
+              </button>
+            )}
+          </div>
+
+          <div className="bg-gray-50 rounded-lg p-6">
+            <h2 className="text-lg font-semibold mb-4">How it works</h2>
+            <ul className="space-y-3 text-gray-700">
+              <li>• Sign up for the next round</li>
+              <li>• You&apos;ll be matched with another YAMLRG member</li>
+              <li>• Maria will send you a calendar invite for March 5th at 5pm GMT</li>
+              <li>• Join the call and enjoy a 30-minute chat!</li>
+              <li>• Meet someone new and expand your network!</li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </ProtectedPage>
   );
 } 

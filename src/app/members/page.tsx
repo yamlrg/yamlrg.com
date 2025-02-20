@@ -7,11 +7,11 @@ import { YamlrgUserProfile, UserStatus } from '../types';
 import Image from 'next/image';
 import Link from "next/link";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { UserIcon, EnvelopeIcon, PencilIcon } from '@heroicons/react/24/outline';
+import { UserIcon, EnvelopeIcon, StarIcon } from '@heroicons/react/24/outline';
 import { FaLinkedin } from 'react-icons/fa';
 import { toast, Toaster } from 'react-hot-toast';
 import { ADMIN_EMAILS } from '../config/admin';
-import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/firebaseConfig';
 
@@ -251,8 +251,8 @@ export default function MembersPage() {
                 <div className="flex items-start gap-4">
                   {member.photoURL ? (
                     <Image
-                      src={member.photoURL}
-                      alt={member.displayName}
+                      src={member.photoURL || '/default-avatar.png'}
+                      alt={member.displayName || 'Member'}
                       width={48}
                       height={48}
                       className="rounded-full"
@@ -290,41 +290,6 @@ export default function MembersPage() {
                           </a>
                         )}
                       </div>
-
-                      {/* Admin edit button in its own row */}
-                      {user && ADMIN_EMAILS.includes(user.email || '') && (
-                        <button
-                          onClick={async () => {
-                            try {
-                              const db = getFirestore();
-                              const memberRef = doc(db, 'users', member.uid);
-                              
-                              const newName = prompt('Enter new display name:', member.displayName);
-                              if (newName === null) return;
-                              
-                              if (newName.trim().length > 50) {
-                                toast.error('Name must be 50 characters or less');
-                                return;
-                              }
-                              
-                              await updateDoc(memberRef, {
-                                displayName: newName.trim()
-                              });
-                              
-                              toast.success('Member updated successfully');
-                              fetchMembers();
-                            } catch (error) {
-                              console.error('Error updating member:', error);
-                              toast.error('Failed to update member');
-                            }
-                          }}
-                          className="text-gray-400 hover:text-emerald-600 transition-colors flex items-center gap-1"
-                          title="Edit member (Admin only)"
-                        >
-                          <PencilIcon className="w-5 h-5" />
-                          <span className="text-sm">Edit</span>
-                        </button>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -342,6 +307,11 @@ export default function MembersPage() {
                       </span>
                     ) : null
                   )}
+                </div>
+
+                <div className="flex items-center gap-1 justify-end text-sm text-gray-600 mt-2">
+                  <StarIcon className="w-4 h-4 text-yellow-400" />
+                  <span>{member.points || 0}</span>
                 </div>
               </div>
             ))}

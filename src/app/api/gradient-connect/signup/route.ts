@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { adminAuth } from '@/app/firebase/firebaseAdmin';
 import { getFirestore } from 'firebase-admin/firestore';
+import { updateUserPoints } from '@/app/firebase/firestoreOperations';
 
 export async function POST(request: Request) {
   try {
@@ -47,6 +48,9 @@ export async function POST(request: Request) {
         matched: false,
         createdAt: new Date().toISOString()
       });
+
+      // Award points for signing up
+      await updateUserPoints(userId, 'GRADIENT_CONNECT_SIGNUP');
 
       return NextResponse.json({ success: true, id: result.id });
     } catch (error) {
