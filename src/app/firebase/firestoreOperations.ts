@@ -1,10 +1,12 @@
 import { db, auth } from "./firebaseConfig";
-import { collection, doc, getDoc, setDoc, getDocs, query, orderBy, addDoc, updateDoc, deleteDoc, where } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc, getDocs, query, orderBy, addDoc, updateDoc, deleteDoc, where, arrayUnion } from "firebase/firestore";
 import { User, YamlrgUserProfile, JoinRequest, Workshop, PresentationRequest } from "../types";
 import { ADMIN_EMAILS } from "../config/admin";
 import { deleteUser } from "firebase/auth";
 import { trackEvent } from "@/utils/analytics";
 import { FirebaseError } from "firebase/app";
+import { POINTS, PointAction } from '../config/points';
+import { getWeekNumber } from '@/utils/dateUtils';
 
 // Export setDoc for use in other files
 export { setDoc, doc };
@@ -23,9 +25,11 @@ export const createUserProfile = async (user: User) => {
         photoURL: user.photoURL || '',
         showInMembers: true,
         linkedinUrl: "",
-        isAdmin: ADMIN_EMAILS.includes(user.email ?? ''),
         profileCompleted: false,
         joinedAt: new Date().toISOString(),
+        isApproved: false,
+        points: 0,
+        pointsHistory: [],
         status: {
           lookingForCofounder: false,
           needsProjectHelp: false,
@@ -77,7 +81,10 @@ export const getUserProfile = async (userId: string) => {
         uid: userSnap.id,
         showInMembers: data.showInMembers ?? false,
         linkedinUrl: data.linkedinUrl ?? '',
-        isAdmin: data.isAdmin ?? false,
+        email: data.email ?? '',
+        isApproved: data.isApproved ?? false,
+        points: data.points ?? 0,
+        pointsHistory: data.pointsHistory ?? [],
         profileCompleted: data.profileCompleted ?? false,
         status: data.status ?? {
           lookingForCofounder: false,
@@ -115,7 +122,6 @@ export const updateUserProfile = async (userId: string, updates: Partial<YamlrgU
   try {
     // Remove any sensitive fields from updates
     const safeUpdates = { ...updates };
-    delete safeUpdates.isAdmin;
     
     const userRef = doc(db, "users", userId);
     
@@ -157,35 +163,17 @@ export const adminUpdateUser = async (userId: string, updates: Partial<YamlrgUse
 // Get all users (for admin)
 export const getAllUsers = async () => {
   try {
-    const usersRef = collection(db, "users");
-    const querySnapshot = await getDocs(usersRef);
+    const usersRef = collection(db, 'users');
+    const snapshot = await getDocs(usersRef);
     
-    return querySnapshot.docs.map(doc => {
-      const data = doc.data();
-      return {
-        uid: doc.id,
-        email: data.email || '',
-        displayName: data.displayName || '',
-        photoURL: data.photoURL || '',
-        showInMembers: data.showInMembers || false,
-        linkedinUrl: data.linkedinUrl || '',
-        isAdmin: ADMIN_EMAILS.includes(data.email || ''),
-        profileCompleted: data.profileCompleted || false,
-        joinedAt: data.joinedAt || '',
-        approvedAt: data.approvedAt,
-        status: data.status || {
-          lookingForCofounder: false,
-          needsProjectHelp: false,
-          offeringProjectHelp: false,
-          isHiring: false,
-          seekingJob: false,
-          openToNetworking: false,
-        },
-        jobListings: data.jobListings || []
-      } as YamlrgUserProfile;
-    });
+    return snapshot.docs.map(doc => ({
+      ...doc.data(),
+      uid: doc.id,
+      points: doc.data().points || 0,
+      pointsHistory: doc.data().pointsHistory || []
+    })) as YamlrgUserProfile[];
   } catch (error) {
-    console.error("Error getting all users:", error);
+    console.error('Error getting users:', error);
     return [];
   }
 };
@@ -227,16 +215,17 @@ export const getVisibleMembers = async () => {
         const data = doc.data();
         return {
           uid: doc.id,
-          id: doc.id,
           email: data.email || '',
           displayName: data.displayName || '',
           photoURL: data.photoURL || '',
           showInMembers: data.showInMembers || false,
           linkedinUrl: data.linkedinUrl || '',
-          isAdmin: ADMIN_EMAILS.includes(data.email || ''),
           profileCompleted: data.profileCompleted || false,
           joinedAt: data.joinedAt || '',
           approvedAt: data.approvedAt,
+          isApproved: data.isApproved || false,
+          points: data.points || 0,
+          pointsHistory: data.pointsHistory || [],
           status: data.status || {
             lookingForCofounder: false,
             needsProjectHelp: false,
@@ -260,8 +249,8 @@ export const getVisibleMembers = async () => {
         if (!aIsAdmin && bIsAdmin) return 1;
         
         // For non-admins or between admins, sort by display name
-        const aName = a.displayName.toLowerCase();
-        const bName = b.displayName.toLowerCase();
+        const aName = (a.displayName || a.email || '').toLowerCase();
+        const bName = (b.displayName || b.email || '').toLowerCase();
         return aName.localeCompare(bName);
       });
 
@@ -299,6 +288,9 @@ export const addToReadingList = async (item: {
     addedByName: currentUser.displayName || currentUser.email,
     addedAt: new Date().toISOString(),
   });
+
+  // Award points for adding to reading list
+  await updateUserPoints(currentUser.uid, 'READING_LIST_ADD');
 };
 
 export const addJoinRequest = async (request: Omit<JoinRequest, 'id'>) => {
@@ -496,6 +488,18 @@ export const addWorkshop = async (workshop: Omit<Workshop, 'id'>) => {
 
   const workshopsRef = collection(db, "workshops");
   await addDoc(workshopsRef, workshop);
+
+  // Award points to the presenter if we have their email
+  if (workshop.presenterEmail) {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("email", "==", workshop.presenterEmail));
+    const querySnapshot = await getDocs(q);
+    
+    if (!querySnapshot.empty) {
+      const presenterDoc = querySnapshot.docs[0];
+      await updateUserPoints(presenterDoc.id, 'WORKSHOP_PRESENTATION');
+    }
+  }
 };
 
 // Update workshop (admin only)
@@ -582,11 +586,7 @@ export const updatePresentationRequestStatus = async (
 export const deletePresentationRequest = async (requestId: string) => {
   try {
     const currentUser = auth.currentUser;
-    if (!currentUser?.email) {
-      throw new Error('No authenticated user');
-    }
-    
-    if (!ADMIN_EMAILS.includes(currentUser.email)) {
+    if (!currentUser?.email || !ADMIN_EMAILS.includes(currentUser.email)) {
       throw new Error('Unauthorized: Admin access required');
     }
 
@@ -711,15 +711,109 @@ export const deleteReadingListItem = async (itemId: string) => {
       throw new Error('Unauthorized: You can only delete your own items');
     }
 
+    // Check if item is less than 2 weeks old
+    const addedAt = new Date(itemData.addedAt);
+    const twoWeeksAgo = new Date();
+    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
+    // If item is less than 2 weeks old, remove the point
+    if (addedAt > twoWeeksAgo) {
+      const userRef = doc(db, "users", currentUser.uid);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const userData = userSnap.data() as YamlrgUserProfile;
+        await updateDoc(userRef, {
+          points: (userData.points || 0) - POINTS.READING_LIST_ADD,
+          pointsHistory: arrayUnion({
+            timestamp: new Date().toISOString(),
+            action: 'READING_LIST_REMOVE',
+            points: -POINTS.READING_LIST_ADD,
+            total: (userData.points || 0) - POINTS.READING_LIST_ADD
+          })
+        });
+      }
+    }
+
     await deleteDoc(itemRef);
     
     // Track deletion
     trackEvent('reading_list_item_deleted', {
       title: itemData.title,
-      by_admin: ADMIN_EMAILS.includes(currentUser.email)
+      by_admin: ADMIN_EMAILS.includes(currentUser.email),
+      points_removed: addedAt > twoWeeksAgo
     });
   } catch (error) {
     console.error('Error deleting reading list item:', error);
     throw error;
+  }
+};
+
+export const updateUserPoints = async (userId: string, action: PointAction) => {
+  try {
+    const userRef = doc(db, 'users', userId);
+    const userSnap = await getDoc(userRef);
+    
+    if (!userSnap.exists()) {
+      throw new Error('User not found');
+    }
+
+    const userData = userSnap.data() as YamlrgUserProfile;
+    const pointsToAdd = POINTS[action];
+    const newTotal = (userData.points || 0) + pointsToAdd;
+
+    await updateDoc(userRef, {
+      points: newTotal,
+      pointsHistory: arrayUnion({
+        timestamp: new Date().toISOString(),
+        action,
+        points: pointsToAdd,
+        total: newTotal
+      })
+    });
+
+    return newTotal;
+  } catch (error) {
+    console.error('Error updating points:', error);
+    throw error;
+  }
+};
+
+export const trackUserLogin = async (userId: string) => {
+  try {
+    const userRef = doc(db, 'users', userId);
+    const userDoc = await getDoc(userRef);
+    const userData = userDoc.data() as YamlrgUserProfile;
+
+    const now = new Date();
+    const currentWeek = getWeekNumber(now);
+
+    if (userData.lastLoginWeek !== currentWeek) {
+      await updateDoc(userRef, {
+        lastLoginWeek: currentWeek,
+        loginStreak: (userData.loginStreak || 0) + 1
+      });
+
+      // Award points for weekly login
+      await updateUserPoints(userId, 'WEEKLY_LOGIN');
+
+      // Award bonus points for first login streak
+      if (!userData.hasFirstLoginStreak && (userData.loginStreak || 0) >= 3) {
+        await updateUserPoints(userId, 'FIRST_LOGIN_STREAK');
+        await updateDoc(userRef, { hasFirstLoginStreak: true });
+      }
+    } else {
+      // If they haven't logged in for more than a week, reset the streak
+      const lastWeek = new Date(now);
+      lastWeek.setDate(lastWeek.getDate() - 7);
+      const lastWeekNumber = getWeekNumber(lastWeek);
+      
+      if (userData.lastLoginWeek && userData.lastLoginWeek < lastWeekNumber) {
+        await updateDoc(userRef, {
+          loginStreak: 1
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Error tracking login:', error);
   }
 }; 

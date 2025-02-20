@@ -44,9 +44,9 @@ export default function ProfilePage() {
           const userProfile = await getUserProfile(user.uid);
           if (userProfile) {
             setProfile(userProfile);
-            setLinkedinUrl(userProfile.linkedinUrl);
-            setDisplayName(userProfile.displayName);
-            setShowInMembers(userProfile.showInMembers);
+            setLinkedinUrl(userProfile.linkedinUrl ?? '');
+            setDisplayName(userProfile.displayName || user.email?.split('@')[0] || 'User');
+            setShowInMembers(userProfile.showInMembers ?? true);
           }
         } catch (error) {
           console.error('Error fetching profile:', error);
@@ -61,12 +61,13 @@ export default function ProfilePage() {
   const handleSave = async () => {
     if (!user || !profile) return;
 
-    if (!displayName.trim()) {
+    const trimmedName = displayName.trim();
+    if (!trimmedName) {
       setNameError('Name cannot be empty');
       return;
     }
 
-    if (displayName.length > MAX_DISPLAY_NAME_LENGTH) {
+    if (trimmedName.length > MAX_DISPLAY_NAME_LENGTH) {
       toast.error(`Display name must be ${MAX_DISPLAY_NAME_LENGTH} characters or less`);
       return;
     }
@@ -76,7 +77,7 @@ export default function ProfilePage() {
       
       const updates = {
         linkedinUrl,
-        displayName: displayName.trim(),
+        displayName: trimmedName,
         profileCompleted: !!linkedinUrl,
         status: profile.status,
         showInMembers
@@ -91,7 +92,7 @@ export default function ProfilePage() {
       
       trackEvent('profile_update', {
         linkedinUrl_provided: !!linkedinUrl,
-        name_updated: displayName !== profile.displayName
+        name_updated: trimmedName !== profile.displayName
       });
     } catch (error) {
       console.error('Error updating profile:', error);

@@ -42,6 +42,6 @@ npm start
 
 ## Future Ideas
 
-- [ ] Gravity: randomly match people in 1-on-1 calls to meet each other
+- [x] gradient connect: match people in 1-on-1 calls to meet each other
 - [ ] Points system for members
 - [x] Send email to admins when someone sends a join request

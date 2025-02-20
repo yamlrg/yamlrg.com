@@ -1,6 +1,5 @@
 import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { auth } from "./firebaseConfig";
-import toast from 'react-hot-toast';
 import { trackEvent } from "@/utils/analytics";
 import { handleFirstLogin } from "./firestoreOperations";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -41,17 +40,9 @@ export const signInWithGoogle = async (router: AppRouterInstance) => {
 
 // Sign Out
 export const logOut = async () => {
-  try {
-    console.log("Starting sign out process...");
-    await signOut(auth);
-    console.log("User signed out successfully");
-    toast.success('Successfully signed out!');
-
-    trackEvent('logout');
-  } catch (error) {
-    console.error("Sign-Out Error:", error);
-    toast.error('Failed to sign out. Please try again.');
-  }
+  return signOut(auth).catch(error => {
+    console.error('Error signing out:', error);
+  });
 };
 
 export const setAdminClaim = async (email: string) => {

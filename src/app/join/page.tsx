@@ -43,12 +43,6 @@ export default function JoinRequestPage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
-    // Check if email is Gmail
-    if (!formData.email.toLowerCase().endsWith('@gmail.com')) {
-      toast.error('Please use a Gmail address to join YAMLRG');
-      return;
-    }
-
     setIsSubmitting(true);
 
     try {
@@ -122,15 +116,11 @@ export default function JoinRequestPage() {
             <input
               type="email"
               required
-              pattern=".*@gmail\.com$"
               value={formData.email}
               onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
               className="w-full px-3 py-2 border rounded"
-              placeholder="your.email@gmail.com"
+              placeholder="your.email@example.com"
             />
-            <p className="mt-1 text-sm text-gray-500">
-              Please use a Gmail address to join YAMLRG
-            </p>
           </div>
 
           <div>

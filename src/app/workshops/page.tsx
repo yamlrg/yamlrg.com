@@ -27,6 +27,7 @@ export default function WorkshopsPage() {
     proposedDate: ''
   });
   const router = useRouter();
+  const user = auth.currentUser;
 
   const fetchWorkshops = useCallback(async () => {
     try {
@@ -55,13 +56,12 @@ export default function WorkshopsPage() {
   useEffect(() => {
     const checkUserStatus = async () => {
       try {
-        const currentUser = auth.currentUser;
-        if (!currentUser) {
+        if (!user) {
           return;
         }
         
-        const userProfile = await getUserProfile(currentUser.uid);
-        if (!userProfile && !ADMIN_EMAILS.includes(currentUser.email || '')) {
+        const userProfile = await getUserProfile(user.uid);
+        if (!userProfile && !ADMIN_EMAILS.includes(user.email || '')) {
           router.push('/join');
         }
       } catch (error) {
@@ -77,21 +77,20 @@ export default function WorkshopsPage() {
     });
 
     return () => unsubscribe();
-  }, [router]);
+  }, [user, router]);
 
   const handleRequestSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
+      if (!user) {
         toast.error('You must be logged in');
         return;
       }
 
       await addPresentationRequest({
-        userId: currentUser.uid,
-        userName: currentUser.displayName ?? '',
-        userEmail: currentUser.email ?? '',
+        userId: user.uid,
+        userName: user.displayName ?? '',
+        userEmail: user.email ?? '',
         title: newRequest.title,
         type: requestType === 'request' ? 'request' : newRequest.type,
         ...(requestType === 'request' 
@@ -120,7 +119,7 @@ export default function WorkshopsPage() {
 
   return (
     <ProtectedPage>
-      <div className="min-h-screen p-4">
+      <main className="min-h-screen p-4">
         <Toaster position="top-center" />
         <div className="max-w-4xl mx-auto">
           <div className="flex justify-between items-center mb-8">
@@ -453,7 +452,7 @@ export default function WorkshopsPage() {
               ))}
           </div>
         </div>
-      </div>
+      </main>
     </ProtectedPage>
   );
 } 

@@ -19,28 +19,29 @@ export interface JobListing {
 export interface YamlrgUserProfile {
   uid: string;
   email: string;
-  displayName: string;
-  photoURL: string;
-  showInMembers: boolean;
-  linkedinUrl: string;
-  isAdmin: boolean;
-  profileCompleted: boolean;
-  joinedAt: string;
+  displayName?: string;
+  photoURL?: string;
+  linkedinUrl?: string;
+  isApproved: boolean;
   approvedAt?: string;
-  status: {
-    lookingForCofounder: boolean;
-    needsProjectHelp: boolean;
-    offeringProjectHelp: boolean;
-    isHiring: boolean;
-    seekingJob: boolean;
-    openToNetworking: boolean;
-  };
-  jobListings?: Array<{
-    title: string;
-    company: string;
-    link: string;
-    postedAt: string;
-  }>;
+  approvedBy?: string;
+  joinedAt?: string;
+  lastUpdate?: string;
+  showInMembers: boolean;
+  profileCompleted: boolean;
+  status: UserStatus;
+  points: number;
+  pointsHistory?: {
+    timestamp: string;
+    action: string;
+    points: number;
+    total: number;
+    reason?: string;
+  }[];
+  lastLoginWeek?: string;
+  loginStreak?: number;
+  hasFirstLoginStreak?: boolean;
+  jobListings?: JobListing[];
 }
 
 // Extend Firebase User with our additional properties
@@ -66,6 +67,7 @@ export interface Workshop {
   title: string;
   presenterName: string;
   presenterLinkedIn?: string;
+  presenterEmail?: string;
   date: string;
   description: string;
   youtubeUrl?: string;

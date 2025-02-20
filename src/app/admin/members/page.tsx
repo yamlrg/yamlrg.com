@@ -1,13 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getAllUsers, removeUserApproval, updateUserVisibility } from '@/app/firebase/firestoreOperations';
+import { getAllUsers, removeUserApproval, updateUserVisibility, updateUserProfile } from '@/app/firebase/firestoreOperations';
 import { YamlrgUserProfile } from '@/app/types';
 import { toast, Toaster } from 'react-hot-toast';
 import Link from 'next/link';
-import { ArrowLeftIcon, EyeIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, EyeIcon, MagnifyingGlassIcon, PencilIcon, PlusIcon, MinusIcon, StarIcon } from '@heroicons/react/24/outline';
+import { FaLinkedin } from 'react-icons/fa';
 import Image from 'next/image';
 import { ADMIN_EMAILS } from '@/app/config/admin';
+import PointsModal from '@/components/PointsModal';
+import PointsHistoryModal from '@/components/PointsHistoryModal';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '@/app/firebase/firebaseConfig';
 
 export default function MembersPage() {
   const [users, setUsers] = useState<YamlrgUserProfile[]>([]);
@@ -15,6 +20,22 @@ export default function MembersPage() {
   const [filters, setFilters] = useState({
     profileStatus: 'all', // 'all', 'complete', 'incomplete'
     visibility: 'all', // 'all', 'visible', 'hidden'
+  });
+  const [pointsModal, setPointsModal] = useState<{
+    isOpen: boolean;
+    mode: 'add' | 'remove';
+    userId: string;
+  }>({
+    isOpen: false,
+    mode: 'add',
+    userId: ''
+  });
+  const [pointsHistoryModal, setPointsHistoryModal] = useState<{
+    isOpen: boolean;
+    user: YamlrgUserProfile | null;
+  }>({
+    isOpen: false,
+    user: null
   });
 
   useEffect(() => {
@@ -55,8 +76,72 @@ export default function MembersPage() {
     }
   };
 
+  const handleEditName = async (user: YamlrgUserProfile, setUsers: React.Dispatch<React.SetStateAction<YamlrgUserProfile[]>>) => {
+    const newName = prompt('Enter new display name:', user.displayName);
+    if (newName === null) return;
+    
+    if (newName.trim().length > 50) {
+      toast.error('Name must be 50 characters or less');
+      return;
+    }
+
+    try {
+      await updateUserProfile(user.uid, {
+        displayName: newName.trim()
+      });
+      
+      // Refresh users list
+      const updatedUsers = await getAllUsers();
+      setUsers(updatedUsers);
+      
+      toast.success('Name updated successfully');
+    } catch (error) {
+      console.error('Error updating name:', error);
+      toast.error('Failed to update name');
+    }
+  };
+
   const isUserAdmin = (email: string | null) => {
     return email && ADMIN_EMAILS.includes(email);
+  };
+
+  const handlePointsUpdate = async (points: number, reason: string) => {
+    try {
+      const user = users.find(u => u.uid === pointsModal.userId);
+      if (!user) return;
+
+      // Get the current user data to ensure we have the latest state
+      const userRef = doc(db, 'users', pointsModal.userId);
+      const userSnap = await getDoc(userRef);
+      const currentUserData = userSnap.data() as YamlrgUserProfile;
+
+      const newTotal = (currentUserData.points || 0) + (pointsModal.mode === 'add' ? points : -points);
+      const newHistory = [
+        ...(currentUserData.pointsHistory || []),
+        {
+          timestamp: new Date().toISOString(),
+          action: reason, // Use the actual reason instead of MANUAL_ADD/REMOVE
+          points: pointsModal.mode === 'add' ? points : -points,
+          total: newTotal
+        }
+      ];
+
+      // Update both points and pointsHistory atomically
+      await updateDoc(userRef, {
+        points: newTotal,
+        pointsHistory: newHistory
+      });
+
+      // Refresh users list
+      const updatedUsers = await getAllUsers();
+      setUsers(updatedUsers);
+      
+      toast.success(`Points ${pointsModal.mode === 'add' ? 'added' : 'removed'} successfully`);
+      setPointsModal({ isOpen: false, mode: 'add', userId: '' });
+    } catch (error) {
+      console.error('Error updating points:', error);
+      toast.error('Failed to update points');
+    }
   };
 
   const filteredUsers = users.filter(user => {
@@ -138,7 +223,7 @@ export default function MembersPage() {
                 className="bg-white rounded-lg shadow p-4"
               >
                 {/* User Header */}
-                <div className="flex items-start gap-3 mb-3">
+                <div className="flex items-start gap-3 mb-3 relative">
                   {user.photoURL ? (
                     <Image
                       src={user.photoURL}
@@ -160,6 +245,16 @@ export default function MembersPage() {
                     </h3>
                     <p className="text-sm text-gray-500 truncate">{user.email}</p>
                   </div>
+                  {user.linkedinUrl && (
+                    <a 
+                      href={user.linkedinUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute top-0 right-0 text-gray-400 hover:text-blue-600 transition-colors"
+                    >
+                      <FaLinkedin className="w-5 h-5" />
+                    </a>
+                  )}
                 </div>
 
                 {/* Status Tags */}
@@ -180,18 +275,6 @@ export default function MembersPage() {
                   </span>
                 </div>
 
-                {/* LinkedIn Link */}
-                {user.linkedinUrl && (
-                  <a 
-                    href={user.linkedinUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-emerald-600 hover:text-emerald-700 block mb-3"
-                  >
-                    LinkedIn Profile
-                  </a>
-                )}
-
                 {/* Actions */}
                 <div className="flex items-center justify-end gap-2 mt-2">
                   {isUserAdmin(user.email) ? (
@@ -200,6 +283,13 @@ export default function MembersPage() {
                     </span>
                   ) : (
                     <>
+                      <button
+                        onClick={() => handleEditName(user, setUsers)}
+                        className="p-2 text-gray-600 hover:text-gray-900 rounded-full hover:bg-gray-100"
+                        title="Edit name"
+                      >
+                        <PencilIcon className="w-5 h-5" />
+                      </button>
                       <button
                         onClick={() => toggleUserVisibility(user)}
                         className="p-2 text-gray-600 hover:text-gray-900 rounded-full hover:bg-gray-100"
@@ -215,11 +305,58 @@ export default function MembersPage() {
                     </>
                   )}
                 </div>
+
+                {/* Add points display and controls in the user card */}
+                <div className="flex items-center gap-2 mt-4 pt-4 border-t">
+                  <button 
+                    onClick={() => setPointsHistoryModal({ isOpen: true, user })}
+                    className="flex items-center gap-1 hover:text-emerald-600"
+                  >
+                    <StarIcon className="w-4 h-4 text-yellow-400" />
+                    <span className="font-medium">{user.points || 0}</span>
+                  </button>
+                  <div className="flex-1" />
+                  <button
+                    onClick={() => setPointsModal({ isOpen: true, mode: 'add', userId: user.uid })}
+                    className="p-1 text-gray-600 hover:text-emerald-600 rounded-full hover:bg-gray-100"
+                    title="Add points"
+                  >
+                    <PlusIcon className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setPointsModal({ isOpen: true, mode: 'remove', userId: user.uid })}
+                    className="p-1 text-gray-600 hover:text-red-600 rounded-full hover:bg-gray-100"
+                    title="Remove points"
+                  >
+                    <MinusIcon className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             ))
           )}
         </div>
       </div>
+
+      {/* Add the modal */}
+      <PointsModal
+        isOpen={pointsModal.isOpen}
+        mode={pointsModal.mode}
+        onClose={() => setPointsModal({ isOpen: false, mode: 'add', userId: '' })}
+        onSubmit={handlePointsUpdate}
+      />
+
+      {/* Add the points history modal */}
+      {pointsHistoryModal.user && (
+        <PointsHistoryModal
+          isOpen={pointsHistoryModal.isOpen}
+          onClose={() => setPointsHistoryModal({ isOpen: false, user: null })}
+          user={pointsHistoryModal.user}
+          onUpdate={async () => {
+            const updatedUsers = await getAllUsers();
+            setUsers(updatedUsers);
+          }}
+        />
+      )}
     </main>
   );
 } 
