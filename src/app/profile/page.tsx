@@ -14,6 +14,8 @@ import { trackEvent } from "@/utils/analytics";
 import { Menu, Transition } from '@headlessui/react';
 import { FaLinkedin } from 'react-icons/fa';
 
+const MAX_DISPLAY_NAME_LENGTH = 50;
+
 export default function ProfilePage() {
   const [user] = useAuthState(auth);
   const [profile, setProfile] = useState<YamlrgUserProfile | null>(null);
@@ -61,6 +63,11 @@ export default function ProfilePage() {
 
     if (!displayName.trim()) {
       setNameError('Name cannot be empty');
+      return;
+    }
+
+    if (displayName.length > MAX_DISPLAY_NAME_LENGTH) {
+      toast.error(`Display name must be ${MAX_DISPLAY_NAME_LENGTH} characters or less`);
       return;
     }
 
@@ -219,6 +226,7 @@ export default function ProfilePage() {
                       setDisplayName(e.target.value);
                       setNameError('');
                     }}
+                    maxLength={MAX_DISPLAY_NAME_LENGTH}
                     className={`text-2xl font-bold p-1 border rounded mb-2 w-full ${
                       nameError ? 'border-red-500' : 'border-gray-300'
                     }`}
@@ -226,6 +234,13 @@ export default function ProfilePage() {
                   />
                   {nameError && (
                     <p className="text-red-500 text-sm mt-1">{nameError}</p>
+                  )}
+                  {displayName.length > 0 && (
+                    <p className={`text-sm mt-1 ${
+                      displayName.length > MAX_DISPLAY_NAME_LENGTH ? 'text-red-600' : 'text-gray-500'
+                    }`}>
+                      {displayName.length}/{MAX_DISPLAY_NAME_LENGTH} characters
+                    </p>
                   )}
                 </div>
               ) : (

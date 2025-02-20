@@ -86,4 +86,25 @@ export interface PresentationRequest {
   createdAt: string;
   completedAt?: string;
   completedBy?: string;
+}
+
+export interface GradientConnectSignup {
+  id?: string;
+  userId: string;
+  userEmail: string;
+  userName: string;
+  matchingDate: string;
+  signedUpAt: string;
+  createdAt: string;
+  status: {
+    matched: boolean;
+    matchedWith?: string;
+    matchedWithName?: string;
+    inviteSent: boolean;
+    inviteSentAt?: string;
+    inviteAccepted: boolean;
+    inviteAcceptedAt?: string;
+    attended: boolean;
+    notes?: string;
+  };
 } 

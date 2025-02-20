@@ -1,16 +1,19 @@
 'use client';
 
 import ProtectedPage from "@/components/ProtectedPage";
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useState, useMemo } from "react";
 import { getVisibleMembers } from "../firebase/firestoreOperations";
 import { YamlrgUserProfile, UserStatus } from '../types';
 import Image from 'next/image';
 import Link from "next/link";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { UserIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
+import { UserIcon, EnvelopeIcon, PencilIcon } from '@heroicons/react/24/outline';
 import { FaLinkedin } from 'react-icons/fa';
 import { toast, Toaster } from 'react-hot-toast';
 import { ADMIN_EMAILS } from '../config/admin';
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../firebase/firebaseConfig';
 
 interface GrowthDataPoint {
   date: string;
@@ -26,6 +29,9 @@ export default function MembersPage() {
   const [filters, setFilters] = useState<Partial<UserStatus>>({});
   const [searchQuery, setSearchQuery] = useState('');
   const [growthData, setGrowthData] = useState<GrowthDataPoint[]>([]);
+  const [hasSignedUpForGradientConnect, setHasSignedUpForGradientConnect] = useState(false);
+  const meetupDate = useMemo(() => new Date('2024-03-05T17:00:00Z'), []);
+  const [user] = useAuthState(auth);
 
   const statusOptions = [
     { key: 'lookingForCofounder', label: 'Looking for Co-founders', color: 'bg-purple-100 text-purple-800' },
@@ -84,6 +90,29 @@ export default function MembersPage() {
     }
   }, [members]);
 
+  useEffect(() => {
+    const checkGradientConnectSignup = async () => {
+      if (!user) return;
+      
+      try {
+        const db = getFirestore();
+        const signupsRef = collection(db, 'gradientConnectSignups');
+        const q = query(
+          signupsRef, 
+          where('userId', '==', user.uid),
+          where('matchingDate', '==', meetupDate.toISOString())
+        );
+        
+        const snapshot = await getDocs(q);
+        setHasSignedUpForGradientConnect(!snapshot.empty);
+      } catch (error) {
+        console.error('Error checking Gradient Connect signup:', error);
+      }
+    };
+
+    checkGradientConnectSignup();
+  }, [user, meetupDate]);
+
   const filteredMembers = members.filter(member => {
     const searchLower = searchQuery.toLowerCase();
     const matchesSearch = 
@@ -110,23 +139,17 @@ export default function MembersPage() {
     <ProtectedPage>
       <div className="container mx-auto px-4 py-8">
         <Toaster position="top-center" />
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold mb-4">Members</h1>
-          <Link href="/wrapped" className="inline-block text-blue-600 hover:text-blue-800">
-            Check out our 2024 Wrapped 🎁
-          </Link>
-        </div>
         
         <main className="min-h-screen p-4">
-          <div className="flex justify-between items-center mb-8">
+          <div className="mb-8">
             <h1 className="text-3xl font-bold">YAMLRG Members ✨</h1>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-gray-600 dark:text-gray-400 mt-2">
               {filteredMembers.length} member{filteredMembers.length !== 1 ? 's' : ''}
             </p>
           </div>
 
           {/* Search bar */}
-          <div className="mb-8">
+          <div className="mb-4">
             <input
               type="text"
               placeholder="Search members..."
@@ -137,15 +160,19 @@ export default function MembersPage() {
             />
           </div>
 
+          <Link href="/wrapped" className="inline-block text-blue-600 hover:text-blue-800 mb-8">
+            Check out our 2024 Wrapped 🎁
+          </Link>
+
           {/* Filters */}
           <div className="mb-8">
-            <h2 className="text-xl font-semibold mb-4">Filter Members</h2>
+            <h2 className="text-lg md:text-xl font-semibold mb-4">Filter Members</h2>
             <div className="flex flex-wrap gap-2">
               {statusOptions.map(({ key, label }) => (
                 <button
                   key={key}
                   onClick={() => toggleFilter(key as keyof UserStatus)}
-                  className={`px-4 py-2 rounded-full border ${
+                  className={`text-sm md:text-base px-3 md:px-4 py-1.5 md:py-2 rounded-full border ${
                     filters[key as keyof UserStatus] 
                       ? 'bg-blue-500 text-white border-blue-500' 
                       : 'bg-white text-gray-700 border-gray-300 hover:border-blue-500'
@@ -185,6 +212,33 @@ export default function MembersPage() {
             </div>
           )}
 
+          {/* Gradient Connect section */}
+          {hasSignedUpForGradientConnect ? (
+            <div className="bg-gradient-to-r from-pink-100 via-orange-50 to-orange-100 text-pink-900 p-4 rounded-lg border border-pink-200/50 shadow-sm mb-8">
+              <p className="font-medium text-sm">
+                🥳 You&apos;re signed up for Gradient Connect on March 5th!
+              </p>
+            </div>
+          ) : (
+            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-6 mb-8">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-xl font-semibold mb-2">🤝 Gradient Connect</h2>
+                  <p className="text-gray-600">
+                    Get matched with another YAMLRG member for a 30-minute chat! 
+                    Expand your network and make meaningful connections.
+                  </p>
+                </div>
+                <Link
+                  href="/gradient-connect"
+                  className="bg-emerald-700 text-white px-6 py-2 rounded-lg hover:bg-emerald-800 transition-colors whitespace-nowrap"
+                >
+                  Join Next Round
+                </Link>
+              </div>
+            </div>
+          )}
+
           {/* Members Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredMembers.map((member) => (
@@ -210,36 +264,68 @@ export default function MembersPage() {
                   )}
                   <div className="flex-grow">
                     <h3 className="font-medium">{member.displayName}</h3>
-                  </div>
-                  <div className="flex flex-col items-end gap-2">
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(member.email);
-                          toast.success('Email copied to clipboard!');
-                        }}
-                        className="text-gray-400 hover:text-gray-600"
-                        title={member.email}
-                      >
-                        <EnvelopeIcon className="w-5 h-5" />
-                      </button>
-                      {member.linkedinUrl && (
-                        <a
-                          href={member.linkedinUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-gray-400 hover:text-blue-600"
-                          title="View LinkedIn Profile"
+                    
+                    {/* Social links row */}
+                    <div className="flex flex-col gap-2 mt-2">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(member.email);
+                            toast.success('Email copied to clipboard!');
+                          }}
+                          className="text-gray-400 hover:text-gray-600 transition-colors"
+                          title={member.email}
                         >
-                          <FaLinkedin className="w-5 h-5" />
-                        </a>
+                          <EnvelopeIcon className="w-5 h-5" />
+                        </button>
+                        
+                        {member.linkedinUrl && (
+                          <a
+                            href={member.linkedinUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-400 hover:text-blue-600 transition-colors"
+                          >
+                            <FaLinkedin className="w-5 h-5" />
+                          </a>
+                        )}
+                      </div>
+
+                      {/* Admin edit button in its own row */}
+                      {user && ADMIN_EMAILS.includes(user.email || '') && (
+                        <button
+                          onClick={async () => {
+                            try {
+                              const db = getFirestore();
+                              const memberRef = doc(db, 'users', member.uid);
+                              
+                              const newName = prompt('Enter new display name:', member.displayName);
+                              if (newName === null) return;
+                              
+                              if (newName.trim().length > 50) {
+                                toast.error('Name must be 50 characters or less');
+                                return;
+                              }
+                              
+                              await updateDoc(memberRef, {
+                                displayName: newName.trim()
+                              });
+                              
+                              toast.success('Member updated successfully');
+                              fetchMembers();
+                            } catch (error) {
+                              console.error('Error updating member:', error);
+                              toast.error('Failed to update member');
+                            }
+                          }}
+                          className="text-gray-400 hover:text-emerald-600 transition-colors flex items-center gap-1"
+                          title="Edit member (Admin only)"
+                        >
+                          <PencilIcon className="w-5 h-5" />
+                          <span className="text-sm">Edit</span>
+                        </button>
                       )}
                     </div>
-                    {ADMIN_EMAILS.includes(member.email) && (
-                      <span className="text-xs px-2 py-1 rounded-full bg-purple-100 text-purple-800 border border-purple-300">
-                        Admin
-                      </span>
-                    )}
                   </div>
                 </div>
                 

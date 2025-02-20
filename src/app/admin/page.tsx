@@ -45,6 +45,18 @@ export default function AdminPage() {
               Manage workshop requests and presentations
             </p>
           </Link>
+
+          {/* Gradient Connect */}
+          <Link 
+            href="/admin/gradient-connect"
+            className="flex flex-col items-center p-6 bg-white rounded-lg shadow hover:shadow-md transition-shadow"
+          >
+            <UsersIcon className="w-12 h-12 text-emerald-600 mb-4" />
+            <h2 className="text-xl font-semibold mb-2">Gradient Connect</h2>
+            <p className="text-gray-600 text-center">
+              Manage 1-on-1 matching and track meetings
+            </p>
+          </Link>
         </div>
       </div>
     </main>
