@@ -1,7 +1,9 @@
+'use client';
+
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { POINTS } from '@/app/config/points';
+import { POINTS_SYSTEM } from '@/app/config/points';
 
 interface RulesModalProps {
   isOpen: boolean;
@@ -10,8 +12,8 @@ interface RulesModalProps {
 
 export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
   return (
-    <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={onClose}>
+    <Transition show={isOpen} as={Fragment}>
+      <Dialog onClose={onClose} className="relative z-50">
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -21,7 +23,7 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
+          <div className="fixed inset-0 bg-black/30" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
@@ -35,8 +37,8 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 shadow-xl transition-all">
-                <div className="flex justify-between items-start">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 shadow-xl transition-all">
+                <div className="flex justify-between items-start mb-4">
                   <Dialog.Title className="text-xl font-semibold">
                     How to Earn Points
                   </Dialog.Title>
@@ -48,62 +50,17 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
                   </button>
                 </div>
 
-                <div className="mt-4 space-y-4">
-                  <div>
-                    <h3 className="font-medium mb-2">Participation</h3>
-                    <ul className="space-y-1 text-sm">
-                      <li className="flex justify-between">
-                        <span>Gradient Connect signup</span>
-                        <span>{POINTS.GRADIENT_CONNECT_SIGNUP} pts</span>
-                      </li>
-                      <li className="flex justify-between">
-                        <span>Gradient Connect attendance</span>
-                        <span>{POINTS.GRADIENT_CONNECT_ATTENDANCE} pts</span>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h3 className="font-medium mb-2">Content</h3>
-                    <ul className="space-y-1 text-sm">
-                      <li className="flex justify-between">
-                        <span>Add to reading list</span>
-                        <span>{POINTS.READING_LIST_ADD} pts</span>
-                      </li>
-                      <li className="flex justify-between">
-                        <span>Workshop presentation</span>
-                        <span>{POINTS.WORKSHOP_PRESENTATION} pts</span>
-                      </li>
-                      <li className="flex justify-between">
-                        <span>Workshop attendance</span>
-                        <span>{POINTS.WORKSHOP_ATTENDANCE} pts</span>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h3 className="font-medium mb-2">Profile</h3>
-                    <ul className="space-y-1 text-sm">
-                      <li className="flex justify-between">
-                        <span>Complete profile</span>
-                        <span>{POINTS.PROFILE_COMPLETION} pts</span>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h3 className="font-medium mb-2">Engagement</h3>
-                    <ul className="space-y-1 text-sm">
-                      <li className="flex justify-between">
-                        <span>Weekly login</span>
-                        <span>{POINTS.WEEKLY_LOGIN} pts</span>
-                      </li>
-                      <li className="flex justify-between">
-                        <span>First 4-week streak</span>
-                        <span>{POINTS.FIRST_LOGIN_STREAK} pts</span>
-                      </li>
-                    </ul>
-                  </div>
+                <div className="space-y-4">
+                  {Object.entries(POINTS_SYSTEM).map(([category, actions]) => (
+                    <div key={category}>
+                      <h3 className="font-medium mb-2">{category.charAt(0).toUpperCase() + category.slice(1)}</h3>
+                      <ul className="list-disc pl-5 space-y-1 text-sm text-gray-600">
+                        {Object.values(actions).map(({ label, value }) => (
+                          <li key={label}>{label}: {value} points</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
                 </div>
               </Dialog.Panel>
             </Transition.Child>

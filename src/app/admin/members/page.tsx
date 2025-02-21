@@ -13,6 +13,7 @@ import PointsModal from '@/components/PointsModal';
 import PointsHistoryModal from '@/components/PointsHistoryModal';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/app/firebase/firebaseConfig';
+import { POINTS_SYSTEM, PointCategory } from '@/app/config/points';
 
 export default function MembersPage() {
   const [users, setUsers] = useState<YamlrgUserProfile[]>([]);
@@ -37,6 +38,8 @@ export default function MembersPage() {
     isOpen: false,
     user: null
   });
+  const [selectedReason, setSelectedReason] = useState('');
+  const [pointsToAdd, setPointsToAdd] = useState(0);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -115,13 +118,20 @@ export default function MembersPage() {
       const userSnap = await getDoc(userRef);
       const currentUserData = userSnap.data() as YamlrgUserProfile;
 
-      const newTotal = (currentUserData.points || 0) + (pointsModal.mode === 'add' ? points : -points);
+      const [category, action] = reason.split('.') as [PointCategory, string];
+      if (!category || !action || !POINTS_SYSTEM[category]?.[action]) {
+        throw new Error('Invalid points reason');
+      }
+
+      const pointsToAdd = POINTS_SYSTEM[category][action].value;
+      const newTotal = (currentUserData.points || 0) + (pointsModal.mode === 'add' ? pointsToAdd : -pointsToAdd);
+
       const newHistory = [
         ...(currentUserData.pointsHistory || []),
         {
           timestamp: new Date().toISOString(),
-          action: reason, // Use the actual reason instead of MANUAL_ADD/REMOVE
-          points: pointsModal.mode === 'add' ? points : -points,
+          action: POINTS_SYSTEM[category][action].label,
+          points: pointsModal.mode === 'add' ? pointsToAdd : -pointsToAdd,
           total: newTotal
         }
       ];
@@ -138,9 +148,19 @@ export default function MembersPage() {
       
       toast.success(`Points ${pointsModal.mode === 'add' ? 'added' : 'removed'} successfully`);
       setPointsModal({ isOpen: false, mode: 'add', userId: '' });
+      setSelectedReason('');
+      setPointsToAdd(0);
     } catch (error) {
       console.error('Error updating points:', error);
       toast.error('Failed to update points');
+    }
+  };
+
+  const handleReasonChange = (value: string) => {
+    const [category, action] = value.split('.') as [PointCategory, string];
+    if (category && action && POINTS_SYSTEM[category]?.[action]) {
+      setSelectedReason(value);
+      setPointsToAdd(POINTS_SYSTEM[category][action].value);
     }
   };
 
@@ -341,9 +361,30 @@ export default function MembersPage() {
       <PointsModal
         isOpen={pointsModal.isOpen}
         mode={pointsModal.mode}
-        onClose={() => setPointsModal({ isOpen: false, mode: 'add', userId: '' })}
+        onClose={() => {
+          setPointsModal({ isOpen: false, mode: 'add', userId: '' });
+          setSelectedReason('');
+          setPointsToAdd(0);
+        }}
         onSubmit={handlePointsUpdate}
-      />
+      >
+        <select 
+          value={selectedReason}
+          onChange={(e) => handleReasonChange(e.target.value)}
+          className="w-full p-2 border rounded mb-4"
+        >
+          <option value="">Select reason</option>
+          {Object.entries(POINTS_SYSTEM).map(([category, actions]) => (
+            <optgroup key={category} label={category.charAt(0).toUpperCase() + category.slice(1)}>
+              {Object.entries(actions).map(([key, { label, value }]) => (
+                <option key={`${category}.${key}`} value={`${category}.${key}`}>
+                  {label} ({value} points)
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+      </PointsModal>
 
       {/* Add the points history modal */}
       {pointsHistoryModal.user && (

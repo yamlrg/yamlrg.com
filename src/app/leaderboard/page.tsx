@@ -6,9 +6,11 @@ import { YamlrgUserProfile } from '../types';
 import Image from 'next/image';
 import { StarIcon } from '@heroicons/react/24/solid';
 import ProtectedPage from '@/components/ProtectedPage';
+import RulesModal from '@/components/RulesModal';
 
 export default function LeaderboardPage() {
   const [users, setUsers] = useState<YamlrgUserProfile[]>([]);
+  const [isRulesModalOpen, setIsRulesModalOpen] = useState(false);
 
   // Group users by points
   const usersByPoints = users.reduce((acc, user) => {
@@ -43,9 +45,14 @@ export default function LeaderboardPage() {
     <ProtectedPage>
       <main className="min-h-screen p-4">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-3 mb-8">
-            <h1 className="text-3xl font-bold">Leaderboard</h1>
-            <StarIcon className="w-8 h-8 text-yellow-400" />
+          <div className="flex flex-col items-center mb-8">
+            <h1 className="text-3xl font-bold mb-2">Leaderboard</h1>
+            <button
+              onClick={() => setIsRulesModalOpen(true)}
+              className="text-emerald-600 hover:text-emerald-700 hover:underline text-sm"
+            >
+              Rules
+            </button>
           </div>
 
           <div className="bg-white rounded-lg shadow divide-y">
@@ -90,6 +97,11 @@ export default function LeaderboardPage() {
               </div>
             ))}
           </div>
+
+          <RulesModal 
+            isOpen={isRulesModalOpen} 
+            onClose={() => setIsRulesModalOpen(false)} 
+          />
         </div>
       </main>
     </ProtectedPage>

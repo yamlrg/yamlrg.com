@@ -68,7 +68,8 @@ export default function JoinRequestPage() {
           body: JSON.stringify({
             name: formData.name,
             email: formData.email,
-            interests: formData.interests
+            interests: formData.interests,
+            linkedinUrl: fullLinkedInUrl
           })
         });
       } catch (error) {
