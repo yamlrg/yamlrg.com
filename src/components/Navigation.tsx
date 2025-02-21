@@ -8,7 +8,17 @@ import { Menu } from '@headlessui/react';
 import { getUserProfile } from '../app/firebase/firestoreOperations';
 import { YamlrgUserProfile } from '../app/types';
 import { ADMIN_EMAILS } from '../app/config/admin';
-import { UserGroupIcon, UsersIcon, PresentationChartBarIcon, DocumentTextIcon, UserIcon, Bars3Icon, StarIcon } from '@heroicons/react/24/outline';
+import { 
+  UserGroupIcon, 
+  RocketLaunchIcon,
+  PresentationChartBarIcon, 
+  DocumentTextIcon, 
+  UserIcon, 
+  Bars3Icon, 
+  StarIcon,
+  ArrowRightOnRectangleIcon,
+  ShieldCheckIcon,
+} from '@heroicons/react/24/outline';
 
 export default function Navigation() {
   const [user, loading] = useAuthState(auth);
@@ -29,7 +39,7 @@ export default function Navigation() {
 
   const protectedNavItems = [
     { href: '/members', label: 'Members', icon: <UserGroupIcon className="w-6 h-6" /> },
-    { href: '/gradient-connect', label: 'Gradient Connect', icon: <UsersIcon className="w-6 h-6" /> },
+    { href: '/gradient-connect', label: 'Gradient Connect', icon: <RocketLaunchIcon className="w-6 h-6" /> },
     { href: '/workshops', label: 'Workshops', icon: <PresentationChartBarIcon className="w-6 h-6" /> },
     { href: '/reading-list', label: 'Reading list', icon: <DocumentTextIcon className="w-6 h-6" /> },
     { href: '/profile', label: 'Profile', icon: <UserIcon className="w-6 h-6" /> },
@@ -94,7 +104,7 @@ export default function Navigation() {
                 href="/admin"
                 className="group relative flex items-center justify-center p-2 text-gray-600 hover:text-emerald-700 transition-colors"
               >
-                <UserIcon className="w-6 h-6" />
+                <ShieldCheckIcon className="w-6 h-6" />
                 <span className="absolute top-full mt-1 whitespace-nowrap bg-gray-800 text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
                   Admin
                 </span>
@@ -104,7 +114,7 @@ export default function Navigation() {
               href="/logout"
               className="group relative flex items-center justify-center p-2 text-gray-600 hover:text-emerald-700 transition-colors"
             >
-              <UserIcon className="w-6 h-6" />
+              <ArrowRightOnRectangleIcon className="w-6 h-6" />
               <span className="absolute top-full mt-1 whitespace-nowrap bg-gray-800 text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
                 Sign out
               </span>
@@ -147,8 +157,9 @@ export default function Navigation() {
                         href="/admin"
                         className={`${
                           active ? 'bg-gray-100' : ''
-                        } block px-4 py-2 text-sm text-gray-700`}
+                        } flex items-center px-4 py-2 text-sm text-gray-700`}
                       >
+                        <ShieldCheckIcon className="w-5 h-5 mr-2" />
                         Admin
                       </Link>
                     )}
@@ -160,8 +171,9 @@ export default function Navigation() {
                       href="/logout"
                       className={`${
                         active ? 'bg-gray-100' : ''
-                      } block px-4 py-2 text-sm text-gray-700`}
+                      } flex items-center px-4 py-2 text-sm text-gray-700`}
                     >
+                      <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2" />
                       Sign out
                     </Link>
                   )}
