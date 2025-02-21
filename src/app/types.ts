@@ -28,6 +28,7 @@ export interface YamlrgUserProfile {
   joinedAt?: string;
   lastUpdate?: string;
   showInMembers: boolean;
+  showEmail: boolean;
   profileCompleted: boolean;
   status: UserStatus;
   points: number;

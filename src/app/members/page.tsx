@@ -268,16 +268,18 @@ export default function MembersPage() {
                     {/* Social links row */}
                     <div className="flex flex-col gap-2 mt-2">
                       <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => {
-                            navigator.clipboard.writeText(member.email);
-                            toast.success('Email copied to clipboard!');
-                          }}
-                          className="text-gray-400 hover:text-gray-600 transition-colors"
-                          title={member.email}
-                        >
-                          <EnvelopeIcon className="w-5 h-5" />
-                        </button>
+                        {(member.showEmail ?? true) && (
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(member.email);
+                              toast.success('Email copied to clipboard!');
+                            }}
+                            className="text-gray-400 hover:text-gray-600 transition-colors"
+                            title={member.email}
+                          >
+                            <EnvelopeIcon className="w-5 h-5" />
+                          </button>
+                        )}
                         
                         {member.linkedinUrl && (
                           <a

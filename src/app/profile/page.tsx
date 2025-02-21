@@ -27,6 +27,7 @@ export default function ProfilePage() {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showInMembers, setShowInMembers] = useState(false);
   const [nameError, setNameError] = useState('');
+  const [showEmail, setShowEmail] = useState(true);
 
   const statusOptions = [
     { key: 'lookingForCofounder', label: 'Looking for a Co-founder', color: 'bg-emerald-100 text-emerald-800' },
@@ -47,6 +48,7 @@ export default function ProfilePage() {
             setLinkedinUrl(userProfile.linkedinUrl ?? '');
             setDisplayName(userProfile.displayName || user.email?.split('@')[0] || 'User');
             setShowInMembers(userProfile.showInMembers ?? true);
+            setShowEmail(userProfile.showEmail ?? true);
           }
         } catch (error) {
           console.error('Error fetching profile:', error);
@@ -80,7 +82,8 @@ export default function ProfilePage() {
         displayName: trimmedName,
         profileCompleted: !!linkedinUrl,
         status: profile.status,
-        showInMembers
+        showInMembers,
+        showEmail,
       };
 
       await updateUserProfile(user.uid, updates);
@@ -283,16 +286,28 @@ export default function ProfilePage() {
           {!isEditing && (
             <div className="mb-8">
               <div className="flex items-center gap-2">
-                <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
-                  showInMembers 
-                    ? 'bg-emerald-100 text-emerald-800' 
-                    : 'bg-gray-100 text-gray-800'
-                }`}>
-                  <span className={`w-2 h-2 rounded-full ${
-                    showInMembers ? 'bg-emerald-500' : 'bg-gray-500'
-                  }`} />
-                  {showInMembers ? 'Profile visible in members directory' : 'Profile hidden from members directory'}
-                </span>
+                <div className="flex flex-col gap-2">
+                  <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
+                    showInMembers 
+                      ? 'bg-emerald-100 text-emerald-800' 
+                      : 'bg-gray-100 text-gray-800'
+                  }`}>
+                    <span className={`w-2 h-2 rounded-full ${
+                      showInMembers ? 'bg-emerald-500' : 'bg-gray-500'
+                    }`} />
+                    {showInMembers ? 'Profile visible in members directory' : 'Profile hidden from members directory'}
+                  </span>
+                  <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
+                    showEmail 
+                      ? 'bg-emerald-100 text-emerald-800' 
+                      : 'bg-gray-100 text-gray-800'
+                  }`}>
+                    <span className={`w-2 h-2 rounded-full ${
+                      showEmail ? 'bg-emerald-500' : 'bg-gray-500'
+                    }`} />
+                    {showEmail ? 'Email visible to members' : 'Email hidden from members'}
+                  </span>
+                </div>
               </div>
             </div>
           )}
@@ -375,6 +390,23 @@ export default function ProfilePage() {
                   <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
                 </label>
                 <span className="text-gray-700">Show my profile in members directory</span>
+              </div>
+            </div>
+          )}
+
+          {isEditing && (
+            <div className="mt-4 pt-4 border-t">
+              <div className="flex items-center gap-2">
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={showEmail}
+                    onChange={() => setShowEmail(!showEmail)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                </label>
+                <span className="text-gray-700">Show my email to other members</span>
               </div>
             </div>
           )}
