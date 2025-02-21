@@ -39,7 +39,6 @@ export default function MembersPage() {
     user: null
   });
   const [selectedReason, setSelectedReason] = useState('');
-  const [pointsToAdd, setPointsToAdd] = useState(0);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -149,7 +148,6 @@ export default function MembersPage() {
       toast.success(`Points ${pointsModal.mode === 'add' ? 'added' : 'removed'} successfully`);
       setPointsModal({ isOpen: false, mode: 'add', userId: '' });
       setSelectedReason('');
-      setPointsToAdd(0);
     } catch (error) {
       console.error('Error updating points:', error);
       toast.error('Failed to update points');
@@ -160,7 +158,6 @@ export default function MembersPage() {
     const [category, action] = value.split('.') as [PointCategory, string];
     if (category && action && POINTS_SYSTEM[category]?.[action]) {
       setSelectedReason(value);
-      setPointsToAdd(POINTS_SYSTEM[category][action].value);
     }
   };
 
@@ -364,7 +361,6 @@ export default function MembersPage() {
         onClose={() => {
           setPointsModal({ isOpen: false, mode: 'add', userId: '' });
           setSelectedReason('');
-          setPointsToAdd(0);
         }}
         onSubmit={handlePointsUpdate}
       >

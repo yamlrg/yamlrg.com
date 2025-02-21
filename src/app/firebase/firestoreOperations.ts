@@ -5,7 +5,11 @@ import { ADMIN_EMAILS } from "../config/admin";
 import { deleteUser } from "firebase/auth";
 import { trackEvent } from "@/utils/analytics";
 import { FirebaseError } from "firebase/app";
-import { POINTS, PointAction } from '../config/points';
+import { 
+  POINTS, 
+  POINTS_SYSTEM,
+  PointCategory 
+} from '../config/points';
 import { getWeekNumber } from '@/utils/dateUtils';
 
 // Export setDoc for use in other files
@@ -290,7 +294,7 @@ export const addToReadingList = async (item: {
   });
 
   // Award points for adding to reading list
-  await updateUserPoints(currentUser.uid, 'READING_LIST_ADD');
+  await updateUserPoints(currentUser.uid, 'content.reading_list');
 };
 
 export const addJoinRequest = async (request: Omit<JoinRequest, 'id'>) => {
@@ -497,7 +501,7 @@ export const addWorkshop = async (workshop: Omit<Workshop, 'id'>) => {
     
     if (!querySnapshot.empty) {
       const presenterDoc = querySnapshot.docs[0];
-      await updateUserPoints(presenterDoc.id, 'WORKSHOP_PRESENTATION');
+      await updateUserPoints(presenterDoc.id, 'participation.workshop_presentation');
     }
   }
 };
@@ -748,32 +752,45 @@ export const deleteReadingListItem = async (itemId: string) => {
   }
 };
 
-export const updateUserPoints = async (userId: string, action: PointAction) => {
+// Add this new type
+export type PointActionPath = `${PointCategory}.${string}`;
+
+// Update the function signature
+export const updateUserPoints = async (userId: string, actionPath: PointActionPath) => {
   try {
-    const userRef = doc(db, 'users', userId);
-    const userSnap = await getDoc(userRef);
-    
-    if (!userSnap.exists()) {
-      throw new Error('User not found');
+    const [category, action] = actionPath.split('.') as [PointCategory, string];
+    if (!category || !action || !POINTS_SYSTEM[category]?.[action]) {
+      throw new Error('Invalid points action');
     }
 
-    const userData = userSnap.data() as YamlrgUserProfile;
-    const pointsToAdd = POINTS[action];
-    const newTotal = (userData.points || 0) + pointsToAdd;
+    const pointValue = POINTS_SYSTEM[category][action].value;
+    const actionLabel = POINTS_SYSTEM[category][action].label;
+
+    const userRef = doc(db, 'users', userId);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.data();
+
+    const currentPoints = userData?.points || 0;
+    const newTotal = currentPoints + pointValue;
+
+    const newHistory = [
+      ...(userData?.pointsHistory || []),
+      {
+        timestamp: new Date().toISOString(),
+        action: actionLabel,
+        points: pointValue,
+        total: newTotal
+      }
+    ];
 
     await updateDoc(userRef, {
       points: newTotal,
-      pointsHistory: arrayUnion({
-        timestamp: new Date().toISOString(),
-        action,
-        points: pointsToAdd,
-        total: newTotal
-      })
+      pointsHistory: newHistory
     });
 
-    return newTotal;
+    return { success: true };
   } catch (error) {
-    console.error('Error updating points:', error);
+    console.error('Error updating user points:', error);
     throw error;
   }
 };
@@ -794,11 +811,11 @@ export const trackUserLogin = async (userId: string) => {
       });
 
       // Award points for weekly login
-      await updateUserPoints(userId, 'WEEKLY_LOGIN');
+      await updateUserPoints(userId, 'engagement.weekly_login');
 
       // Award bonus points for first login streak
       if (!userData.hasFirstLoginStreak && (userData.loginStreak || 0) >= 3) {
-        await updateUserPoints(userId, 'FIRST_LOGIN_STREAK');
+        await updateUserPoints(userId, 'engagement.login_streak');
         await updateDoc(userRef, { hasFirstLoginStreak: true });
       }
     } else {

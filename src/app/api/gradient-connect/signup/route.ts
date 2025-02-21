@@ -49,8 +49,8 @@ export async function POST(request: Request) {
         createdAt: new Date().toISOString()
       });
 
-      // Award points for signing up
-      await updateUserPoints(userId, 'GRADIENT_CONNECT_SIGNUP');
+      // Award points for signing up - update to use the new format
+      await updateUserPoints(userId, 'participation.gradient_connect');
 
       return NextResponse.json({ success: true, id: result.id });
     } catch (error) {
