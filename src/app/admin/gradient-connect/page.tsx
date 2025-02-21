@@ -48,8 +48,18 @@ export default function GradientConnectAdminPage() {
         }
       })) as GradientConnectSignup[];
 
+      // Sort signups by date and invite status
+      const sortedSignups = signupsData.sort((a, b) => {
+        // First, prioritize unsent invites
+        if (!a.status.inviteSent && b.status.inviteSent) return -1;
+        if (a.status.inviteSent && !b.status.inviteSent) return 1;
+
+        // Then sort by date (newest first)
+        return new Date(b.matchingDate).getTime() - new Date(a.matchingDate).getTime();
+      });
+
       // Group by matchingDate
-      const grouped = signupsData.reduce((acc, signup) => {
+      const grouped = sortedSignups.reduce((acc, signup) => {
         const date = new Date(signup.matchingDate);
         const dateKey = date.toLocaleDateString('en-US', { 
           day: 'numeric',
@@ -64,7 +74,17 @@ export default function GradientConnectAdminPage() {
         return acc;
       }, {} as GroupedSignups);
 
-      setSignups(grouped);
+      // Sort the date keys to ensure newest dates are first
+      const sortedGrouped = Object.entries(grouped)
+        .sort(([dateA], [dateB]) => {
+          return new Date(dateB).getTime() - new Date(dateA).getTime();
+        })
+        .reduce((acc, [date, signups]) => {
+          acc[date] = signups;
+          return acc;
+        }, {} as GroupedSignups);
+
+      setSignups(sortedGrouped);
     } catch (error) {
       toast.error('Failed to fetch signups');
       console.error(error);
@@ -138,7 +158,12 @@ export default function GradientConnectAdminPage() {
             <h2 className="text-xl font-semibold mb-4">{dateKey}</h2>
             <div className="grid grid-cols-1 gap-4">
               {dateSignups.map((signup) => (
-                <div key={signup.id} className="bg-white p-4 rounded-lg shadow relative">
+                <div 
+                  key={signup.id} 
+                  className={`bg-white p-4 rounded-lg shadow relative ${
+                    !signup.status.inviteSent ? 'border-l-4 border-yellow-400' : ''
+                  }`}
+                >
                   <div className="flex flex-col gap-4">
                     <div className="flex flex-col sm:flex-row sm:items-start justify-between">
                       <div className="flex-1">
