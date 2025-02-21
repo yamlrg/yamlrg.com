@@ -100,7 +100,7 @@ async function sendWelcomeEmail(email: string) {
   }
 }
 
-export const sendAdminNotification = async (newRequest: { name: string; email: string; interests: string }) => {
+export const sendAdminNotification = async (newRequest: { name: string; email: string; interests: string; linkedinUrl: string }) => {
   if (!process.env.NEXT_RESEND_API_KEY) {
     throw new ConfigurationError('Missing Resend API key');
   }
@@ -114,6 +114,7 @@ export const sendAdminNotification = async (newRequest: { name: string; email: s
         <h2>New Join Request Received</h2>
         <p><strong>Name:</strong> ${newRequest.name}</p>
         <p><strong>Email:</strong> ${newRequest.email}</p>
+        <p><strong>LinkedIn:</strong> <a href="${newRequest.linkedinUrl}">${newRequest.linkedinUrl}</a></p>
         <p><strong>Interests:</strong> ${newRequest.interests}</p>
         <p><a href="https://www.yamlrg.com/admin/join-requests">Review request in admin dashboard</a></p>
       `
