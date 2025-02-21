@@ -42,6 +42,10 @@ const getTimeElapsed = (date: string) => {
   return `${Math.floor(diffInDays / 30)} months ago`;
 };
 
+const TITLE_MAX_LENGTH = 100;
+const URL_MAX_LENGTH = 500;
+const AUTHOR_MAX_LENGTH = 50;
+
 export default function ReadingListPage() {
   const [readingList, setReadingList] = useState<ReadingItem[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -128,32 +132,52 @@ export default function ReadingListPage() {
             <form onSubmit={handleSubmit} className="mb-8 bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Title *</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-sm font-medium">Title *</label>
+                    <span className="text-xs text-gray-500">
+                      {newItem.title.length}/{TITLE_MAX_LENGTH}
+                    </span>
+                  </div>
                   <input
                     type="text"
                     value={newItem.title}
-                    onChange={(e) => setNewItem({ ...newItem, title: e.target.value })}
+                    onChange={(e) => setNewItem({ ...newItem, title: e.target.value.slice(0, TITLE_MAX_LENGTH) })}
                     className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
                     required
+                    maxLength={TITLE_MAX_LENGTH}
+                    placeholder="Enter a descriptive title"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">URL *</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-sm font-medium">URL *</label>
+                    <span className="text-xs text-gray-500">
+                      {newItem.url.length}/{URL_MAX_LENGTH}
+                    </span>
+                  </div>
                   <input
                     type="url"
                     value={newItem.url}
-                    onChange={(e) => setNewItem({ ...newItem, url: e.target.value })}
+                    onChange={(e) => setNewItem({ ...newItem, url: e.target.value.slice(0, URL_MAX_LENGTH) })}
                     className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
                     required
+                    maxLength={URL_MAX_LENGTH}
+                    placeholder="https://..."
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Author (optional)</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-sm font-medium">Author (optional)</label>
+                    <span className="text-xs text-gray-500">
+                      {newItem.author.length}/{AUTHOR_MAX_LENGTH}
+                    </span>
+                  </div>
                   <input
                     type="text"
                     value={newItem.author}
-                    onChange={(e) => setNewItem({ ...newItem, author: e.target.value })}
+                    onChange={(e) => setNewItem({ ...newItem, author: e.target.value.slice(0, AUTHOR_MAX_LENGTH) })}
                     className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+                    maxLength={AUTHOR_MAX_LENGTH}
                     placeholder="e.g., John Doe"
                   />
                 </div>

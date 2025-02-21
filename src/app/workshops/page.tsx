@@ -11,6 +11,17 @@ import { useRouter } from 'next/navigation';
 import { collection, getDocs } from 'firebase/firestore';
 import { FaYoutube, FaBook, FaLink } from 'react-icons/fa';
 
+// Add these constants at the top
+const TITLE_MAX_LENGTH = 100;
+const DESCRIPTION_MAX_LENGTH = 500;
+const URL_MAX_LENGTH = 500;
+
+const getMinDate = () => {
+  const date = new Date();
+  date.setDate(date.getDate() + 7); // Add 7 days
+  return date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+};
+
 export default function WorkshopsPage() {
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
   const [showRequestForm, setShowRequestForm] = useState(false);
@@ -155,15 +166,21 @@ export default function WorkshopsPage() {
                 </h2>
                 <form onSubmit={handleRequestSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1">
-                      {requestType === 'give' ? 'Title' : 'Topic You Want to Learn About'}
-                    </label>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="block text-sm font-medium">
+                        {requestType === 'give' ? 'Title' : 'Topic You Want to Learn About'}
+                      </label>
+                      <span className="text-xs text-gray-500">
+                        {newRequest.title.length}/{TITLE_MAX_LENGTH}
+                      </span>
+                    </div>
                     <input
                       type="text"
                       value={newRequest.title}
-                      onChange={(e) => setNewRequest({ ...newRequest, title: e.target.value })}
+                      onChange={(e) => setNewRequest({ ...newRequest, title: e.target.value.slice(0, TITLE_MAX_LENGTH) })}
                       className="w-full px-3 py-2 border rounded"
                       required
+                      maxLength={TITLE_MAX_LENGTH}
                     />
                   </div>
 
@@ -182,13 +199,19 @@ export default function WorkshopsPage() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-1">Description</label>
+                        <div className="flex justify-between items-center mb-1">
+                          <label className="block text-sm font-medium">Description</label>
+                          <span className="text-xs text-gray-500">
+                            {newRequest.description.length}/{DESCRIPTION_MAX_LENGTH}
+                          </span>
+                        </div>
                         <textarea
                           value={newRequest.description}
-                          onChange={(e) => setNewRequest({ ...newRequest, description: e.target.value })}
+                          onChange={(e) => setNewRequest({ ...newRequest, description: e.target.value.slice(0, DESCRIPTION_MAX_LENGTH) })}
                           className="w-full px-3 py-2 border rounded"
                           rows={4}
                           required
+                          maxLength={DESCRIPTION_MAX_LENGTH}
                         />
                       </div>
                       <div>
@@ -197,19 +220,29 @@ export default function WorkshopsPage() {
                           type="date"
                           value={newRequest.proposedDate}
                           onChange={(e) => setNewRequest({ ...newRequest, proposedDate: e.target.value })}
+                          min={getMinDate()}
                           className="w-full px-3 py-2 border rounded"
                         />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Must be at least a week from today
+                        </p>
                       </div>
                     </>
                   ) : (
                     <div>
-                      <label className="block text-sm font-medium mb-1">Relevant Link (optional)</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="block text-sm font-medium">Relevant Link (optional)</label>
+                        <span className="text-xs text-gray-500">
+                          {newRequest.description.length}/{URL_MAX_LENGTH}
+                        </span>
+                      </div>
                       <input
                         type="url"
                         value={newRequest.description}
-                        onChange={(e) => setNewRequest({ ...newRequest, description: e.target.value })}
+                        onChange={(e) => setNewRequest({ ...newRequest, description: e.target.value.slice(0, URL_MAX_LENGTH) })}
                         className="w-full px-3 py-2 border rounded"
                         placeholder="https://..."
+                        maxLength={URL_MAX_LENGTH}
                       />
                     </div>
                   )}
