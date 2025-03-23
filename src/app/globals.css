@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 51, 51, 51;
+  --background-rgb: 244, 244, 244;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* Add smooth transitions for dark mode changes */
+* {
+  transition-property: color, background-color, border-color;
+  transition-duration: 200ms;
+  transition-timing-function: ease-in-out;
+}
+
+/* Add some obvious dark mode styles */
+.dark body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+}
+
+/* Add obvious dark mode styles to specific elements */
+.dark button {
+  background-color: #374151;
+  color: white;
+}
+
+.dark a {
+  color: #60A5FA;
+}
+
+/* Debug styles */
+.dark * {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
