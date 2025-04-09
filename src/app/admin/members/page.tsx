@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getAllUsers, removeUserApproval, updateUserVisibility, updateUserProfile } from '@/app/firebase/firestoreOperations';
+import { getAllUsers, removeUserApproval, updateUserVisibility, updateUserProfile, deleteUserAccount, deleteJoinRequest } from '@/app/firebase/firestoreOperations';
 import { YamlrgUserProfile } from '@/app/types';
 import { toast, Toaster } from 'react-hot-toast';
 import Link from 'next/link';
-import { ArrowLeftIcon, EyeIcon, MagnifyingGlassIcon, PencilIcon, PlusIcon, MinusIcon, StarIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, EyeIcon, MagnifyingGlassIcon, PencilIcon, PlusIcon, MinusIcon, StarIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { FaLinkedin } from 'react-icons/fa';
 import Image from 'next/image';
 import { ADMIN_EMAILS } from '@/app/config/admin';
@@ -69,6 +69,13 @@ export default function MembersPage() {
   const [selectedReason, setSelectedReason] = useState('');
   const [upcomingEvent, setUpcomingEvent] = useState<GradientConnectEvent | null>(null);
   const [gradientConnectSignups, setGradientConnectSignups] = useState<Set<string>>(new Set());
+  const [deleteConfirmation, setDeleteConfirmation] = useState<{
+    isOpen: boolean;
+    user: YamlrgUserProfile | null;
+  }>({
+    isOpen: false,
+    user: null
+  });
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -278,6 +285,31 @@ export default function MembersPage() {
     }
   };
 
+  const handleDeleteUser = async (user: YamlrgUserProfile) => {
+    try {
+      // First, try to find and delete the join request
+      const requestsRef = collection(db, 'joinRequests');
+      const q = query(requestsRef, where('email', '==', user.email.toLowerCase()));
+      const querySnapshot = await getDocs(q);
+      
+      // Delete all matching join requests
+      const deletePromises = querySnapshot.docs.map(doc => deleteJoinRequest(doc.id));
+      await Promise.all(deletePromises);
+      
+      // Then delete the user account
+      await deleteUserAccount(user.uid);
+      
+      toast.success('User and join request deleted successfully');
+      
+      // Refresh users list
+      const updatedUsers = await getAllUsers();
+      setUsers(updatedUsers);
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      toast.error('Failed to delete user');
+    }
+  };
+
   const filteredUsers = users.filter(user => {
     const matchesSearch = (
       user.displayName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -301,7 +333,7 @@ export default function MembersPage() {
     <AdminProtectedPage>
       <main className="min-h-screen p-4">
         <Toaster position="top-center" />
-        <div className="max-w-md mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-4 mb-8">
             <Link 
               href="/admin"
@@ -365,8 +397,17 @@ export default function MembersPage() {
               filteredUsers.map((user) => (
                 <div 
                   key={user.uid} 
-                  className="bg-white rounded-lg shadow p-4"
+                  className="bg-white rounded-lg shadow p-4 relative"
                 >
+                  {/* Delete button */}
+                  <button
+                    onClick={() => setDeleteConfirmation({ isOpen: true, user })}
+                    className="absolute top-2 right-2 text-gray-400 hover:text-red-600 transition-colors"
+                    title="Delete user"
+                  >
+                    <TrashIcon className="w-5 h-5" />
+                  </button>
+
                   {/* User Header */}
                   <div className="flex items-start gap-3 mb-3 relative">
                     {user.photoURL ? (
@@ -570,6 +611,38 @@ export default function MembersPage() {
               setUsers(updatedUsers);
             }}
           />
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {deleteConfirmation.isOpen && deleteConfirmation.user && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+              <h3 className="text-lg font-semibold mb-4">Delete User</h3>
+              <p className="text-gray-600 mb-6">
+                Are you sure you want to delete {deleteConfirmation.user.displayName || deleteConfirmation.user.email}? 
+                This will also delete their join request and cannot be undone.
+              </p>
+              <div className="flex justify-end gap-4">
+                <button
+                  onClick={() => setDeleteConfirmation({ isOpen: false, user: null })}
+                  className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    if (deleteConfirmation.user) {
+                      handleDeleteUser(deleteConfirmation.user);
+                      setDeleteConfirmation({ isOpen: false, user: null });
+                    }
+                  }}
+                  className="px-4 py-2 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </main>
     </AdminProtectedPage>

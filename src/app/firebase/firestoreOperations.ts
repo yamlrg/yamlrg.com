@@ -382,40 +382,104 @@ export const deleteUserAccount = async (userId: string) => {
 
 export const handleFirstLogin = async (user: User) => {
   try {
+    console.log('handleFirstLogin called for user:', user.email);
+    
+    // Check if user is an admin first
+    if (user.email && ADMIN_EMAILS.includes(user.email)) {
+      console.log('User is an admin, creating profile directly');
+      
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        console.log('Admin profile already exists with UID:', user.uid);
+        return { status: 'exists' as const };
+      }
+
+      // Create admin profile
+      const userProfile = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        showInMembers: true,
+        showEmail: true,
+        linkedinUrl: '',
+        isAdmin: true,
+        profileCompleted: true,
+        joinedAt: new Date().toISOString(),
+        interests: [],
+        lookingFor: {
+          cofounder: false,
+          wannabeFounders: false,
+          investors: false,
+          customers: false,
+          hiring: false,
+          fundraising: false,
+          partnerships: false,
+          advice: false
+        },
+        isInvestor: false,
+        status: {
+          needsProjectHelp: false,
+          offeringProjectHelp: false,
+          openToNetworking: true,
+        }
+      };
+
+      console.log('Creating admin profile with data:', userProfile);
+      await setDoc(userRef, userProfile);
+      console.log('Successfully created admin profile');
+
+      return { status: 'approved' as const };
+    }
+    
+    // For non-admin users, continue with the existing logic
     const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
 
     if (userSnap.exists()) {
+      console.log('User profile already exists with UID:', user.uid);
       return { status: 'exists' as const };
     }
 
     // Check for any join request for this email
+    console.log('Checking for join request with email:', user.email);
     const requestsRef = collection(db, 'joinRequests');
     const requestsSnap = await getDocs(requestsRef);
     
     const matchingRequest = requestsSnap.docs.find(doc => {
       const data = doc.data();
-      return data.email === user.email;
+      const matches = data.email.toLowerCase() === user.email?.toLowerCase();
+      if (matches) {
+        console.log('Found matching join request for email:', user.email);
+      }
+      return matches;
     });
 
     // If no request exists at all, redirect to join page
     if (!matchingRequest) {
+      console.log('No join request found for email:', user.email);
       await auth.signOut();
       return { status: 'no_request' as const };
     }
 
     // If request exists but isn't approved, show pending message
     const request = matchingRequest.data();
+    console.log('Found join request:', request);
+    
     if (request.status !== 'approved') {
+      console.log('Join request exists but status is:', request.status);
       await auth.signOut();
       return { status: 'pending' as const };
     }
 
     // If we get here, request exists and is approved
+    console.log('Join request is approved, creating user profile');
     const approvedAt = request.approvedAt;
 
     // Create user profile
-    await setDoc(userRef, {
+    const userProfile = {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName,
@@ -444,9 +508,12 @@ export const handleFirstLogin = async (user: User) => {
         offeringProjectHelp: false,
         openToNetworking: true,
       }
-    });
+    };
 
-    console.log('Successfully handled first login');
+    console.log('Creating user profile with data:', userProfile);
+    await setDoc(userRef, userProfile);
+    console.log('Successfully created user profile');
+
     return { status: 'approved' as const };
     
   } catch (error) {

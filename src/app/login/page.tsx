@@ -20,8 +20,11 @@ export default function LoginPage() {
       if (loading) return;
       
       if (user) {
+        console.log('User is authenticated:', user.email);
         const profile = await getUserProfile(user.uid);
+        console.log('User profile:', profile);
         if (profile) {
+          console.log('Profile exists, redirecting to /members');
           router.replace('/members');
           return;
         }
@@ -35,15 +38,19 @@ export default function LoginPage() {
     try {
       setIsSigningIn(true);
       sessionStorage.setItem('signingIn', 'true');
+      console.log('Starting sign in process...');
       const result = await signInWithGoogle(router);
+      console.log('Sign in result:', result);
       
       if (result?.status === 'pending') {
+        console.log('User has a pending join request');
         setShowPendingMessage(true);
       } else if (result?.status === 'no_request') {
-        console.log('Redirecting to /join - no request found');
+        console.log('No join request found, redirecting to /join');
         await auth.signOut(); // Make sure user is signed out
         router.push('/join');
       } else if (result?.status === 'approved') {
+        console.log('User is approved, redirecting to /members');
         router.replace('/members');
       }
       // If status is 'exists', the router.replace in useEffect will handle it
