@@ -3,6 +3,8 @@
 # marias code
 /python/
 /python/*
+/send_events/
+/send_events/*
 
 # dependencies
 /node_modules

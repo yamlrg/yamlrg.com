@@ -131,6 +131,7 @@ export interface GradientConnectSignup {
   userId: string;
   userEmail: string;
   userName: string;
+  linkedin?: string;
   matchingDate: string;
   status: {
     inviteSent: boolean;

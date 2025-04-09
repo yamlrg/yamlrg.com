@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { 
   XMarkIcon, 
@@ -15,6 +15,16 @@ import Image from 'next/image';
 import { FaLinkedin, FaWhatsapp } from 'react-icons/fa';
 import { formatLinkedInUrl } from '@/utils/linkedin';
 import { toast } from 'react-hot-toast';
+import { ADMIN_EMAILS } from '@/app/config/admin';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '@/app/firebase/firebaseConfig';
+import { getFirestore, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+
+interface GradientConnectEvent {
+  id: string;
+  date: string;
+  status: 'upcoming' | 'completed';
+}
 
 interface Props {
   member: YamlrgUserProfile;
@@ -23,6 +33,108 @@ interface Props {
 }
 
 export function MemberProfileModal({ member, isOpen, onClose }: Props) {
+  const [user] = useAuthState(auth);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [upcomingEvent, setUpcomingEvent] = useState<GradientConnectEvent | null>(null);
+  const [hasSignedUp, setHasSignedUp] = useState(false);
+
+  useEffect(() => {
+    if (user?.email) {
+      setIsAdmin(ADMIN_EMAILS.includes(user.email));
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const checkGradientConnectStatus = async () => {
+      try {
+        const db = getFirestore();
+        const eventsRef = collection(db, 'gradientConnectEvents');
+        const eventsSnapshot = await getDocs(eventsRef);
+
+        // Get the nearest upcoming event
+        const events = eventsSnapshot.docs
+          .map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          } as GradientConnectEvent))
+          .filter(event => event.status === 'upcoming')
+          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+        if (events.length === 0) {
+          setUpcomingEvent(null);
+          return;
+        }
+
+        const nextEvent = events[0];
+        setUpcomingEvent(nextEvent);
+
+        // Check if member has signed up for this event
+        const signupsRef = collection(db, 'gradientConnectSignups');
+        const signupQuery = query(
+          signupsRef,
+          where('userId', '==', member.uid),
+          where('matchingDate', '==', nextEvent.date)
+        );
+        
+        const signupSnapshot = await getDocs(signupQuery);
+        setHasSignedUp(!signupSnapshot.empty);
+      } catch (error) {
+        console.error('Error checking Gradient Connect status:', error);
+      }
+    };
+
+    if (isAdmin) {
+      checkGradientConnectStatus();
+    }
+  }, [isAdmin, member.uid]);
+
+  const handleGradientConnectSignup = async () => {
+    if (!upcomingEvent) {
+      toast.error('No upcoming Gradient Connect event found');
+      return;
+    }
+
+    try {
+      const db = getFirestore();
+      const signupsRef = collection(db, 'gradientConnectSignups');
+      
+      // Check if already signed up
+      const existingQuery = query(
+        signupsRef,
+        where('userId', '==', member.uid),
+        where('matchingDate', '==', upcomingEvent.date)
+      );
+      const existingSnapshot = await getDocs(existingQuery);
+
+      if (!existingSnapshot.empty) {
+        toast.error('Member is already signed up for this event');
+        return;
+      }
+
+      // Create new signup
+      await addDoc(signupsRef, {
+        userId: member.uid,
+        userEmail: member.email,
+        userName: member.displayName,
+        matchingDate: upcomingEvent.date,
+        status: {
+          inviteSent: false,
+          inviteAccepted: false,
+          matched: false,
+          matchedWith: null,
+          matchedWithName: null
+        },
+        createdAt: new Date().toISOString()
+      });
+
+      setHasSignedUp(true);
+      toast.success('Member signed up for Gradient Connect successfully');
+    } catch (error) {
+      console.error('Error signing up for Gradient Connect:', error);
+      toast.error('Failed to sign up for Gradient Connect');
+    }
+  };
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -244,6 +356,27 @@ export function MemberProfileModal({ member, isOpen, onClose }: Props) {
                     <span className="mr-2">💰</span>
                     Investor
                   </span>
+                </div>
+              )}
+
+              {/* Admin Actions */}
+              {isAdmin && upcomingEvent && (
+                <div className="mb-8 pt-4 border-t">
+                  <h3 className="text-lg font-medium mb-3">Admin Actions</h3>
+                  <div className="flex items-center gap-4">
+                    {hasSignedUp ? (
+                      <div className="text-emerald-600 font-medium">
+                        ✓ Signed up for Gradient Connect on {new Date(upcomingEvent.date).toLocaleDateString()}
+                      </div>
+                    ) : (
+                      <button
+                        onClick={handleGradientConnectSignup}
+                        className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
+                      >
+                        Sign up for Gradient Connect
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
 

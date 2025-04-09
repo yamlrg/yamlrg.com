@@ -11,12 +11,18 @@ import Image from 'next/image';
 import { ADMIN_EMAILS } from '@/app/config/admin';
 import PointsModal from '@/components/PointsModal';
 import PointsHistoryModal from '@/components/PointsHistoryModal';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '@/app/firebase/firebaseConfig';
 import { POINTS_SYSTEM, PointCategory } from '@/app/config/points';
 import { formatLinkedInUrl } from '@/utils/linkedin';
 import { saveAs } from 'file-saver';
 import AdminProtectedPage from "@/components/AdminProtectedPage";
+
+interface GradientConnectEvent {
+  id: string;
+  date: string;
+  status: 'upcoming' | 'completed';
+}
 
 const downloadEmails = (users: YamlrgUserProfile[]) => {
   try {
@@ -61,6 +67,8 @@ export default function MembersPage() {
     user: null
   });
   const [selectedReason, setSelectedReason] = useState('');
+  const [upcomingEvent, setUpcomingEvent] = useState<GradientConnectEvent | null>(null);
+  const [gradientConnectSignups, setGradientConnectSignups] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -69,6 +77,46 @@ export default function MembersPage() {
     };
 
     fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    const fetchUpcomingEvent = async () => {
+      try {
+        const eventsRef = collection(db, 'gradientConnectEvents');
+        const eventsSnapshot = await getDocs(eventsRef);
+
+        // Get the nearest upcoming event
+        const events = eventsSnapshot.docs
+          .map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          } as GradientConnectEvent))
+          .filter(event => event.status === 'upcoming')
+          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+        if (events.length > 0) {
+          const nextEvent = events[0];
+          setUpcomingEvent(nextEvent);
+
+          // Fetch all signups for this event
+          const signupsRef = collection(db, 'gradientConnectSignups');
+          const signupQuery = query(
+            signupsRef,
+            where('matchingDate', '==', nextEvent.date)
+          );
+          
+          const signupSnapshot = await getDocs(signupQuery);
+          const signedUpUserIds = new Set(
+            signupSnapshot.docs.map(doc => doc.data().userId)
+          );
+          setGradientConnectSignups(signedUpUserIds);
+        }
+      } catch (error) {
+        console.error('Error fetching upcoming event:', error);
+      }
+    };
+
+    fetchUpcomingEvent();
   }, []);
 
   const handleRemoveApproval = async (userId: string) => {
@@ -180,6 +228,53 @@ export default function MembersPage() {
     const [category, action] = value.split('.') as [PointCategory, string];
     if (category && action && POINTS_SYSTEM[category]?.[action]) {
       setSelectedReason(value);
+    }
+  };
+
+  const handleGradientConnectSignup = async (user: YamlrgUserProfile) => {
+    if (!upcomingEvent) {
+      toast.error('No upcoming Gradient Connect event found');
+      return;
+    }
+
+    try {
+      const signupsRef = collection(db, 'gradientConnectSignups');
+      
+      // Check if already signed up
+      const existingQuery = query(
+        signupsRef,
+        where('userId', '==', user.uid),
+        where('matchingDate', '==', upcomingEvent.date)
+      );
+      const existingSnapshot = await getDocs(existingQuery);
+
+      if (!existingSnapshot.empty) {
+        toast.error('Member is already signed up for this event');
+        return;
+      }
+
+      // Create new signup
+      await addDoc(signupsRef, {
+        userId: user.uid,
+        userEmail: user.email,
+        userName: user.displayName,
+        matchingDate: upcomingEvent.date,
+        status: {
+          inviteSent: false,
+          inviteAccepted: false,
+          matched: false,
+          matchedWith: null,
+          matchedWithName: null
+        },
+        createdAt: new Date().toISOString()
+      });
+
+      // Update local state
+      setGradientConnectSignups(prev => new Set([...prev, user.uid]));
+      toast.success('Member signed up for Gradient Connect successfully');
+    } catch (error) {
+      console.error('Error signing up for Gradient Connect:', error);
+      toast.error('Failed to sign up for Gradient Connect');
     }
   };
 
@@ -323,6 +418,11 @@ export default function MembersPage() {
                     }`}>
                       {user.showInMembers ? 'Visible' : 'Hidden'}
                     </span>
+                    {upcomingEvent && gradientConnectSignups.has(user.uid) && (
+                      <span className="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
+                        Signed up for Gradient Connect
+                      </span>
+                    )}
                   </div>
 
                   {/* Actions */}
@@ -380,6 +480,50 @@ export default function MembersPage() {
                     >
                       <MinusIcon className="w-4 h-4" />
                     </button>
+                  </div>
+
+                  {/* Gradient Connect Actions */}
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => setPointsHistoryModal({ isOpen: true, user })}
+                      className="text-sm text-blue-600 hover:text-blue-800"
+                    >
+                      Points History
+                    </button>
+                    <button
+                      onClick={() => setPointsModal({ isOpen: true, mode: 'add', userId: user.uid })}
+                      className="text-sm text-emerald-600 hover:text-emerald-800"
+                    >
+                      Add Points
+                    </button>
+                    <button
+                      onClick={() => setPointsModal({ isOpen: true, mode: 'remove', userId: user.uid })}
+                      className="text-sm text-red-600 hover:text-red-800"
+                    >
+                      Remove Points
+                    </button>
+                    <button
+                      onClick={() => toggleUserVisibility(user)}
+                      className="text-sm text-gray-600 hover:text-gray-800"
+                    >
+                      {user.showInMembers ? 'Hide' : 'Show'}
+                    </button>
+                    {user.isApproved && (
+                      <button
+                        onClick={() => handleRemoveApproval(user.uid)}
+                        className="text-sm text-red-600 hover:text-red-800"
+                      >
+                        Remove Approval
+                      </button>
+                    )}
+                    {upcomingEvent && !gradientConnectSignups.has(user.uid) && (
+                      <button
+                        onClick={() => handleGradientConnectSignup(user)}
+                        className="text-sm text-blue-600 hover:text-blue-800"
+                      >
+                        Add to Gradient Connect
+                      </button>
+                    )}
                   </div>
                 </div>
               ))

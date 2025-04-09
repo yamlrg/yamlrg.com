@@ -29,7 +29,8 @@ import AdminProtectedPage from "@/components/AdminProtectedPage";
 interface Team {
   id: string;
   members: GradientConnectSignup[];
-  notes?: string;
+  notes?: string | null;
+  previouslyPaired?: boolean;
 }
 
 interface TeamArrangement {
@@ -51,7 +52,15 @@ export default function GradientConnectAdminPage() {
   const [loading, setLoading] = useState(true);
   const [showNewEventForm, setShowNewEventForm] = useState(false);
   const [newEventDate, setNewEventDate] = useState('');
+  const [showAddMemberForm, setShowAddMemberForm] = useState(false);
+  const [newMemberName, setNewMemberName] = useState('');
   const [activeDragData, setActiveDragData] = useState<GradientConnectSignup | null>(null);
+  const [notes, setNotes] = useState('');
+  const [selectedTeamId, setSelectedTeamId] = useState('');
+  const [showNotesModal, setShowNotesModal] = useState(false);
+  const [showLinkedInModal, setShowLinkedInModal] = useState(false);
+  const [currentMember, setCurrentMember] = useState<GradientConnectSignup | null>(null);
+  const [linkedInUrl, setLinkedInUrl] = useState('');
 
   useEffect(() => {
     fetchSignups();
@@ -139,6 +148,54 @@ export default function GradientConnectAdminPage() {
       }
     }
   }, [user?.email, currentSession]);
+
+  const checkPreviousPairings = useCallback(async (teams: Team[]) => {
+    const db = getFirestore();
+    const teamsRef = collection(db, 'gradientConnectTeams');
+    const teamsSnapshot = await getDocs(teamsRef);
+    
+    // Get all previous team arrangements that occurred before the current session
+    const previousTeams = teamsSnapshot.docs
+      .map(doc => {
+        const data = doc.data() as TeamArrangement;
+        return data;
+      })
+      .filter(arrangement => {
+        // Convert dates to timestamps for comparison
+        const arrangementDate = new Date(arrangement.sessionDate).getTime();
+        const currentDate = new Date(currentSession).getTime();
+        // Only include sessions that happened before the current one
+        return arrangementDate < currentDate;
+      });
+
+    // Create a map of all previous pairings using userIds instead of document IDs
+    const pairingHistory = new Set<string>();
+    previousTeams.forEach(arrangement => {
+      arrangement.teams.forEach(team => {
+        if (team.members.length === 2) {
+          const [member1, member2] = team.members;
+          // Use userIds for consistent pair keys
+          const pairKey = [member1.userId, member2.userId].sort().join('_');
+          pairingHistory.add(pairKey);
+        }
+      });
+    });
+
+    // Check current teams against history using userIds
+    return teams.map(team => {
+      if (team.members.length !== 2) return team;
+      
+      const [member1, member2] = team.members;
+      // Use userIds for consistent pair keys
+      const pairKey = [member1.userId, member2.userId].sort().join('_');
+      const wasPreviouslyPaired = pairingHistory.has(pairKey);
+      
+      return {
+        ...team,
+        previouslyPaired: wasPreviouslyPaired
+      };
+    });
+  }, [currentSession]);
 
   useEffect(() => {
     const handleRemoveFromTeam = async (event: Event) => {
@@ -252,7 +309,8 @@ export default function GradientConnectAdminPage() {
         
         if (!teamsSnapshot.empty) {
           const teamData = teamsSnapshot.docs[0].data() as TeamArrangement;
-          setTeams(teamData.teams);
+          const teamsWithPairingHistory = await checkPreviousPairings(teamData.teams);
+          setTeams(teamsWithPairingHistory);
         } else {
           // No teams yet, start with empty team
           setTeams([{ id: '1', members: [] }]);
@@ -279,7 +337,8 @@ export default function GradientConnectAdminPage() {
       
       if (!teamsSnapshot.empty) {
         const teamData = teamsSnapshot.docs[0].data() as TeamArrangement;
-        setTeams(teamData.teams);
+        const teamsWithPairingHistory = await checkPreviousPairings(teamData.teams);
+        setTeams(teamsWithPairingHistory);
       } else {
         // No teams yet, start with empty team
         setTeams([{ id: '1', members: [] }]);
@@ -414,6 +473,7 @@ export default function GradientConnectAdminPage() {
 
     const activeId = active.id as string;
     let targetId = over.id as string;
+
     let updatedTeams = [...teams];
 
     // Find the dragged signup from both signups and teams
@@ -439,19 +499,6 @@ export default function GradientConnectAdminPage() {
       await saveTeams(updatedTeams);
       await updateMatches(updatedTeams);
       return;
-    }
-
-    // Check if all teams are full
-    const allTeamsFull = updatedTeams.every(team => team.members.length >= 2);
-    
-    // If all teams are full and trying to drop on a team, create a new team
-    if (allTeamsFull && targetId.startsWith('team-')) {
-      const newTeam: Team = { id: `${teams.length + 1}`, members: [] };
-      updatedTeams = [...teams, newTeam];
-      setTeams(updatedTeams);
-      
-      // Update targetId to target the new team
-      targetId = `team-${newTeam.id}`;
     }
 
     // If dropping on a team
@@ -480,10 +527,13 @@ export default function GradientConnectAdminPage() {
           : team
       );
 
+      // Check for previous pairings immediately after updating the team
+      const teamsWithPairingHistory = await checkPreviousPairings(updatedTeams);
+      
       setSignups(newSignups);
-      setTeams(updatedTeams);
-      await updateMatches(updatedTeams);
-      await saveTeams(updatedTeams);
+      setTeams(teamsWithPairingHistory);
+      await updateMatches(teamsWithPairingHistory);
+      await saveTeams(teamsWithPairingHistory);
     }
 
     // Check if we need to add a new team
@@ -540,6 +590,146 @@ export default function GradientConnectAdminPage() {
     }
   };
 
+  const addManualMember = async () => {
+    try {
+      if (!newMemberName.trim()) {
+        toast.error('Please enter a member name');
+        return;
+      }
+
+      const db = getFirestore();
+      await addDoc(collection(db, 'gradientConnectSignups'), {
+        userId: `manual_${Date.now()}`,
+        userEmail: 'manual@entry.com',
+        userName: newMemberName.trim(),
+        matchingDate: currentSession,
+        status: {
+          inviteSent: false,
+          inviteAccepted: false,
+          matched: false,
+          matchedWith: null,
+          matchedWithName: null
+        },
+        createdAt: new Date().toISOString(),
+        isManualEntry: true
+      });
+
+      toast.success('Member added successfully');
+      setNewMemberName('');
+      setShowAddMemberForm(false);
+      await fetchSignups();
+    } catch (error) {
+      console.error('Error adding manual member:', error);
+      toast.error('Failed to add member');
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const db = getFirestore();
+      const updatedTeams = teams.map(team => 
+        team.id === selectedTeamId ? { ...team, notes } : team
+      );
+      setTeams(updatedTeams);
+      await saveTeams(updatedTeams);
+      setNotes('');
+      setSelectedTeamId('');
+      setShowNotesModal(false);
+      toast.success('Team notes saved successfully');
+    } catch (error) {
+      console.error('Error saving team notes:', error);
+      toast.error('Failed to save team notes');
+    }
+  };
+
+  const onClose = () => {
+    setNotes('');
+    setSelectedTeamId('');
+    setShowNotesModal(false);
+  };
+
+  const handleAddLinkedIn = (member: GradientConnectSignup) => {
+    setCurrentMember(member);
+    setLinkedInUrl('');
+    setShowLinkedInModal(true);
+  };
+
+  const saveLinkedInUrl = async () => {
+    if (!currentMember) return;
+    try {
+      const db = getFirestore();
+      await updateDoc(doc(db, 'gradientConnectSignups', currentMember.id!), {
+        linkedin: linkedInUrl
+      });
+      toast.success('LinkedIn URL saved successfully');
+      setShowLinkedInModal(false);
+      fetchSignups(); // Refresh data
+    } catch (error) {
+      console.error('Error saving LinkedIn URL:', error);
+      toast.error('Failed to save LinkedIn URL');
+    }
+  };
+
+  const downloadTeamInfo = async () => {
+    try {
+      const db = getFirestore();
+      
+      // Get all user profiles first
+      const usersRef = collection(db, 'users');
+      const usersSnapshot = await getDocs(usersRef);
+      const userProfiles = new Map(
+        usersSnapshot.docs.map(doc => [doc.id, doc.data()])
+      );
+
+      // Format teams data with LinkedIn URLs
+      const teamsData = teams.map(team => ({
+        teamNumber: team.id,
+        members: team.members.map(member => {
+          const userProfile = userProfiles.get(member.userId);
+          return {
+            name: member.userName,
+            email: member.userEmail,
+            linkedin: userProfile?.linkedinUrl || 'N/A',
+            status: {
+              inviteSent: member.status.inviteSent,
+              inviteAccepted: member.status.inviteAccepted,
+              matched: member.status.matched,
+              matchedWith: member.status.matchedWith,
+              matchedWithName: member.status.matchedWithName
+            }
+          };
+        }),
+        notes: team.notes || null,
+        previouslyPaired: team.previouslyPaired || false
+      }));
+
+      // Create the JSON string
+      const jsonString = JSON.stringify(teamsData, null, 2);
+      
+      // Create a blob and download link
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const downloadAnchorNode = document.createElement('a');
+      downloadAnchorNode.setAttribute('href', url);
+      downloadAnchorNode.setAttribute('download', `gradient-connect-teams-${currentSession}.json`);
+      document.body.appendChild(downloadAnchorNode);
+      downloadAnchorNode.click();
+      downloadAnchorNode.remove();
+    } catch (error) {
+      console.error('Error downloading team info:', error);
+      toast.error('Failed to download team information');
+    }
+  };
+
+  const deleteTeam = async (teamId: string) => {
+    const updatedTeams = teams.filter(team => team.id !== teamId);
+    const membersToUnassign = teams.find(team => team.id === teamId)?.members || [];
+    setSignups(prev => [...prev, ...membersToUnassign]);
+    setTeams(updatedTeams);
+    await saveTeams(updatedTeams);
+    toast.success('Team deleted');
+  };
+
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
@@ -583,8 +773,52 @@ export default function GradientConnectAdminPage() {
                 <PlusIcon className="h-5 w-5" />
                 New Event
               </button>
+              <button
+                onClick={downloadTeamInfo}
+                className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+              >
+                Download Teams
+              </button>
             </div>
           </div>
+
+          {/* Add Member Form */}
+          {showAddMemberForm && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                <h2 className="text-xl font-bold mb-4">Add New Member</h2>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Member Name
+                  </label>
+                  <input
+                    type="text"
+                    value={newMemberName}
+                    onChange={(e) => setNewMemberName(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-md"
+                    placeholder="Enter member name"
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => {
+                      setShowAddMemberForm(false);
+                      setNewMemberName('');
+                    }}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={addManualMember}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Add Member
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* New Event Form */}
           {showNewEventForm && (
@@ -613,6 +847,41 @@ export default function GradientConnectAdminPage() {
             </div>
           )}
 
+          {/* LinkedIn Modal */}
+          {showLinkedInModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                <h2 className="text-xl font-bold mb-4">Add LinkedIn URL</h2>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    LinkedIn URL for {currentMember?.userName}
+                  </label>
+                  <input
+                    type="text"
+                    value={linkedInUrl}
+                    onChange={(e) => setLinkedInUrl(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-md"
+                    placeholder="Enter LinkedIn URL"
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => setShowLinkedInModal(false)}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={saveLinkedInUrl}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <DndContext 
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -621,8 +890,8 @@ export default function GradientConnectAdminPage() {
           >
             <div className="flex gap-4">
               {/* Teams Section */}
-              <div className="flex-1 space-y-4">
-                <div className="flex justify-between items-center">
+              <div className="flex-1 pr-4">
+                <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-semibold">Teams</h2>
                   <button
                     onClick={addNewTeam}
@@ -633,7 +902,7 @@ export default function GradientConnectAdminPage() {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4 max-h-[calc(100vh-200px)] overflow-y-auto pr-2">
                   {teams.map((team) => (
                     <DroppableTeam
                       key={team.id}
@@ -641,12 +910,19 @@ export default function GradientConnectAdminPage() {
                       teamNumber={team.id}
                       members={team.members}
                       notes={team.notes}
+                      previouslyPaired={team.previouslyPaired}
                       onNotesChange={async (notes) => {
+                        setSelectedTeamId(team.id);
+                        setNotes(notes);
+                        setShowNotesModal(true);
+                      }}
+                      onNotesDelete={async () => {
                         const updatedTeams = teams.map(t => 
-                          t.id === team.id ? { ...t, notes } : t
+                          t.id === team.id ? { ...t, notes: null } : t
                         );
                         setTeams(updatedTeams);
                         await saveTeams(updatedTeams);
+                        toast.success('Notes deleted');
                       }}
                       onInviteSentToggle={async (userId) => {
                         const member = team.members.find(m => m.id === userId);
@@ -666,6 +942,7 @@ export default function GradientConnectAdminPage() {
                           });
                         }
                       }}
+                      onDelete={() => deleteTeam(team.id)}
                     />
                   ))}
                 </div>
@@ -674,28 +951,37 @@ export default function GradientConnectAdminPage() {
               {/* Unassigned Section */}
               <div className="w-64 shrink-0">
                 <h2 className="text-xl font-semibold mb-4">Unassigned</h2>
-                <DroppableArea
-                  id="unassigned"
-                  items={getUnassignedSignups()}
-                  onInviteSentToggle={async (userId) => {
-                    const signup = signups.find(s => s.id === userId);
-                    if (signup) {
-                      await updateSignupStatus(userId, {
-                        ...signup.status,
-                        inviteSent: !signup.status.inviteSent
-                      });
-                    }
-                  }}
-                  onInviteAcceptedToggle={async (userId) => {
-                    const signup = signups.find(s => s.id === userId);
-                    if (signup) {
-                      await updateSignupStatus(userId, {
-                        ...signup.status,
-                        inviteAccepted: !signup.status.inviteAccepted
-                      });
-                    }
-                  }}
-                />
+                <div className="space-y-4">
+                  <DroppableArea
+                    id="unassigned"
+                    items={getUnassignedSignups()}
+                    onInviteSentToggle={async (userId) => {
+                      const signup = signups.find(s => s.id === userId);
+                      if (signup) {
+                        await updateSignupStatus(userId, {
+                          ...signup.status,
+                          inviteSent: !signup.status.inviteSent
+                        });
+                      }
+                    }}
+                    onInviteAcceptedToggle={async (userId) => {
+                      const signup = signups.find(s => s.id === userId);
+                      if (signup) {
+                        await updateSignupStatus(userId, {
+                          ...signup.status,
+                          inviteAccepted: !signup.status.inviteAccepted
+                        });
+                      }
+                    }}
+                  />
+                  <button
+                    onClick={() => setShowAddMemberForm(true)}
+                    className="w-full mt-4 flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                  >
+                    <PlusIcon className="h-5 w-5" />
+                    Add Member
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -707,6 +993,35 @@ export default function GradientConnectAdminPage() {
               ) : null}
             </DragOverlay>
           </DndContext>
+
+          {/* Team Notes Modal */}
+          {showNotesModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
+              <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
+                <h2 className="text-xl font-bold mb-4">Team Notes</h2>
+                <textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  className="w-full h-32 p-2 border rounded-md resize-none"
+                  placeholder="Add notes about this team..."
+                />
+                <div className="flex justify-end gap-2 mt-4">
+                  <button
+                    onClick={onClose}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSave}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </AdminProtectedPage>

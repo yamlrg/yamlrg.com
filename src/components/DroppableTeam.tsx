@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useDroppable } from '@dnd-kit/core';
-import { UserGroupIcon, PencilIcon } from '@heroicons/react/24/outline';
+import { UserGroupIcon, PencilIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { GradientConnectSignup } from '@/app/types';
 import { UserCard } from './UserCard';
 import { TeamNotesModal } from './TeamNotesModal';
@@ -11,21 +11,24 @@ interface Props {
   id: string;
   teamNumber: string;
   members: GradientConnectSignup[];
-  notes?: string;
+  notes?: string | null;
+  previouslyPaired?: boolean;
   onNotesChange: (notes: string) => void;
+  onNotesDelete: () => void;
   onInviteSentToggle?: (userId: string) => void;
   onInviteAcceptedToggle?: (userId: string) => void;
+  onDelete?: () => void;
 }
 
-export function DroppableTeam({ id, teamNumber, members, notes, onNotesChange, onInviteSentToggle, onInviteAcceptedToggle }: Props) {
+export function DroppableTeam({ id, teamNumber, members, notes, previouslyPaired, onNotesChange, onNotesDelete, onInviteSentToggle, onInviteAcceptedToggle, onDelete }: Props) {
   const [showNotesModal, setShowNotesModal] = useState(false);
+  
   const { setNodeRef, isOver } = useDroppable({
     id,
     data: {
       type: 'team',
       accepts: ['user']
-    },
-    disabled: members.length >= 2
+    }
   });
 
   const isFull = members.length >= 2;
@@ -44,12 +47,18 @@ export function DroppableTeam({ id, teamNumber, members, notes, onNotesChange, o
         ref={setNodeRef}
         className={`bg-white p-4 rounded-lg shadow min-h-[120px] transition-colors
           ${isOver && !isFull ? 'bg-blue-50 ring-2 ring-blue-500 ring-opacity-50' : ''}
-          ${isFull ? 'bg-gray-50' : ''}`}
+          ${isFull ? 'bg-gray-50' : ''}
+          ${previouslyPaired && members.length === 2 ? 'border-2 border-red-400 border-solid' : ''}`}
       >
         <h3 className="font-medium mb-2 flex items-center justify-between">
           <span className="flex items-center gap-2">
             <UserGroupIcon className="h-5 w-5 text-gray-400" />
             Team {teamNumber}
+            {previouslyPaired && members.length === 2 && (
+              <span className="text-xs px-2 py-0.5 bg-red-100 text-red-800 rounded-full">
+                Previously Paired
+              </span>
+            )}
           </span>
           <div className="flex items-center gap-2">
             <button
@@ -63,6 +72,15 @@ export function DroppableTeam({ id, teamNumber, members, notes, onNotesChange, o
               <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">
                 Full
               </span>
+            )}
+            {onDelete && (
+              <button
+                onClick={onDelete}
+                className="p-1 hover:bg-red-100 rounded-full"
+                title="Delete Team"
+              >
+                <XMarkIcon className="h-4 w-4 text-red-500" />
+              </button>
             )}
           </div>
         </h3>
@@ -79,8 +97,17 @@ export function DroppableTeam({ id, teamNumber, members, notes, onNotesChange, o
           ))}
         </div>
         {notes && (
-          <div className="mt-3 text-sm text-gray-600 bg-blue-50 p-2 rounded border border-blue-100">
-            {notes}
+          <div className="mt-3 text-sm text-gray-600 bg-blue-50 p-2 rounded border border-blue-100 group relative">
+            <button
+              onClick={onNotesDelete}
+              className="absolute top-1 right-1 p-1 hover:bg-red-100 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+              title="Delete notes"
+            >
+              <XMarkIcon className="h-4 w-4 text-red-500" />
+            </button>
+            <div className="pr-6">
+              {notes}
+            </div>
           </div>
         )}
       </div>
