@@ -59,12 +59,8 @@ export default function GradientConnectAdminPage() {
   const [selectedTeamId, setSelectedTeamId] = useState('');
   const [showNotesModal, setShowNotesModal] = useState(false);
   const [showLinkedInModal, setShowLinkedInModal] = useState(false);
-  const [currentMember, setCurrentMember] = useState<GradientConnectSignup | null>(null);
+  const [selectedMember, setSelectedMember] = useState<GradientConnectSignup | null>(null);
   const [linkedInUrl, setLinkedInUrl] = useState('');
-
-  useEffect(() => {
-    fetchSignups();
-  }, [user]);
 
   const updateMatches = useCallback(async (currentTeams: Team[]) => {
     const db = getFirestore();
@@ -197,50 +193,7 @@ export default function GradientConnectAdminPage() {
     });
   }, [currentSession]);
 
-  useEffect(() => {
-    const handleRemoveFromTeam = async (event: Event) => {
-      const customEvent = event as CustomEvent<{ memberId: string }>;
-      const { memberId } = customEvent.detail;
-      
-      // Find the member to remove
-      const memberToRemove = teams.flatMap(t => t.members).find(m => m.id === memberId);
-      if (!memberToRemove) {
-        console.log('Member not found:', memberId);
-        return;
-      }
-
-      console.log('Found member to remove:', memberToRemove.userName);
-
-      // Update teams
-      const updatedTeams = teams.map(team => ({
-        ...team,
-        members: team.members.filter(m => m.id !== memberId)
-      }));
-
-      // Add to unassigned only if not already there
-      setSignups(prev => {
-        // Check if user is already in signups
-        const exists = prev.some(s => s.id === memberId);
-        if (exists) {
-          return prev;
-        }
-        return [...prev, memberToRemove];
-      });
-
-      setTeams(updatedTeams);
-      
-      // Save changes
-      await saveTeams(updatedTeams);
-      await updateMatches(updatedTeams);
-    };
-
-    window.addEventListener('removeFromTeam', handleRemoveFromTeam);
-    return () => {
-      window.removeEventListener('removeFromTeam', handleRemoveFromTeam);
-    };
-  }, [teams, signups, saveTeams, updateMatches]);
-
-  const fetchSignups = async () => {
+  const fetchSignups = useCallback(async () => {
     try {
       const db = getFirestore();
       
@@ -322,7 +275,54 @@ export default function GradientConnectAdminPage() {
       toast.error('Failed to fetch data');
       console.error(error);
     }
-  };
+  }, [checkPreviousPairings]);
+
+  useEffect(() => {
+    fetchSignups();
+  }, [user, fetchSignups]);
+
+  useEffect(() => {
+    const handleRemoveFromTeam = async (event: Event) => {
+      const customEvent = event as CustomEvent<{ memberId: string }>;
+      const { memberId } = customEvent.detail;
+      
+      // Find the member to remove
+      const memberToRemove = teams.flatMap(t => t.members).find(m => m.id === memberId);
+      if (!memberToRemove) {
+        console.log('Member not found:', memberId);
+        return;
+      }
+
+      console.log('Found member to remove:', memberToRemove.userName);
+
+      // Update teams
+      const updatedTeams = teams.map(team => ({
+        ...team,
+        members: team.members.filter(m => m.id !== memberId)
+      }));
+
+      // Add to unassigned only if not already there
+      setSignups(prev => {
+        // Check if user is already in signups
+        const exists = prev.some(s => s.id === memberId);
+        if (exists) {
+          return prev;
+        }
+        return [...prev, memberToRemove];
+      });
+
+      setTeams(updatedTeams);
+      
+      // Save changes
+      await saveTeams(updatedTeams);
+      await updateMatches(updatedTeams);
+    };
+
+    window.addEventListener('removeFromTeam', handleRemoveFromTeam);
+    return () => {
+      window.removeEventListener('removeFromTeam', handleRemoveFromTeam);
+    };
+  }, [teams, signups, saveTeams, updateMatches]);
 
   const handleSessionChange = async (date: string) => {
     setCurrentSession(date);
@@ -472,7 +472,7 @@ export default function GradientConnectAdminPage() {
     if (!over) return;
 
     const activeId = active.id as string;
-    let targetId = over.id as string;
+    const targetId = over.id as string;
 
     let updatedTeams = [...teams];
 
@@ -626,7 +626,6 @@ export default function GradientConnectAdminPage() {
 
   const handleSave = async () => {
     try {
-      const db = getFirestore();
       const updatedTeams = teams.map(team => 
         team.id === selectedTeamId ? { ...team, notes } : team
       );
@@ -648,25 +647,20 @@ export default function GradientConnectAdminPage() {
     setShowNotesModal(false);
   };
 
-  const handleAddLinkedIn = (member: GradientConnectSignup) => {
-    setCurrentMember(member);
-    setLinkedInUrl('');
-    setShowLinkedInModal(true);
-  };
-
   const saveLinkedInUrl = async () => {
-    if (!currentMember) return;
+    if (!selectedMember) return;
     try {
       const db = getFirestore();
-      await updateDoc(doc(db, 'gradientConnectSignups', currentMember.id!), {
-        linkedin: linkedInUrl
+      await updateDoc(doc(db, 'users', selectedMember.userId), {
+        linkedinUrl: linkedInUrl
       });
-      toast.success('LinkedIn URL saved successfully');
+      toast.success('LinkedIn URL updated');
       setShowLinkedInModal(false);
-      fetchSignups(); // Refresh data
+      setLinkedInUrl('');
+      setSelectedMember(null);
     } catch (error) {
-      console.error('Error saving LinkedIn URL:', error);
-      toast.error('Failed to save LinkedIn URL');
+      console.error('Error updating LinkedIn URL:', error);
+      toast.error('Failed to update LinkedIn URL');
     }
   };
 
@@ -847,26 +841,30 @@ export default function GradientConnectAdminPage() {
             </div>
           )}
 
-          {/* LinkedIn Modal */}
-          {showLinkedInModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-                <h2 className="text-xl font-bold mb-4">Add LinkedIn URL</h2>
+          {/* LinkedIn URL Modal */}
+          {showLinkedInModal && selectedMember && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
+              <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
+                <h2 className="text-xl font-bold mb-4">Update LinkedIn URL</h2>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    LinkedIn URL for {currentMember?.userName}
+                    LinkedIn URL for {selectedMember.userName}
                   </label>
                   <input
                     type="text"
                     value={linkedInUrl}
                     onChange={(e) => setLinkedInUrl(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-md"
-                    placeholder="Enter LinkedIn URL"
+                    className="w-full p-2 border rounded-md"
+                    placeholder="https://linkedin.com/in/..."
                   />
                 </div>
                 <div className="flex justify-end gap-2">
                   <button
-                    onClick={() => setShowLinkedInModal(false)}
+                    onClick={() => {
+                      setShowLinkedInModal(false);
+                      setLinkedInUrl('');
+                      setSelectedMember(null);
+                    }}
                     className="px-4 py-2 text-gray-600 hover:text-gray-800"
                   >
                     Cancel
