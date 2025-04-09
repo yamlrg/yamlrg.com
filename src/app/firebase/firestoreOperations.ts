@@ -217,14 +217,66 @@ export async function getVisibleMembers(): Promise<YamlrgUserProfile[]> {
   
   const snapshot = await getDocs(q);
   
-  return snapshot.docs
-    .map(doc => ({
-      uid: doc.id,
-      email: doc.data().email,
-      showInMembers: doc.data().showInMembers,
-      ...doc.data(),
-      bestWayToReach: doc.data().bestWayToReach || [],
-    } as YamlrgUserProfile))
+  // Create a map to store unique users by email
+  const uniqueUsers = new Map<string, YamlrgUserProfile>();
+  // Track which duplicates we've already logged
+  const loggedDuplicates = new Set<string>();
+  
+  snapshot.docs.forEach(doc => {
+    const data = doc.data();
+    const email = data.email;
+    
+    // If this email already exists in our map, log the duplicate
+    if (uniqueUsers.has(email)) {
+      const existingUser = uniqueUsers.get(email)!;
+      
+      // Only log if we haven't logged this pair before
+      const duplicatePair = `${existingUser.uid}-${doc.id}`;
+      if (!loggedDuplicates.has(duplicatePair)) {
+        const existingJoinedAt = new Date(existingUser.joinedAt || 0);
+        const newJoinedAt = new Date(data.joinedAt || 0);
+        
+        console.log('Found duplicate user:', {
+          email,
+          existingProfile: {
+            id: existingUser.uid,
+            joinedAt: existingUser.joinedAt,
+            displayName: existingUser.displayName
+          },
+          duplicateProfile: {
+            id: doc.id,
+            joinedAt: data.joinedAt,
+            displayName: data.displayName
+          },
+          keepingProfile: newJoinedAt > existingJoinedAt ? 'duplicate' : 'existing'
+        });
+        loggedDuplicates.add(duplicatePair);
+      }
+      
+      const existingJoinedAt = new Date(existingUser.joinedAt || 0);
+      const newJoinedAt = new Date(data.joinedAt || 0);
+      
+      if (newJoinedAt > existingJoinedAt) {
+        uniqueUsers.set(email, {
+          uid: doc.id,
+          email: data.email,
+          showInMembers: data.showInMembers,
+          ...data,
+          bestWayToReach: data.bestWayToReach || [],
+        } as YamlrgUserProfile);
+      }
+    } else {
+      uniqueUsers.set(email, {
+        uid: doc.id,
+        email: data.email,
+        showInMembers: data.showInMembers,
+        ...data,
+        bestWayToReach: data.bestWayToReach || [],
+      } as YamlrgUserProfile);
+    }
+  });
+  
+  return Array.from(uniqueUsers.values())
     .filter(user => ADMIN_EMAILS.includes(user.email) || user.showInMembers)
     .sort((a, b) => {
       // Sort admins to the top
@@ -364,11 +416,9 @@ export const deleteUserAccount = async (userId: string) => {
     const userRef = doc(db, "users", userId);
     await deleteDoc(userRef);
 
-    // Delete the auth user
-    const currentUser = auth.currentUser;
-    if (currentUser) {
-      await deleteUser(currentUser);
-    }
+    // We'll skip deleting the auth user due to Firebase security requirements
+    // that require recent authentication for sensitive operations
+    console.log('User document deleted from Firestore. Auth user deletion skipped due to security requirements.');
 
     // Track deletion
     trackEvent('account_deleted', {
@@ -386,17 +436,23 @@ export const handleFirstLogin = async (user: User) => {
     
     // Check if user is an admin first
     if (user.email && ADMIN_EMAILS.includes(user.email)) {
-      console.log('User is an admin, creating profile directly');
+      console.log('User is an admin, checking for existing profile by email');
       
-      const userRef = doc(db, "users", user.uid);
-      const userSnap = await getDoc(userRef);
-
-      if (userSnap.exists()) {
-        console.log('Admin profile already exists with UID:', user.uid);
+      // First check if there's an existing profile with this email
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("email", "==", user.email));
+      const querySnapshot = await getDocs(q);
+      
+      if (!querySnapshot.empty) {
+        const existingDoc = querySnapshot.docs[0];
+        console.log('Found existing admin profile with ID:', existingDoc.id);
         return { status: 'exists' as const };
       }
 
-      // Create admin profile
+      // If no existing profile found, create a new admin profile
+      console.log('No existing admin profile found, creating new one');
+      const userRef = doc(db, "users", user.uid);
+      
       const userProfile = {
         uid: user.uid,
         email: user.email,
@@ -435,16 +491,21 @@ export const handleFirstLogin = async (user: User) => {
     }
     
     // For non-admin users, continue with the existing logic
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
-
-    if (userSnap.exists()) {
-      console.log('User profile already exists with UID:', user.uid);
+    console.log('User is not an admin, checking for existing profile by email');
+    
+    // First check if there's an existing profile with this email
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("email", "==", user.email));
+    const querySnapshot = await getDocs(q);
+    
+    if (!querySnapshot.empty) {
+      const existingDoc = querySnapshot.docs[0];
+      console.log('Found existing profile with ID:', existingDoc.id);
       return { status: 'exists' as const };
     }
 
-    // Check for any join request for this email
-    console.log('Checking for join request with email:', user.email);
+    // If no existing profile found, check for join request
+    console.log('No existing profile found, checking for join request with email:', user.email);
     const requestsRef = collection(db, 'joinRequests');
     const requestsSnap = await getDocs(requestsRef);
     
@@ -511,7 +572,7 @@ export const handleFirstLogin = async (user: User) => {
     };
 
     console.log('Creating user profile with data:', userProfile);
-    await setDoc(userRef, userProfile);
+    await setDoc(doc(db, "users", user.uid), userProfile);
     console.log('Successfully created user profile');
 
     return { status: 'approved' as const };

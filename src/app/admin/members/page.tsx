@@ -299,14 +299,14 @@ export default function MembersPage() {
       // Then delete the user account
       await deleteUserAccount(user.uid);
       
-      toast.success('User and join request deleted successfully');
+      toast.success('User profile and join request deleted successfully. Note: The user may still be able to log in until they try to access protected resources.');
       
       // Refresh users list
       const updatedUsers = await getAllUsers();
       setUsers(updatedUsers);
     } catch (error) {
       console.error('Error deleting user:', error);
-      toast.error('Failed to delete user');
+      toast.error('Failed to delete user. Please try again later.');
     }
   };
 
