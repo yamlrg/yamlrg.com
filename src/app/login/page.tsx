@@ -9,6 +9,8 @@ import { getUserProfile, getApprovedJoinRequestByEmail } from '../firebase/fires
 import Link from 'next/link';
 import { toast, Toaster } from 'react-hot-toast';
 
+type ApprovedJoinRequest = { id: string; loginMethod?: string };
+
 export default function LoginPage() {
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
@@ -80,9 +82,10 @@ export default function LoginPage() {
       console.log('[Login] signInWithEmail result:', result);
       toast.success('Logged in successfully!');
       // The useEffect will handle redirect
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errMsg = error instanceof Error ? error.message : 'Authentication failed';
       console.error('[Login] Error during signInWithEmail:', error);
-      setAuthError(error.message || 'Authentication failed');
+      setAuthError(errMsg);
     } finally {
       setAuthLoading(false);
       console.log('[Login] Login finished. Loading:', authLoading);
@@ -98,14 +101,14 @@ export default function LoginPage() {
     setResetSent(false);
     setAuthLoading(true);
     try {
-      const approvedRequest = await getApprovedJoinRequestByEmail(email);
+      const approvedRequest = await getApprovedJoinRequestByEmail(email) as ApprovedJoinRequest | null;
       if (!approvedRequest) {
         toast.error('This email has not been approved by the admin yet.');
         setAuthError('This email has not been approved by the admin yet.');
         setAuthLoading(false);
         return;
       }
-      if ((approvedRequest as any).loginMethod === 'google') {
+      if (approvedRequest.loginMethod === 'google') {
         toast.error('This account was approved for Google login. Please use the "Sign in with Google" button below.');
         setAuthError('This account was approved for Google login. Please use the "Sign in with Google" button below.');
         setAuthLoading(false);
@@ -114,9 +117,10 @@ export default function LoginPage() {
       await resetPassword(email);
       setResetSent(true);
       toast.success('Password reset email sent!');
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to send reset email');
-      setAuthError(error.message || 'Failed to send reset email');
+    } catch (error: unknown) {
+      const errMsg = error instanceof Error ? error.message : 'Failed to send reset email';
+      toast.error(errMsg);
+      setAuthError(errMsg);
     } finally {
       setAuthLoading(false);
     }

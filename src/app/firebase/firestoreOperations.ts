@@ -1,8 +1,7 @@
 import { db, auth } from "./firebaseConfig";
-import { collection, doc, getDoc, setDoc, getDocs, query, orderBy, addDoc, updateDoc, deleteDoc, where, arrayUnion } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc, getDocs, query, orderBy, addDoc, updateDoc, deleteDoc, where, arrayUnion, getFirestore } from "firebase/firestore";
 import { User, YamlrgUserProfile, JoinRequest, Workshop, PresentationRequest } from "../types";
 import { ADMIN_EMAILS } from "../config/admin";
-import { deleteUser } from "firebase/auth";
 import { trackEvent } from "@/utils/analytics";
 import { FirebaseError } from "firebase/app";
 import { 
@@ -11,7 +10,6 @@ import {
   PointCategory 
 } from '../config/points';
 import { getWeekNumber } from '@/utils/dateUtils';
-import { getFirestore } from "firebase/firestore";
 
 // Export setDoc for use in other files
 export { setDoc, doc };

@@ -11,8 +11,7 @@ import { ADMIN_EMAILS } from '../app/config/admin';
 import { 
   UserGroupIcon, 
   RocketLaunchIcon,
-  PresentationChartBarIcon, 
-  DocumentTextIcon, 
+  PresentationChartBarIcon,
   UserIcon, 
   Bars3Icon, 
   StarIcon,

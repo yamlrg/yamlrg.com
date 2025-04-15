@@ -5,7 +5,6 @@ import { useEffect, useCallback, useState } from "react";
 import { getVisibleMembers } from "../firebase/firestoreOperations";
 import { YamlrgUserProfile, UserStatus, GradientConnectEvent } from '../types';
 import Image from 'next/image';
-import Link from "next/link";
 import { UserIcon, EnvelopeIcon, StarIcon } from '@heroicons/react/24/outline';
 import { FaLinkedin } from 'react-icons/fa';
 import { toast, Toaster } from 'react-hot-toast';
@@ -21,10 +20,6 @@ interface GrowthDataPoint {
   month: string; // e.g. '2024-01'
   members: number;
 }
-
-const getTimestamp = (member: YamlrgUserProfile) => {
-  return new Date(member.joinedAt ?? member.approvedAt ?? 0).getTime();
-};
 
 export default function MembersPage() {
   const [members, setMembers] = useState<YamlrgUserProfile[]>([]);
