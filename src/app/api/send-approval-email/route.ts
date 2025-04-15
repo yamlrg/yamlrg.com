@@ -3,6 +3,8 @@ import { adminAuth } from '@/app/firebase/firebaseAdmin';
 import { ADMIN_EMAILS } from '@/app/config/admin';
 import { DecodedIdToken } from 'firebase-admin/auth';
 import { NextResponse } from 'next/server';
+import { getAuth as getAdminAuth } from 'firebase-admin/auth';
+import { getFirestore } from 'firebase-admin/firestore';
 
 // Initialize Resend once
 const resend = new Resend(process.env.NEXT_RESEND_API_KEY);
@@ -77,19 +79,67 @@ async function sendWelcomeEmail(email: string) {
     throw new ConfigurationError('Missing Resend API key');
   }
 
+  // Fetch join request to determine login method
+  let loginMethod = 'google'; // default for legacy users
+  let joinRequest = null;
+  try {
+    const db = getFirestore();
+    const requestsRef = db.collection('joinRequests');
+    const snapshot = await requestsRef.where('email', '==', email.toLowerCase()).get();
+    if (!snapshot.empty) {
+      joinRequest = snapshot.docs[0].data();
+      if (joinRequest.loginMethod) {
+        loginMethod = joinRequest.loginMethod;
+      }
+    }
+  } catch (err) {
+    console.error('[sendWelcomeEmail] Error fetching join request for login method:', err);
+  }
+
+  let resetLink: string | null = null;
+  if (loginMethod === 'email') {
+    try {
+      const adminAuth = getAdminAuth();
+      // Ensure user exists in Firebase Auth
+      try {
+        await adminAuth.getUserByEmail(email);
+      } catch {
+        await adminAuth.createUser({ email });
+      }
+      resetLink = await adminAuth.generatePasswordResetLink(email, {
+        url: 'https://www.yamlrg.com/login',
+        handleCodeInApp: false,
+      });
+    } catch (err) {
+      console.error('[sendWelcomeEmail] Error generating password reset link:', err);
+      resetLink = null;
+    }
+  }
+
+  let html = `
+    <h1>Welcome to YAMLRG! 🎉</h1>
+    <p>Your request to join has been approved. You can now join our WhatsApp group:</p>
+    <p><a href="https://chat.whatsapp.com/DMqsymB8YmFD5za7R9IdwO">Click here to join the WhatsApp group</a></p>
+    <p>When you join the WhatsApp group, feel free to send a short message introducing yourself! 😊</p>
+    <p>We're excited to have you as part of our community!</p>
+    <p>Please also complete your profile on the website: <a href="https://www.yamlrg.com/profile">https://www.yamlrg.com/profile</a></p>
+  `;
+  if (resetLink) {
+    html += `
+      <hr />
+      <p><strong>Set your password:</strong></p>
+      <p>To log in with your email, please set your password here:</p>
+      <p><a href="${resetLink}">${resetLink}</a></p>
+      <p>If you did not request this, you can ignore this email.</p>
+    `;
+  }
+
   try {
     const { error } = await resend.emails.send({
       from: 'YAMLRG <hello@onboarding.yamlrg.com>',
       to: email,
       subject: 'Welcome to YAMLRG!',
-      html: `
-        <h1>Welcome to YAMLRG! 🎉</h1>
-        <p>Your request to join has been approved. You can now join our WhatsApp group:</p>
-        <p><a href="https://chat.whatsapp.com/DMqsymB8YmFD5za7R9IdwO">Click here to join the WhatsApp group</a></p>
-        <p>When you join the WhatsApp group, feel free to send a short message introducing yourself! 😊</p>
-        <p>We're excited to have you as part of our community!</p>
-        <p>Please also complete your profile on the website: <a href="https://www.yamlrg.com/login">https://www.yamlrg.com/profile</a></p>
-      `
+      html,
     });
 
     if (error) {

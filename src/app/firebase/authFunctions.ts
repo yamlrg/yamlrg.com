@@ -1,4 +1,4 @@
-import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "./firebaseConfig";
 import { trackEvent } from "@/utils/analytics";
 import { handleFirstLogin } from "./firestoreOperations";
@@ -60,5 +60,44 @@ export const setAdminClaim = async (email: string) => {
   } catch (error) {
     console.error('Error setting admin claim:', error);
     return false;
+  }
+};
+
+// Email/Password Sign-In
+export const signInWithEmail = async (email: string, password: string) => {
+  try {
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    if (result.user) {
+      return await handleFirstLogin(result.user);
+    }
+    throw new Error('No user returned from email sign in');
+  } catch (error) {
+    trackEvent('login_error', { error_message: (error as Error).message });
+    throw error;
+  }
+};
+
+// Email/Password Sign-Up
+export const signUpWithEmail = async (email: string, password: string) => {
+  try {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    if (result.user) {
+      return await handleFirstLogin(result.user);
+    }
+    throw new Error('No user returned from email sign up');
+  } catch (error) {
+    trackEvent('signup_error', { error_message: (error as Error).message });
+    throw error;
+  }
+};
+
+// Password Reset
+export const resetPassword = async (email: string) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    return true;
+  } catch (error) {
+    trackEvent('reset_password_error', { error_message: (error as Error).message });
+    throw error;
   }
 };

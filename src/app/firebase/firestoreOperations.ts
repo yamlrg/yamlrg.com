@@ -378,6 +378,13 @@ export const updateJoinRequestStatus = async (
 ) => {
   try {
     const requestRef = doc(db, 'joinRequests', requestId);
+    // Log before update
+    const beforeSnap = await getDoc(requestRef);
+    if (beforeSnap.exists()) {
+      console.log('[updateJoinRequestStatus] BEFORE:', { id: requestId, ...beforeSnap.data() });
+    } else {
+      console.log('[updateJoinRequestStatus] BEFORE: No document found for', requestId);
+    }
     const updateData: {
       status: 'approved' | 'rejected' | 'pending';
       approvedAt?: string;
@@ -392,6 +399,13 @@ export const updateJoinRequestStatus = async (
     }
 
     await updateDoc(requestRef, updateData);
+    // Log after update
+    const afterSnap = await getDoc(requestRef);
+    if (afterSnap.exists()) {
+      console.log('[updateJoinRequestStatus] AFTER:', { id: requestId, ...afterSnap.data() });
+    } else {
+      console.log('[updateJoinRequestStatus] AFTER: No document found for', requestId);
+    }
   } catch (error) {
     console.error('Error updating join request:', error);
     throw error;
@@ -944,4 +958,14 @@ export const trackUserLogin = async (userId: string) => {
   } catch (error) {
     console.error('Error tracking login:', error);
   }
+};
+
+export const getApprovedJoinRequestByEmail = async (email: string) => {
+  const requestsRef = collection(db, 'joinRequests');
+  const q = query(requestsRef, where('email', '==', email.toLowerCase()), where('status', '==', 'approved'));
+  const querySnapshot = await getDocs(q);
+  if (!querySnapshot.empty) {
+    return { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
+  }
+  return null;
 }; 

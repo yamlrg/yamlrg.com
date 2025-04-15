@@ -14,7 +14,8 @@ export default function JoinRequestPage() {
     email: '',
     name: '',
     linkedinUrl: '',
-    interests: ''
+    interests: '',
+    loginMethod: 'google', // default to google
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -146,6 +147,32 @@ export default function JoinRequestPage() {
               rows={4}
               placeholder="Tell us about your background and what interests you about YAMLRG..."
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Preferred Login Method *</label>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="loginMethod"
+                  value="google"
+                  checked={formData.loginMethod === 'google'}
+                  onChange={() => setFormData(prev => ({ ...prev, loginMethod: 'google' }))}
+                />
+                Google
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="loginMethod"
+                  value="email"
+                  checked={formData.loginMethod === 'email'}
+                  onChange={() => setFormData(prev => ({ ...prev, loginMethod: 'email' }))}
+                />
+                Email
+              </label>
+            </div>
           </div>
 
           <button
