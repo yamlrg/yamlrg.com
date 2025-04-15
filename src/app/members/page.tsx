@@ -10,7 +10,7 @@ import { UserIcon, EnvelopeIcon, StarIcon } from '@heroicons/react/24/outline';
 import { FaLinkedin } from 'react-icons/fa';
 import { toast, Toaster } from 'react-hot-toast';
 import { ADMIN_EMAILS } from '../config/admin';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/firebaseConfig';
 import { MemberProfileModal } from '@/components/MemberProfileModal';
@@ -18,7 +18,7 @@ import { formatLinkedInUrl } from '@/utils/linkedin';
 import MemberGrowthChart from '@/components/MemberGrowthChart';
 
 interface GrowthDataPoint {
-  date: string;
+  month: string; // e.g. '2024-01'
   members: number;
 }
 
@@ -61,27 +61,20 @@ export default function MembersPage() {
 
   useEffect(() => {
     const processGrowthData = (members: YamlrgUserProfile[]) => {
-      const sortedMembers = [...members].sort((a, b) => {
-        return getTimestamp(a) - getTimestamp(b);
-      });
-
-      const data: GrowthDataPoint[] = [];
-      let count = 0;
-      sortedMembers.forEach((member) => {
+      // Aggregate by month
+      const monthlyCounts: Record<string, number> = {};
+      members.forEach((member) => {
         const timestamp = member.joinedAt ?? member.approvedAt;
         if (timestamp) {
-          count++;
-          const date = new Date(timestamp).toISOString().split('T')[0];
-          
-          const lastPoint = data[data.length - 1];
-          if (!lastPoint || lastPoint.date !== date) {
-            data.push({ date, members: count });
-          } else {
-            lastPoint.members = count;
-          }
+          const date = new Date(timestamp);
+          const month = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+          monthlyCounts[month] = (monthlyCounts[month] || 0) + 1;
         }
       });
-
+      // Convert to array sorted by month
+      const data: GrowthDataPoint[] = Object.entries(monthlyCounts)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([month, members]) => ({ month, members }));
       setGrowthData(data);
     };
 
@@ -93,19 +86,19 @@ export default function MembersPage() {
   useEffect(() => {
     const checkGradientConnectStatus = async () => {
       if (!user) return;
-      
       try {
         const db = getFirestore();
         const eventsRef = collection(db, 'gradientConnectEvents');
         const eventsSnapshot = await getDocs(eventsRef);
 
-        // Get the nearest upcoming event
+        // Get the nearest upcoming event whose date is in the future
+        const now = new Date();
         const events = eventsSnapshot.docs
           .map(doc => ({
             id: doc.id,
             ...doc.data()
           } as GradientConnectEvent))
-          .filter(event => event.status === 'upcoming')
+          .filter(event => event.status === 'upcoming' && new Date(event.date) > now)
           .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
         if (events.length === 0) {
@@ -123,7 +116,6 @@ export default function MembersPage() {
           where('userId', '==', user.uid),
           where('matchingDate', '==', nextEvent.date)
         );
-        
         const signupSnapshot = await getDocs(signupQuery);
         setHasSignedUp(!signupSnapshot.empty);
       } catch (error) {
@@ -164,6 +156,36 @@ export default function MembersPage() {
       ...prev,
       [key]: !prev[key]
     }));
+  };
+
+  const handleSignUp = async () => {
+    if (!user || !upcomingEvent) return;
+    try {
+      const db = getFirestore();
+      const signupsRef = collection(db, 'gradientConnectSignups');
+      // Check if already signed up
+      const existingQuery = query(
+        signupsRef,
+        where('userId', '==', user.uid),
+        where('matchingDate', '==', upcomingEvent.date)
+      );
+      const existingSnapshot = await getDocs(existingQuery);
+      if (!existingSnapshot.empty) {
+        setHasSignedUp(true);
+        return;
+      }
+      await addDoc(signupsRef, {
+        userId: user.uid,
+        userEmail: user.email,
+        userName: user.displayName,
+        matchingDate: upcomingEvent.date,
+        status: { inviteSent: false },
+        createdAt: new Date().toISOString()
+      });
+      setHasSignedUp(true);
+    } catch (error) {
+      console.error('Error signing up for Gradient Connect:', error);
+    }
   };
 
   return (
@@ -253,7 +275,8 @@ export default function MembersPage() {
               {hasSignedUp ? (
                 <div className="bg-gradient-to-r from-pink-100 via-orange-50 to-orange-100 text-pink-900 p-4 rounded-lg border border-pink-200/50 shadow-sm">
                   <p className="font-medium text-sm">
-                    🥳 You&apos;re signed up for Gradient Connect on {new Date(upcomingEvent.date).toLocaleDateString('en-US', {
+                    🥳 You&apos;re signed up for Gradient Connect on {new Date(upcomingEvent.date).toLocaleDateString('en-GB', {
+                      year: 'numeric',
                       month: 'long',
                       day: 'numeric'
                     })}!
@@ -264,16 +287,21 @@ export default function MembersPage() {
                   <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                     <div>
                       <h2 className="text-xl font-semibold mb-2">🤝 Gradient Connect</h2>
-                      <p className="text-gray-600">
-                        Please <a href="/login" className="text-emerald-700 hover:underline">log in</a> to sign up for Gradient Connect
-                      </p>
+                      <div className="mb-2 text-emerald-800 font-medium">
+                        The next Gradient Connect is on {new Date(upcomingEvent.date).toLocaleDateString('en-GB', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </div>
                     </div>
-                    <Link 
-                      href="/gradient-connect"
+                    <button
+                      onClick={handleSignUp}
                       className="bg-emerald-700 text-white px-6 py-2 rounded-lg hover:bg-emerald-800 transition-colors whitespace-nowrap"
+                      disabled={hasSignedUp}
                     >
-                      Join Next Round
-                    </Link>
+                      {hasSignedUp ? 'You are signed up!' : 'Sign me up'}
+                    </button>
                   </div>
                 </div>
               )}

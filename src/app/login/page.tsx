@@ -113,28 +113,33 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8">
+      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
         <div className="text-center">
-          <h2 className="text-3xl font-bold mb-4">Welcome Back!</h2>
-          <p className="text-gray-600 mb-8">Sign in to access the YAMLRG community.</p>
-          
+          <h2 className="text-3xl font-bold mb-4">Welcome Back! 👋</h2>
           <button
             onClick={handleSignIn}
             disabled={isSigningIn}
-            className="w-full flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-emerald-700 hover:bg-emerald-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSigningIn ? (
-              'Signing in...'
-            ) : (
-              'Sign in with Google'
-            )}
+            {isSigningIn ? 'Signing in...' : 'Sign in with Google'}
           </button>
-          
           <p className="mt-4 text-sm text-gray-600">
             Not a member yet?{' '}
-            <Link href="/join" className="text-emerald-600 hover:text-emerald-500">
+            <Link href="/join" className="text-emerald-700 hover:text-emerald-800">
               Request to join
             </Link>
+          </p>
+          <p className="mt-2 text-sm text-gray-600">
+            If you&apos;re having trouble logging in, please let{' '}
+            <a 
+              href="https://wa.me/447599973293"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-emerald-700 hover:text-emerald-800 underline"
+            >
+              Maria
+            </a>
+            {' '}know
           </p>
         </div>
       </div>

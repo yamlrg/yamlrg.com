@@ -1,9 +1,9 @@
 'use client';
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface GrowthDataPoint {
-  date: string;
+  month: string; // e.g. '2024-01'
   members: number;
 }
 
@@ -25,44 +25,60 @@ export default function MemberGrowthChart({ data }: Props) {
   // Custom tooltip with proper typing
   const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
-      const date = new Date(label || '');
-      const formattedDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+      // Format month as 'Jan 2024'
+      const [year, month] = (label || '').split('-');
+      const formattedDate = `${new Date(Number(year), Number(month) - 1).toLocaleString('default', { month: 'short' })} ${year}`;
       return (
         <div className="bg-white p-2 border rounded shadow">
           <p className="text-sm">{formattedDate}</p>
-          <p className="text-sm font-semibold">Members: {payload[0].value}</p>
+          <p className="text-sm font-semibold">New Members: {payload[0].value}</p>
         </div>
       );
     }
     return null;
   };
 
+  // Calculate Y-axis ticks in increments of 10
+  const maxValue = Math.max(0, ...data.map(d => d.members));
+  const yTicks = [];
+  for (let i = 0; i <= maxValue + 10; i += 10) {
+    yTicks.push(i);
+  }
+
   return (
     <div className="h-[300px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data}>
+        <BarChart data={data} margin={{ bottom: 40 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis 
-            dataKey="date" 
-            tickFormatter={(date) => {
-              const d = new Date(date);
-              // Use fixed format for ticks too
-              return `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear().toString().slice(-2)}`;
+            dataKey="month"
+            tickFormatter={(label) => {
+              if (!label) return '';
+              const [year, month] = label.split('-');
+              if (!year || !month) return label;
+              // Show "Jan 25", "Feb 25", etc.
+              return `${new Date(Number(year), Number(month) - 1).toLocaleString('default', { month: 'short' })} '${year.slice(-2)}`;
             }}
+            angle={-30}
+            textAnchor="end"
+            interval={0}
+            height={60}
+            tick={{ fontSize: 12 }}
           />
           <YAxis 
             tick={{ fontSize: 12 }}
-            domain={[0, 'dataMax + 5']}
+            domain={[0, yTicks[yTicks.length - 1]]}
+            allowDecimals={false}
+            interval={0}
+            ticks={yTicks}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Line 
-            type="monotone" 
+          <Bar 
             dataKey="members" 
-            stroke="#4F46E5" 
-            strokeWidth={2}
-            dot={{ fill: '#4F46E5', r: 4 }}
+            fill="#4F46E5"
+            radius={[4, 4, 0, 0]}
           />
-        </LineChart>
+        </BarChart>
       </ResponsiveContainer>
     </div>
   );

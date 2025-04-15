@@ -41,7 +41,6 @@ export default function Navigation() {
     { href: '/members', label: 'Members', icon: <UserGroupIcon className="w-6 h-6" /> },
     { href: '/gradient-connect', label: 'Gradient Connect', icon: <RocketLaunchIcon className="w-6 h-6" /> },
     { href: '/workshops', label: 'Workshops', icon: <PresentationChartBarIcon className="w-6 h-6" /> },
-    { href: '/reading-list', label: 'Reading list', icon: <DocumentTextIcon className="w-6 h-6" /> },
     { href: '/profile', label: 'Profile', icon: <UserIcon className="w-6 h-6" /> },
   ];
 
