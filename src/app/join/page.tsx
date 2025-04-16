@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { addJoinRequest } from '../firebase/firestoreOperations';
 import { useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
@@ -8,6 +8,7 @@ import { trackEvent } from "@/utils/analytics";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 import { formatLinkedInUrl } from '@/utils/linkedin';
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function JoinRequestPage() {
   const [formData, setFormData] = useState({
@@ -17,6 +18,8 @@ export default function JoinRequestPage() {
     interests: '',
     loginMethod: 'google', // default to google
   });
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -28,13 +31,51 @@ export default function JoinRequestPage() {
     }));
   };
 
+  // Handle reCAPTCHA change
+  const handleCaptchaChange = (token: string | null) => {
+    setCaptchaToken(token);
+  };
+
+  // Handle reCAPTCHA expiration
+  const handleCaptchaExpired = () => {
+    setCaptchaToken(null);
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    
+    // Validate reCAPTCHA
+    if (!captchaToken) {
+      toast.error('Please complete the captcha verification.');
+      return;
+    }
     
     setIsSubmitting(true);
 
     try {
       const fullLinkedInUrl = formatLinkedInUrl(formData.linkedinUrl);
+
+      // Verify reCAPTCHA token server-side
+      const verifyResponse = await fetch('/api/verify-recaptcha', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: captchaToken }),
+      });
+
+      const verifyResult = await verifyResponse.json();
+      
+      if (!verifyResult.success) {
+        toast.error('Captcha verification failed. Please try again.');
+        // Reset captcha
+        if (recaptchaRef.current) {
+          recaptchaRef.current.reset();
+        }
+        setCaptchaToken(null);
+        setIsSubmitting(false);
+        return;
+      }
 
       const result = await addJoinRequest({
         ...formData,
@@ -74,10 +115,17 @@ export default function JoinRequestPage() {
     } catch (error) {
       console.error('Error submitting join request:', error);
       toast.error('Failed to submit request. Please try again.');
+      
+      // Reset captcha
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+      }
+      setCaptchaToken(null);
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <main className="min-h-screen p-4">
@@ -175,9 +223,27 @@ export default function JoinRequestPage() {
             </div>
           </div>
 
+          {/* reCAPTCHA component */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Verify you're human *
+            </label>
+            <div className="mt-2">
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
+                onChange={handleCaptchaChange}
+                onExpired={handleCaptchaExpired}
+              />
+            </div>
+            <p className="mt-1 text-sm text-gray-500">
+              This helps us prevent spam submissions.
+            </p>
+          </div>
+
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !captchaToken}
             className="w-full bg-emerald-700 text-white py-2 px-4 rounded hover:bg-emerald-800 disabled:opacity-50"
           >
             {isSubmitting ? 'Submitting...' : 'Submit Request'}

@@ -10,21 +10,22 @@ export default function JoinSuccessPage() {
           <p className="font-medium mb-2">Important:</p>
           <p className="text-sm">
             Please check your spam/junk folder as our emails sometimes end up there.
-            If you haven&apos;t received an email within 24 hours, please reach out to Maria.
+            If you haven&apos;t received an email within 24 hours, please check our waitlist page.
           </p>
         </div>
         <div className="mt-6 p-4 bg-emerald-50 rounded-lg">
-          <p className="text-emerald-800">
-            Need help or haven&apos;t received an email?{' '}
-            <a 
-              href="https://wa.me/447599973293"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-emerald-700 hover:text-emerald-800 underline"
-            >
-              Message Maria on WhatsApp
-            </a>
+          <p className="text-emerald-800 font-medium mb-2">
+            Join our waitlist to stay updated
           </p>
+          <p className="text-emerald-700 text-sm mb-3">
+            While you wait for approval, you can join our waitlist to get updates about upcoming events and meetings.
+          </p>
+          <a 
+            href="/waitlist"
+            className="inline-block bg-emerald-700 text-white py-2 px-4 rounded-lg hover:bg-emerald-800 transition-colors"
+          >
+            Join the Waitlist
+          </a>
         </div>
       </div>
     </main>

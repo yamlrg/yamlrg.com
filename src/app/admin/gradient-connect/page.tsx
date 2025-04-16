@@ -724,6 +724,101 @@ export default function GradientConnectAdminPage() {
     toast.success('Team deleted');
   };
 
+  // Add a function to send invitation emails
+  const sendInvitationEmail = async (member: GradientConnectSignup) => {
+    try {
+      await fetch('/api/send-gradient-connect-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: member.userName,
+          email: member.userEmail,
+          eventDate: currentSession
+        })
+      });
+      
+      // Update status to mark as sent
+      await updateSignupStatus(member.id!, {
+        ...member.status,
+        inviteSent: true
+      });
+      
+      toast.success(`Invitation sent to ${member.userName}`);
+    } catch (error) {
+      console.error('Error sending invitation:', error);
+      toast.error(`Failed to send invitation to ${member.userName}`);
+    }
+  };
+
+  // Add a function to send invitations to all unmatched members
+  const sendAllInvitations = async () => {
+    try {
+      // Get all unmatched members
+      const unmatchedMembers = signups.filter(signup => !signup.status.inviteSent);
+      
+      if (unmatchedMembers.length === 0) {
+        toast.info('No pending invitations to send');
+        return;
+      }
+
+      // Confirm with the user
+      if (!window.confirm(`Send invitations to ${unmatchedMembers.length} members?`)) {
+        return;
+      }
+
+      // Track progress
+      let successCount = 0;
+      let failCount = 0;
+      
+      // Show loading toast
+      toast.loading(`Sending ${unmatchedMembers.length} invitations...`, { id: 'sending-invites' });
+      
+      // Send invitations in sequence to avoid rate limiting
+      for (const member of unmatchedMembers) {
+        try {
+          await fetch('/api/send-gradient-connect-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              name: member.userName,
+              email: member.userEmail,
+              eventDate: currentSession
+            })
+          });
+          
+          // Update status
+          await updateSignupStatus(member.id!, {
+            ...member.status,
+            inviteSent: true
+          });
+          
+          successCount++;
+        } catch (error) {
+          console.error(`Error sending invitation to ${member.userName}:`, error);
+          failCount++;
+        }
+      }
+      
+      // Dismiss loading toast
+      toast.dismiss('sending-invites');
+      
+      // Show result toast
+      if (failCount === 0) {
+        toast.success(`Successfully sent ${successCount} invitations`);
+      } else {
+        toast.success(`Sent ${successCount} invitations, ${failCount} failed`);
+      }
+      
+    } catch (error) {
+      console.error('Error sending invitations:', error);
+      toast.error('Failed to send invitations');
+    }
+  };
+
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
@@ -759,6 +854,12 @@ export default function GradientConnectAdminPage() {
                 className="flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
               >
                 Reset All
+              </button>
+              <button
+                onClick={sendAllInvitations}
+                className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+              >
+                Send All Emails
               </button>
               <button
                 onClick={() => setShowNewEventForm(true)}
@@ -925,10 +1026,16 @@ export default function GradientConnectAdminPage() {
                       onInviteSentToggle={async (userId) => {
                         const member = team.members.find(m => m.id === userId);
                         if (member) {
-                          await updateSignupStatus(userId, {
-                            ...member.status,
-                            inviteSent: !member.status.inviteSent
-                          });
+                          // If we're marking as sent, send the actual email
+                          if (!member.status.inviteSent) {
+                            await sendInvitationEmail(member);
+                          } else {
+                            // Just toggle the status without sending email
+                            await updateSignupStatus(userId, {
+                              ...member.status,
+                              inviteSent: false
+                            });
+                          }
                         }
                       }}
                       onInviteAcceptedToggle={async (userId) => {
@@ -956,10 +1063,16 @@ export default function GradientConnectAdminPage() {
                     onInviteSentToggle={async (userId) => {
                       const signup = signups.find(s => s.id === userId);
                       if (signup) {
-                        await updateSignupStatus(userId, {
-                          ...signup.status,
-                          inviteSent: !signup.status.inviteSent
-                        });
+                        // If we're marking as sent, send the actual email
+                        if (!signup.status.inviteSent) {
+                          await sendInvitationEmail(signup);
+                        } else {
+                          // Just toggle the status without sending email
+                          await updateSignupStatus(userId, {
+                            ...signup.status,
+                            inviteSent: false
+                          });
+                        }
                       }
                     }}
                     onInviteAcceptedToggle={async (userId) => {
